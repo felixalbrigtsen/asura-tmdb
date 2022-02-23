@@ -1,0 +1,38 @@
+@startuml Tournament System
+
+class Team {
+    name: String
+    tournament: Tournament
+    players: [Player]
+    matches: [Match]
+}
+class Group
+class Match {
+    tournament: Tournament
+    team1: Team
+    team2: Team
+    team1_score: Integer
+    team2_score: Integer
+    winner_id: Integer
+    void setScore(team1_score: Integer, team2_score: Integer)
+    void setWinner(winner_id: Integer)
+}
+
+class Player {
+    name: String
+    team: Team
+    void setTeam(team: Team)
+}
+
+class Tournament {
+    
+}
+
+
+Tournament "1" *-- "2..*" Team : contains
+Player "1..*" *-- "1" Team : belongsTo
+
+Match "*" *--- "2" Team : contains
+
+
+@enduml
