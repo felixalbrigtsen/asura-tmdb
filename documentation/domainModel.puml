@@ -1,77 +1,40 @@
 @startuml Tournament System
+title Tournament System - Group 1 
 
-
-' class Group
-
-' Match med bare to teams:
-' class Match {
-'     *match_id: Integer
-'     tournament_id: Integer
-'     team1_id: Integer
-'     team2_id: Integer
-'     scores: [Integer, Integer]
-'     winner_id: Integer
-'     void setScore(team1_score: Integer, team2_score: Integer)
-'     void setWinner(winner_id: Integer)
-'     Integer getWinner()
-' }
-
-' Match med vilkårlig antall teams
 class Match {
     *match_id: Integer
-    tournament_id: Integer
-    team_ids: Integer[]
-    scores: Integer[]
-    winner_id: Integer
-
-    Match constructor(tournament_id: Integer, team_ids: Integer[])
-    void setScore(team_id: Integer, score: Integer)
-    void setWinner(winner_id: Integer)
-    Integer getWinner()
+    Tournament
+    Teams
+    Scores
+    Winner
 }
 class Team {
-    *team_id: Integer
-    name: String
-    tournament_ids: Integer[]
-    player_ids: Integer[]
-    match_ids: Integer[]
-
-    Team constructor(name: String)
-    void joinTournament(tournament_id: Integer)
-    void addPlayer(player_id: Integer)
-    void addMatch(match_id: Integer)
-    void removePlayer(player_id: Integer)
-    void removeMatch(match_id: Integer)
-    void leaveTournament(tournament_id: Integer)
+    *team_id
+    Name
+    Tournaments
+    Players
+    Matches
 }
 class Player {
-    *player_id: Integer
-    name: String
-    team_id: Integer
-
-
-    Player constructor(name: String)
-    void joinTeam(team_id: Integer)
-    void leaveTeam()
+    *player_id
+    Name
 }
 
 class Tournament {
-    *tournament_id: Integer
-    name: String
-    start_date: Date
-    end_date: Date
-    team_ids: Integer[]
-
-    Tournament constructor(name: String, start_date: Date, end_date: Date)
-    void addTeam(team_id: Integer)
-    void removeTeam(team_id: Integer)
+    *tournament_id
+    Name
+    
+    Banner Image
+    Start-date
+    End-date
+    Teams
 }
 
 
-Tournament "1" *-- "2..*" Team : contains
-Tournament "1" *-- "*" Match : contains
-Player "1..*" *-- "1" Team : belongsTo
-Match "*" *--- "2" Team : contains
+Team "2..*" -> "1..*" Tournament : "Plays in"
+Tournament "1" --> "*" Match : contains
+Player "1..*" --> "1..1" Team : "Belongs to"
+Team "2..2" --> "1..*" Match : "Competes in"
 
 
 @enduml
