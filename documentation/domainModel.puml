@@ -25,14 +25,20 @@ class Tournament {
     Name
     
     Banner Image
-    Start-date
-    End-date
+    Start-time
+    End-time
     Teams
 }
 
+class Administrator {
+    *admin_id
+    Name
+    Email
+    Manager-status
+}
 
 Team "2..*" -> "1..*" Tournament : "Plays in"
-Tournament "1" --> "*" Match : contains
+Tournament "1" --> "1..*" Match : contains
 Player "1..*" --> "1..1" Team : "Belongs to"
 Team "2..2" --> "1..*" Match : "Competes in"
 
