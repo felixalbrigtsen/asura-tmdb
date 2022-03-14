@@ -12,21 +12,16 @@ class Match {
     Match constructor(tournament_id: Integer, team_ids: Integer[])
     void setScore(team_id: Integer, score: Integer)
     void setWinner(winner_id: Integer)
-    Integer getWinner()
 }
 class Team {
     *team_id: Integer
     name: String
     tournament_ids: Integer[]
-    player_ids: Integer[]
-    match_ids: Integer[]
 
     Team constructor(name: String)
     void joinTournament(tournament_id: Integer)
     void addPlayer(player_id: Integer)
-    void addMatch(match_id: Integer)
     void removePlayer(player_id: Integer)
-    void removeMatch(match_id: Integer)
     void leaveTournament(tournament_id: Integer)
 }
 class Player {
@@ -45,6 +40,7 @@ class Tournament {
     name: String
     start_date: Date
     end_date: Date
+    manager_ids: Integer[]
     team_ids: Integer[]
 
     Tournament constructor(name: String, start_date: Date, end_date: Date)
@@ -53,10 +49,10 @@ class Tournament {
 }
 
 
-Tournament "1" --> "2..*" Team : contains
-Tournament "1" --> "*" Match : contains
-Player "1..*" --> "1" Team : belongsTo
-Match "*" ---> "2" Team : contains
+Team "2..*" -- "1..*" Tournament : "Plays in"
+Tournament "1" -- "1..*" Match : contains
+Player "1..*" -- "1..1" Team : "Belongs to"
+Team "2..2" -- "1..*" Match : "Competes in"
 
 
 @enduml
