@@ -3,6 +3,7 @@ actor User #LightBlue
 participant Website
 database Server #Brown
 
+
 User->Website: viewTournament(Tournament)
 activate User
 activate Website
