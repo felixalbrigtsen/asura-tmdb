@@ -1,6 +1,9 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+
+  "name": "tournament-server",
+  "version": "1.0.0",
+  "description": "DCST1008 Project - Server - Asura Tournament Management System",
+  "author": "felixalb, kristoju, jonajha, krisleri",
   "private": true,
   "dependencies": {
     "react": "^17.0.2",
