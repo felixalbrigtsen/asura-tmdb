@@ -1,8 +1,67 @@
 @startuml Manger View
-title Edit Admins
-Actor Admin #palegreen
+title Manager View
+Actor Manager #lime
 participant Website
 database Server #brown
-hide footbox
+
+note left of Manager #white
+**Managers can do** 
+**everything an admin can,**
+**these are additions**
+end note
+
+alt View Admins
+activate Manager
+activate Website
+    Manager->Website: viewAdmins()
+activate Server
+    Website->Server: requestList(Admins)
+    Website<--Server: sendList(Admins)
+deactivate Server
+    Manager<--Website: displayAdmins()
+end
+
+alt Add Admins
+    Manager->Website: addAdmin(name,passwd)
+activate Server
+    Website->Server: addUser(id,name,passwd)
+    Website<--Server: {status: success | failure}
+deactivate Server
+    opt status = success
+        Manager<--Website: displayInfo(Success)
+    activate Server
+        Website->Server: requestList(Admins)
+            Website<--Server: sendList(Admins)
+    deactivate Server
+        Manager<--Website: displayAdmins()
+    
+    else status = failure
+        Manager<--Website: displayError(error)  
+    end
+end
+
+alt Remove Admins
+    Manager->Website: removeAdmin(name)
+activate Server
+    Website->Server: removeUser(id)
+    Website<--Server: {status: success | failure}
+deactivate Server
+    opt status = success
+        Manager<--Website: displayInfo(Success)
+    activate Server
+        Website->Server: requestList(Admins)
+            Website<--Server: sendList(Admins)
+    deactivate Server
+        Manager<--Website: displayAdmins()
+    
+    else status = failure
+        Manager<--Website: displayError(error)  
+    end
+deactivate Manager
+deactivate Website
+end
+
+
+
 
 @enduml
