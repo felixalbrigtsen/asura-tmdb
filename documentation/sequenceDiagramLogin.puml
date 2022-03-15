@@ -14,11 +14,12 @@ activate Server
 deactivate Server
 alt status = success
     Website-->Admin: "Login Successful"
-opt Is Manager
+opt if (isManager(user))
     Website->Admin: redirect(managerPage)
+    else 
+        Website->Admin: redirect(adminPage)
 end
-Website->Admin: redirect(adminPage)
-' Website-->Admin: Login
+
 end
 deactivate Website
 deactivate Admin

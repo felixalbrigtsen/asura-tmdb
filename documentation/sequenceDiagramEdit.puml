@@ -5,5 +5,12 @@ participant Website
 database Server #brown
 hide footbox
 
+
+
+alt Manage Tournament
+end
+
+alt Manage Teams
+end
+
 @enduml
-'test to update Commit author
