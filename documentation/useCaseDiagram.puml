@@ -1,0 +1,37 @@
+@startuml Tournament System
+title Tournament System - Group 1 
+
+skinparam actorStyle awesome
+package Administrators {
+    :Manager: as mgr
+    actor Admin as adm
+
+    note "Manager extends admin" as MgrNote
+    mgr . MgrNote
+    MgrNote . adm
+}
+
+actor Player as p1
+
+left to right direction
+rectangle System {
+    usecase "Login" as SysLogin
+    usecase "Create admin" as SysCreateA
+
+    package Tournament {
+        usecase "Create tournament" as TouCreateT
+        usecase "Edit tournament" as TouEdit
+        usecase "View tournament" as TouView
+    }
+}
+
+mgr --> SysLogin
+mgr --> SysCreateA
+
+adm --> SysLogin
+adm --> TouCreateT
+adm --> TouEdit
+adm --> TouView
+
+p1 --> TouView
+@enduml
