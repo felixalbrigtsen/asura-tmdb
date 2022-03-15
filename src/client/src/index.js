@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import Hello from "./front_page";
+import ListElement from "./list_component";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Hello />
+    <ListElement />
+    <ListElement />
+    <ListElement />
   </React.StrictMode>,
   document.getElementById("root")
 );
