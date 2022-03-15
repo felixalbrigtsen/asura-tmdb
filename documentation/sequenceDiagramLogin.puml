@@ -1,43 +1,22 @@
 @startuml Asura Tournament System
-Actor User #lightblue
 Actor Admin #palegreen
 participant Website
 database Server #brown
 hide footbox
 
-User->Website: viewTournament(Tournament)
-activate User
-activate Website
-Website->Server: fetchTournament(Tournament)
-activate Server
-Server-->Website: {status: success | failure}
-alt status = success
-Website-->User: displayTournament(Tournament)
-else status = failure 
-Website-->User: displayError(error)
-deactivate User
-end
-
 Admin->Website: login(username, passwd)
 activate Admin
+activate Website
 Website->Server: Login Request
+activate Server
 Server-->Website: {status: success | failure}
 deactivate Server
 alt status = success
 Website-->Admin: "Login Successful"
+Website->Admin: redirect(adminPage)
+' Website-->Admin: Login
 end
-Website->Admin: managementOptions(manage,edit,create,delete)
-' Website-->Admin: Login successful
-Admin->Website: createTournament(Tournament)
-Website->Server: sendInfo(Tournament)
-Server-->Website: {status: success | failure}
-alt status = success
-Website->Server: fetchTournament(Tournament)
-Server-->Website: {status: success | failure}
-' deactivate Server
-Website-->Admin: displayTournament(Tournament)
-Admin->Website: editTournament(Tournament)
-' deactivate Admin
-' deactivate Website
-end
+deactivate Website
+deactivate Admin
+
 @enduml
