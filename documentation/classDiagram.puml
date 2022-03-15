@@ -1,6 +1,7 @@
 @startuml Tournament System
 ' Internal development class diagram
 ' Describes database fields and object methods required
+title Tournament System - Group 1 
 
 class Match {
     *match_id: Integer
@@ -8,6 +9,7 @@ class Match {
     team_ids: Integer[]
     scores: Integer[]
     winner_id: Integer
+    tier: Integer
 
     Match constructor(tournament_id: Integer, team_ids: Integer[])
     void setScore(team_id: Integer, score: Integer)
