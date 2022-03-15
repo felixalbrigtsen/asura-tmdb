@@ -1,4 +1,5 @@
 @startuml Create Tournament
+title Create Tournament
 Actor Admin #palegreen
 participant Website
 database Server #brown
