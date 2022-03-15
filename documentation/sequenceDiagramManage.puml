@@ -1,0 +1,7 @@
+@startuml Edit Tournament
+Actor Admin #palegreen
+participant Website
+database Server #brown
+hide footbox
+
+@enduml
