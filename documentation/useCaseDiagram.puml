@@ -2,36 +2,63 @@
 title Tournament System - Group 1 
 
 skinparam actorStyle awesome
+skinparam linetype polyline
+
 package Administrators {
     actor Manager as mgr
     actor Admin as adm
 
     note "Manager extends admin" as MgrNote
-    mgr . MgrNote
-    MgrNote . adm
+    mgr .l. MgrNote
+    MgrNote .l. adm
 }
 
-actor Player as p1
+actor User as u1
 
 left to right direction
 rectangle System {
     usecase "Login" as SysLogin
-    usecase "Create admin" as SysCreateA
-
+    usecase "Manage admins" as SysMngAdm
+    
+        usecase "Create admin" as SysCrtAdm
+        usecase "Delete admin" as SysDelAdm
+    
+    usecase "View home page" as HomeView
+    
     package Tournament {
-        usecase "Create tournament" as TouCreateT
-        usecase "Edit tournament" as TouEdit
-        usecase "View tournament" as TouView
+        usecase "Manage tournament" as MngTou
+        together {
+            usecase "Create tournament" as TouCreateT
+            usecase "Edit tournament" as TouEdit
+            usecase "Delete tournament" as TouDelete
+        }
+        together {
+            usecase "View tournaments" as TouVtou
+            usecase "View matches" as TouVmatch
+        }
     }
+
+    note "If logged in as manager" as SysCrtAdmNote
+    SysLogin .r. SysCrtAdmNote
+    SysCrtAdmNote ..> SysMngAdm
 }
 
 mgr --> SysLogin
-mgr --> SysCreateA
 
 adm --> SysLogin
-adm --> TouCreateT
-adm --> TouEdit
-adm --> TouView
+adm --> HomeView
 
-p1 ---> TouView
+u1 --> HomeView
+
+SysLogin --> MngTou
+
+SysMngAdm -l--> SysCrtAdm
+SysMngAdm -l--> SysDelAdm
+
+MngTou --> TouCreateT
+MngTou --> TouEdit
+MngTou --> TouDelete
+
+HomeView --> TouVtou
+HomeView --> TouVmatch
 @enduml
