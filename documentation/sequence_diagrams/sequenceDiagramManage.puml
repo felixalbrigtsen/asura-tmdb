@@ -98,6 +98,4 @@ alt Delete Tournament
     deactivate Admin
     deactivate Website
 end
-
-
 @enduml
