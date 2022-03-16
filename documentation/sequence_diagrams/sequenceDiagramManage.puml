@@ -5,18 +5,20 @@ participant Website
 database Server #brown
 hide footbox
 
-
-
-alt Edit Tournament
-    Admin->Website: 
-end
-
 alt Manage Teams
     Admin->Website: manageTeamsButton()
     Website-->Admin: redirect(/tournament/id/teams)
     opt Add 
+        Admin->Website: addTeam(name,users)
+            opt Error
+                Website-->Admin: displayError(error)
+            end
+        Website->Server: addTeam(id,name,users)
+        Server-->Website: postTeam(team)
+        Website-->Admin: updateTeamList(team)
     end
-    opt Edit 
+    opt Edit
+        Admin->Website: 
     end
     opt Delete
     end
@@ -28,9 +30,12 @@ alt Select Match Winner
         activate Server
     Server-->Website: updatePartentOf(child:matchID)
         deactivate Server
-    Website-->Admin: displayTournament()
+    Website-->Admin: displayTournament(Tournament)
 end
 
+alt Delete Tournament
+    Admin->Website: 
+end
 
 
 @enduml
