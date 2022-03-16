@@ -7,12 +7,10 @@ class Match {
     *match_id: Integer
     tournament_id: Integer
     team_ids: Integer[]
-    scores: Integer[]
     winner_id: Integer
     tier: Integer
 
     Match constructor(tournament_id: Integer, team_ids: Integer[])
-    void setScore(team_id: Integer, score: Integer)
     void setWinner(winner_id: Integer)
 }
 class Team {
