@@ -3,7 +3,7 @@ title Tournament System - Group 1
 
 skinparam actorStyle awesome
 package Administrators {
-    :Manager: as mgr
+    actor Manager as mgr
     actor Admin as adm
 
     note "Manager extends admin" as MgrNote
@@ -33,5 +33,5 @@ adm --> TouCreateT
 adm --> TouEdit
 adm --> TouView
 
-p1 --> TouView
+p1 ---> TouView
 @enduml
