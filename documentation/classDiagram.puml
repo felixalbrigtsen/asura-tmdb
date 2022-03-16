@@ -6,9 +6,10 @@ title Tournament System - Group 1
 class Match {
     *match_id: Integer
     tournament_id: Integer
-    team_ids: Integer[]
+    parent_id: Integer
+    team1_id: Integer
+    team2_id: Integer
     winner_id: Integer
-    tier: Integer
 
     Match constructor(tournament_id: Integer, team_ids: Integer[])
     void setWinner(winner_id: Integer)
@@ -16,13 +17,11 @@ class Match {
 class Team {
     *team_id: Integer
     name: String
-    tournament_ids: Integer[]
+    tournament_ids Integer
 
-    Team constructor(name: String)
-    void joinTournament(tournament_id: Integer)
+    Team constructor(name: String, tournamentId: Integer)
     void addPlayer(player_id: Integer)
     void removePlayer(player_id: Integer)
-    void leaveTournament(tournament_id: Integer)
 }
 class Player {
     *player_id: Integer
@@ -40,12 +39,8 @@ class Tournament {
     name: String
     start_date: Date
     end_date: Date
-    manager_ids: Integer[]
-    team_ids: Integer[]
 
     Tournament constructor(name: String, start_date: Date, end_date: Date)
-    void addTeam(team_id: Integer)
-    void removeTeam(team_id: Integer)
 }
 
 
