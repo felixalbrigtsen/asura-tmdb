@@ -1,5 +1,6 @@
 # Database credentials
 sql_creds.txt
+config/config.json
 
 # Logs
 logs
