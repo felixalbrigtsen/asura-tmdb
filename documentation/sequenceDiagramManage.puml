@@ -1,0 +1,36 @@
+@startuml Manage Tournament
+title Manage Tournament
+Actor Admin #palegreen
+participant Website
+database Server #brown
+hide footbox
+
+
+
+alt Edit Tournament
+    Admin->Website: 
+end
+
+alt Manage Teams
+    Admin->Website: manageTeamsButton()
+    Website-->Admin: redirect(/tournament/id/teams)
+    opt Add 
+    end
+    opt Edit 
+    end
+    opt Delete
+    end
+end
+
+alt Select Match Winner
+    Admin->Website: chooseWinner(match,team)
+    Website->Server: updateMatch(id:matchID,winner:teamID)
+        activate Server
+    Server-->Website: updatePartentOf(child:matchID)
+        deactivate Server
+    Website-->Admin: displayTournament()
+end
+
+
+
+@enduml
