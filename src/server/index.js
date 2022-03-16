@@ -25,9 +25,14 @@ app.get("/", (req, res) => {
 
 app.get("/tournament/:tournamentId/getMatches", (req, res) => {
   let tournamentId = req.params.tournamentId;
+  if (isNaN(tournamentId)) {
+    res.json({"status": "error", "data": "tournamentId must be a number"});
+    return
+  }
+  tournamentId = parseInt(tournamentId);
   getMatchesByTournamentId(tournamentId)
-    .then((result) => res.send({"status": "OK", "data": result}))
-    .catch((err) => res.send({"status": "ERROR", "data": err}));
+    .then(matches => res.send({"status": "OK", "data": matches}))
+    .catch(err => res.send({"status": "error", "data": err}));
 });
 
 // app.get("/getMatches", (req, res) => {
@@ -40,30 +45,6 @@ app.get("/tournament/:tournamentId/getMatches", (req, res) => {
 //   });
 // });
 
-
-// let tournaments = {
-//   "1": {
-//     "name": "Tournament 1",
-//     "description": "This is the first tournament",
-//     "matches":[
-//       {"id": "2",
-//       "player1": "Player 1",
-//       "player2": "Player 2",
-//       "winner": "Player 1",
-//     }
-//     ]
-//   },
-//   "2": { 
-//     "name": "Tournament 2",
-//     "description": "This is the second tournament",
-//     "matches":[
-//         {"id": "2",
-//         "player1": "Player 1",
-//         "player2": "Player 2",
-//         "winner": "Player 1",
-//       }]
-//     }
-// };
 // app.get("/tournament/:tournamentId", (req, res) => {
 //   res.render(path.join(__dirname, "public", "tournament.html"), {"tournament":tournaments[req.params.tournamentId]});
 // });
