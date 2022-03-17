@@ -1,7 +1,18 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import Manage_Button from "./components/manage_button";
+import Create_Tournament from "./create_tournament.js";
+import Tournament_Overview from "./tournament_overview.js";
 import Tournament_Manager from "./manage_tournament.js";
+import Home_Image from "./components/home_image";
+
+function Create_Button(props) {
+  return (
+    <button className="Create_Button">
+      <Link to="/create">Create Tournament</Link>
+    </button>
+  );
+}
 
 function Overview_Button(props) {
   return (
@@ -28,6 +39,8 @@ function ListElement(props) {
 function Home() {
   return (
     <React.StrictMode>
+      <Home_Image />
+      <Create_Button />
       <div id="tournamentList">
         <ListElement name="Weekend Warmup" competitors="16" date="29.04.2022" />
         <ListElement
@@ -46,6 +59,8 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/create" element={<Create_Tournament />} />
+        <Route path="/tournament" element={<Tournament_Overview />} />
         <Route path="/tournament/manage" element={<Tournament_Manager />} />
       </Routes>
     </Router>

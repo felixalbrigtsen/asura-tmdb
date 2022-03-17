@@ -1,9 +1,11 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import Home_Image from "./components/home_image";
 
 export default function Tournament_Manager() {
   return (
     <React.Fragment>
+      <Home_Image />
       <h1 className="pageHeader">Tournament</h1>
       <br></br>
       <input
