@@ -12,6 +12,8 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // #endregion
 
 // #region frontend
@@ -37,6 +39,38 @@ app.get("/tournament/:tournamentId/getMatches", (req, res) => {
   tournamentId = parseInt(tournamentId);
   tmdb.getMatchesByTournamentId(tournamentId)
     .then(matches => res.send({"status": "OK", "data": matches}))
+    .catch(err => res.send({"status": "error", "data": err}));
+});
+
+app.get("/match/:matchId/getMatch", (req, res) => {
+  let matchId = req.params.matchId;
+  if (isNaN(matchId)) {
+    res.json({"status": "error", "data": "matchId must be a number"});
+    return
+  }
+  matchId = parseInt(matchId);
+  tmdb.getMatch(matchId)
+    .then(match => res.send({"status": "OK", "data": match}))
+    .catch(err => res.send({"status": "error", "data": err}));
+});
+
+// JSON body: {"winner": "teamId"}
+app.post("/match/:matchId/setWinner", (req, res) => {
+  let matchId = req.params.matchId;
+  let winnerId = req.body.winnerId;
+  if (isNaN(matchId)) {
+    res.json({"status": "error", "data": "matchId must be a number"});
+    return
+  }
+  if (winnerId == undefined || isNaN(winnerId)) {
+    res.json({"status": "error", "data": "winnerId must be a number"});
+    return
+  }
+
+  matchId = parseInt(matchId);
+  winnerId = parseInt(winnerId);
+  tmdb.setMatchWinner(matchId, winnerId)
+    .then(match => res.send({"status": "OK", "data": match}))
     .catch(err => res.send({"status": "error", "data": err}));
 });
 // #endregion

@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS tournaments;
 CREATE TABLE tournaments (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL,
+    description TEXT,
     startTime DATETIME NOT NULL,
     endTime DATETIME NOT NULL
 );
@@ -43,8 +44,8 @@ CREATE TABLE players (
 );
 
 -- Example data (Two tournaments, 4 teams, single elimination)
-INSERT INTO tournaments (name, startTime, endTime) VALUES ('Tournament 1', '2022-04-01 16:00:00', '2022-04-01 20:00:00');
-INSERT INTO tournaments (name, startTime, endTime) VALUES ('Tournament 2', '2022-04-03 17:30:00', '2022-04-02 21:30:00');
+INSERT INTO tournaments (name, description, startTime, endTime) VALUES ('Tournament 1', 'First tournament, single elimination', '2022-04-01 16:00:00', '2022-04-01 20:00:00');
+INSERT INTO tournaments (name, description, startTime, endTime) VALUES ('Tournament 2', 'Second tournament, four teams', '2022-04-03 17:30:00', '2022-04-02 21:30:00');
 
 INSERT INTO teams (tournamentId, name) VALUES (1, 'Fnatic');        -- 1
 INSERT INTO teams (tournamentId, name) VALUES (1, 'Cloud 9');       -- 2
