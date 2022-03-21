@@ -14,23 +14,25 @@ app.listen(port, () => {
 })
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+let api = express.Router();
+app.use("/api", api);
 // #endregion
 
 // #region frontend
 // Serve static files from the React app
-app.get("/", (req, res) => {
+api.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "landing.html"));
 });
 // #endregion
 
 // #region API
-app.get("/tournament/getTournaments", (req, res) => {
+api.get("/tournament/getTournaments", (req, res) => {
   tmdb.getTournaments()
     .then(tournaments => {res.json({"status": "OK", "data": tournaments}); })
     .catch(err => {res.json({"status": "error", "data": err}); });
 });
 
-app.get("/tournament/:tournamentId/getMatches", (req, res) => {
+api.get("/tournament/:tournamentId/getMatches", (req, res) => {
   let tournamentId = req.params.tournamentId;
   if (isNaN(tournamentId)) {
     res.json({"status": "error", "data": "tournamentId must be a number"});
@@ -42,7 +44,7 @@ app.get("/tournament/:tournamentId/getMatches", (req, res) => {
     .catch(err => res.send({"status": "error", "data": err}));
 });
 
-app.get("/match/:matchId/getMatch", (req, res) => {
+api.get("/match/:matchId/getMatch", (req, res) => {
   let matchId = req.params.matchId;
   if (isNaN(matchId)) {
     res.json({"status": "error", "data": "matchId must be a number"});
@@ -55,7 +57,7 @@ app.get("/match/:matchId/getMatch", (req, res) => {
 });
 
 // JSON body: {"winner": "teamId"}
-app.post("/match/:matchId/setWinner", (req, res) => {
+api.post("/match/:matchId/setWinner", (req, res) => {
   let matchId = req.params.matchId;
   let winnerId = req.body.winnerId;
   if (isNaN(matchId)) {
