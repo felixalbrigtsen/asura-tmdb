@@ -40,7 +40,7 @@ function OverviewButton(props) {
 
 function ListElement(props) {
   return (
-    <Container>
+    <Container maxWidth="lg" align="start">
       <Grid container spacing={2}>
         <Grid item xs={5}>
           <Typography noWrap>
