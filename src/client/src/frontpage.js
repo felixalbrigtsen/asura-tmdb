@@ -15,10 +15,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
 
 function CreateButton(props) {
   return (
-    <Link to="/create">
+    <Link to="/create" style={{textDecoration:'none'}}>
       <Button variant="contained" color="primary">
         Create Tournament
       </Button>
@@ -28,7 +30,7 @@ function CreateButton(props) {
 
 function OverviewButton(props) {
   return (
-    <Link to="/tournament">
+    <Link to="/tournament" style={{textDecoration:'none'}}>
       <Button variant="contained" color="success">
         View Tournament
       </Button>
@@ -39,9 +41,19 @@ function OverviewButton(props) {
 function ListElement(props) {
   return (
     <Container>
-      {props.name}, {props.competitors} competitors, Date: {props.date}
-      <ManageButton />
-      <OverviewButton />
+      <Grid container spacing={2}>
+        <Grid item xs={5}>
+          <Typography noWrap>
+            {props.name}, {props.competitors} competitors, Date: {props.date}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <ManageButton />
+        </Grid>
+        <Grid item>
+          <OverviewButton />
+        </Grid>
+      </Grid>
     </Container>
   );
 }
@@ -50,28 +62,25 @@ function Home() {
   return (
     <React.StrictMode>
       <CssBaseline />
-      <AppBar
-        position="relative"
-        sx={{
-          backgroundColor: "grey",
-        }}
-      >
+      <AppBar position="relative" color="primary">
         <Toolbar>
-          <HomeImage />
+          <HomeImage className='mainIcon'/>
           <Typography>This is an Appbar</Typography>
         </Toolbar>
       </AppBar>
-
-      <CreateButton />
+      <main>
       <Container>
+        <Box>
+          <CreateButton />
+        </Box>
         <ListElement name="Weekend Warmup" competitors="16" date="29.04.2022" />
-        <ListElement
-          name="Saturday Showdown"
-          competitors="8"
-          date="30.04.2022"
-        />
+        <ListElement name="Saturday Showdown" competitors="8" date="30.04.2022"/>
         <ListElement name="Sunday Funday" competitors="64" date="01.05.2022" />
       </Container>
+      </main>
+      <footer className="footer">
+
+      </footer>
     </React.StrictMode>
   );
 }
