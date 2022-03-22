@@ -5,8 +5,8 @@ import Button from "@mui/material/Button";
 
 export default function ManageButton(props) {
   return (
-    <Link to="/tournament/manage">
-      <Button className="ManageButton">Manage Tournament</Button>
+    <Link to="/tournament/manage" style={{textDecoration:'none'}}>
+      <Button className="ManageButton" variant="contained" color="primary">Manage Tournament</Button>
     </Link>
   );
 }
