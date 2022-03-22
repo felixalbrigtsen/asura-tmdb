@@ -8,26 +8,46 @@ function ManageTournament(props) {
     <React.Fragment>
       <form>
         <label>Edit name: </label>
-        <input type="text" id="edtName" />
+        <input type="text" id="editName" />
         <br />
         <label>Edit description: </label>
-        <input type="text" id="edtDesc" />
+        <input type="text" id="editDesc" />
         <br />
         <label>Edit image: </label>
         <input
           type="file"
-          id="edtImage"
+          id="editImage"
           accept="image/png, image/jpeg, image/jpg"
         />
         <br />
         <label>Edit start time: </label>
-        <input type="date" id="edtDate" />
-        <input type="time" id="edtTime" />
+        <input type="date" id="editDate" />
+        <input type="time" id="editTime" />
         <br />
         <br />
       </form>
-      <button>.</button>
     </React.Fragment>
+  );
+}
+
+function AnnounceButton(props) {
+  return (
+    <Link to="/tournament/manage/announcement">
+      <button id="sendAnnon">Send Tournament Announcement</button>
+    </Link>
+  );
+}
+
+function InviteButton(props) {
+  return (
+    <button
+      id="createInvLink"
+      onClick={() => {
+        return <div>Hei</div>;
+      }}
+    >
+      Create Invite Link
+    </button>
   );
 }
 
@@ -36,6 +56,8 @@ export default function TournamentManager() {
     <React.Fragment>
       <HomeImage />
       <ManageTournament />
+      <AnnounceButton />
+      <InviteButton />
       <SaveButton />
     </React.Fragment>
   );

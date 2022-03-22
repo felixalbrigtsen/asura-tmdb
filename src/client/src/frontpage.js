@@ -1,48 +1,47 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import HomeImage from "./components/homeimage";
 import ManageButton from "./components/managebutton";
 import CreateTournament from "./createtournament.js";
 import TournamentOverview from "./tournamentoverview.js";
 import TournamentManager from "./managetournament.js";
-import HomeImage from "./components/homeimage";
+import TournamentAnnouncement from "./tournamentannouncement";
+import TournamentMatches from "./tournamentmatches";
+import TeamEditor from "./teameditor";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
 function CreateButton(props) {
   return (
     <Link to="/create">
-      <Button variant="primary">Create Tournament</Button>
+      <Button variant="contained" color="primary">
+        Create Tournament
+      </Button>
     </Link>
   );
 }
 
 function OverviewButton(props) {
   return (
-    <Button variant="secondary">
-      <Link to="/tournament">View Tournament</Link>
-    </Button>
+    <Link to="/tournament">
+      <Button variant="contained" color="success">
+        View Tournament
+      </Button>
+    </Link>
   );
 }
 
 function ListElement(props) {
   return (
     <Container>
-      <Row>
-        <Col xs={6}>
-          {props.name}, {props.competitors} competitors, Date: {props.date}
-        </Col>
-        <Col>
-          <ManageButton />
-        </Col>
-        <Col>
-          <OverviewButton />
-        </Col>
-      </Row>
+      {props.name}, {props.competitors} competitors, Date: {props.date}
+      <ManageButton />
+      <OverviewButton />
     </Container>
   );
 }
@@ -50,7 +49,19 @@ function ListElement(props) {
 function Home() {
   return (
     <React.StrictMode>
-      <HomeImage />
+      <CssBaseline />
+      <AppBar
+        position="relative"
+        sx={{
+          backgroundColor: "grey",
+        }}
+      >
+        <Toolbar>
+          <HomeImage />
+          <Typography>This is an Appbar</Typography>
+        </Toolbar>
+      </AppBar>
+
       <CreateButton />
       <Container>
         <ListElement name="Weekend Warmup" competitors="16" date="29.04.2022" />
@@ -73,6 +84,12 @@ export default function App() {
         <Route path="/create" element={<CreateTournament />} />
         <Route path="/tournament" element={<TournamentOverview />} />
         <Route path="/tournament/manage" element={<TournamentManager />} />
+        <Route path="/tournament/teams" element={<TeamEditor />} />
+        <Route path="/tournament/matches" element={<TournamentMatches />} />
+        <Route
+          path="/tournament/manage/announcement"
+          element={<TournamentAnnouncement />}
+        />
       </Routes>
     </Router>
   );

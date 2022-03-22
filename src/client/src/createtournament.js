@@ -1,14 +1,39 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import SaveButton from "./components/savebutton";
 import HomeImage from "./components/homeimage";
+
+function CreateButton(props) {
+  return (
+    <Link to="/">
+      <button>Create Tournament!</button>
+    </Link>
+  );
+}
 
 function FormatSelector(props) {
   return (
     <div>
+      Tournament Format:
       <select>
         <option value="Single Elimination">Single Elimination</option>
         <option value="Double Elimination">Double Elimination</option>
+      </select>
+    </div>
+  );
+}
+
+function ParticipantLimit(props) {
+  return (
+    <div>
+      Participant Limit:
+      <select>
+        <option value="4">4</option>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="16">32</option>
+        <option value="64">64</option>
+        <option value="128">128</option>
+        <option value="256">256</option>
       </select>
     </div>
   );
@@ -49,7 +74,8 @@ export default function CreateTournament(props) {
       <HomeImage />
       <CreateForm />
       <FormatSelector />
-      <SaveButton />
+      <ParticipantLimit />
+      <CreateButton />
     </React.Fragment>
   );
 }
