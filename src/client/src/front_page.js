@@ -6,33 +6,38 @@ import Tournament_Overview from "./tournament_overview.js";
 import Tournament_Manager from "./manage_tournament.js";
 import Home_Image from "./components/home_image";
 
+import 'bootstrap/dist/css/bootstrap.min.css'
+import Button from 'react-boostrap/Button'
+import Container from 'react-boostrap/Container'
+import Card from 'react-boostrap/Card'
+
 function Create_Button(props) {
   return (
-    <button className="Create_Button">
+    <Button className="Create_Button" variant='primary'>
       <Link to="/create">Create Tournament</Link>
-    </button>
+    </Button>
   );
 }
 
 function Overview_Button(props) {
   return (
-    <button className="Overview_Button">
+    <Button className="Overview_Button" variant='secondary'>
       <Link to="/tournament">View Tournament</Link>
-    </button>
+    </Button>
   );
 }
 
 function ListElement(props) {
   return (
-    <div>
-      <div className="ListElement">
+    <Container>
+      <Card className="ListElement">
         <div className="tournamentDetails">
           {props.name}, {props.competitors} competitors, Date: {props.date}
         </div>
         <Manage_Button />
         <Overview_Button />
-      </div>
-    </div>
+      </Card>
+    </Container>
   );
 }
 
@@ -41,7 +46,7 @@ function Home() {
     <React.StrictMode>
       <Home_Image />
       <Create_Button />
-      <div id="tournamentList">
+      <Card id="tournamentList">
         <ListElement name="Weekend Warmup" competitors="16" date="29.04.2022" />
         <ListElement
           name="Saturday Showdown"
@@ -49,7 +54,7 @@ function Home() {
           date="30.04.2022"
         />
         <ListElement name="Sunday Funday" competitors="64" date="01.05.2022" />
-      </div>
+      </Card>
     </React.StrictMode>
   );
 }

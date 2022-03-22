@@ -17,37 +17,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-#tournamentList {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: auto auto;
-  margin-top: 25vh;
-  width: 80vw;
-}
-.ListElement {
-  background-color: #073b4c;
-  width: 40vw;
-  height: 7vh;
-  display: grid;
-  flex-flow: row;
-  column-gap: 5vw;
-  grid-template-columns: 4fr 1fr 1fr;
-  margin-bottom: 5vh;
-}
-
-.Manage_Button {
-  background-color: #ef476f;
-  width: 10vw;
-  height: 100%;
-  color: #eeeeee;
-}
-
-.Overview_Button {
-  background-color: #118ab2;
-  width: 10vw;
-  height: 100%;
-  color: #eeeeee;
-}
