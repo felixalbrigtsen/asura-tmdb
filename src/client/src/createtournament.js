@@ -10,18 +10,6 @@ function CreateButton(props) {
   );
 }
 
-function FormatSelector(props) {
-  return (
-    <div>
-      Tournament Format:
-      <select>
-        <option value="Single Elimination">Single Elimination</option>
-        <option value="Double Elimination">Double Elimination</option>
-      </select>
-    </div>
-  );
-}
-
 function ParticipantLimit(props) {
   return (
     <div>
@@ -43,9 +31,6 @@ function CreateForm(props) {
   return (
     <React.Fragment>
       <form>
-        <label for="organizer">Tournament Organizer:</label>
-        <input type="text" id="organizer" />
-        <br />
         <label for="name">Tournament Name:</label>
         <input type="text" id="name" />
         <br />
@@ -73,7 +58,6 @@ export default function CreateTournament(props) {
     <React.Fragment>
       <HomeImage />
       <CreateForm />
-      <FormatSelector />
       <ParticipantLimit />
       <CreateButton />
     </React.Fragment>
