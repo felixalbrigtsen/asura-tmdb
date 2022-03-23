@@ -1,6 +1,8 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import HomeImage from "./components/homeimage";
+import Appbar from "./components/appbar";
+
+import CssBaseline from '@mui/material/CssBaseline'
 
 function CreateButton(props) {
   return (
@@ -71,7 +73,8 @@ function CreateForm(props) {
 export default function CreateTournament(props) {
   return (
     <React.Fragment>
-      <HomeImage />
+      <CssBaseline />
+      <Appbar /> 
       <CreateForm />
       <FormatSelector />
       <ParticipantLimit />

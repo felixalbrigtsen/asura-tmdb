@@ -8,15 +8,14 @@ import TournamentManager from "./managetournament.js";
 import TournamentAnnouncement from "./tournamentannouncement";
 import TournamentMatches from "./tournamentmatches";
 import TeamEditor from "./teameditor";
+import Appbar from './components/appbar';
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 function CreateButton(props) {
   return (
@@ -62,12 +61,7 @@ function Home() {
   return (
     <React.StrictMode>
       <CssBaseline />
-      <AppBar position="relative" color="primary">
-        <Toolbar>
-          <HomeImage className='mainIcon'/>
-          <Typography>This is an Appbar</Typography>
-        </Toolbar>
-      </AppBar>
+      <Appbar />
       <main>
       <Container>
         <Box>
