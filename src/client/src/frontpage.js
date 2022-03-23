@@ -1,6 +1,5 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import HomeImage from "./components/homeimage";
 import ManageButton from "./components/managebutton";
 import CreateTournament from "./createtournament.js";
 import TournamentOverview from "./tournamentoverview.js";
@@ -14,12 +13,12 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 function CreateButton(props) {
   return (
-    <Link to="/create" style={{textDecoration:'none'}}>
+    <Link to="/create" style={{ textDecoration: "none" }}>
       <Button variant="contained" color="primary">
         Create Tournament
       </Button>
@@ -29,7 +28,7 @@ function CreateButton(props) {
 
 function OverviewButton(props) {
   return (
-    <Link to="/tournament" style={{textDecoration:'none'}}>
+    <Link to="/tournament" style={{ textDecoration: "none" }}>
       <Button variant="contained" color="success">
         View Tournament
       </Button>
@@ -57,24 +56,48 @@ function ListElement(props) {
   );
 }
 
+function TournamentList() {
+  let [data, setData] = React.useState(null);
+  React.useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/todos/1")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.log("oopsie"));
+  }, []);
+  return <div>{data && data.map((id) => console.log(id))}</div>;
+}
+
 function Home() {
   return (
     <React.StrictMode>
       <CssBaseline />
       <Appbar />
       <main>
-      <Container>
-        <Box>
-          <CreateButton />
-        </Box>
-        <ListElement name="Weekend Warmup" competitors="16" date="29.04.2022" />
-        <ListElement name="Saturday Showdown" competitors="8" date="30.04.2022"/>
-        <ListElement name="Sunday Funday" competitors="64" date="01.05.2022" />
-      </Container>
+        <Container>
+          <Box>
+            <CreateButton />
+          </Box>
+          <ListElement
+            name="Weekend Warmup"
+            competitors="16"
+            date="29.04.2022"
+          />
+          <ListElement
+            name="Saturday Showdown"
+            competitors="8"
+            date="30.04.2022"
+          />
+          <ListElement
+            name="Sunday Funday"
+            competitors="64"
+            date="01.05.2022"
+          />
+          <TournamentList />
+        </Container>
       </main>
-      <footer className="footer">
-
-      </footer>
+      <footer className="footer"></footer>
     </React.StrictMode>
   );
 }
