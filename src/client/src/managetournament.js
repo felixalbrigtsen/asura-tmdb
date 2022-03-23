@@ -6,7 +6,7 @@ import SaveButton from "./components/savebutton";
 
 function ManageTournament(props) {
   return (
-    <React.Fragment>
+    <>
       <form>
         <label>Edit name: </label>
         <input type="text" id="editName" />
@@ -27,7 +27,7 @@ function ManageTournament(props) {
         <br />
         <br />
       </form>
-    </React.Fragment>
+    </>
   );
 }
 
@@ -59,13 +59,13 @@ function InviteButton(props) {
 //navigator.clipboard.writeText("discord.gg/asura")
 export default function TournamentManager() {
   return (
-    <React.Fragment>
+    <>
       <Appbar />
       <ManageTournament />
       <AnnounceButton />
       <InviteButton />
       <SaveButton />
       <AlertContainer floatingTime={5000} />
-    </React.Fragment>
+    </>
   );
 }
