@@ -15,12 +15,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 function CreateButton(props) {
   return (
-    <Link to="/create" style={{textDecoration:'none'}}>
+    <Link to="/create" style={{ textDecoration: "none" }}>
       <Button variant="contained" color="primary">
         Create Tournament
       </Button>
@@ -30,7 +30,7 @@ function CreateButton(props) {
 
 function OverviewButton(props) {
   return (
-    <Link to="/tournament" style={{textDecoration:'none'}}>
+    <Link to="/tournament" style={{ textDecoration: "none" }}>
       <Button variant="contained" color="success">
         View Tournament
       </Button>
@@ -58,29 +58,53 @@ function ListElement(props) {
   );
 }
 
+function TournamentList() {
+  let [data, setData] = React.useState(null);
+  React.useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/todos/1")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.log("oopsie"));
+  }, []);
+  return <div>{data && data.map((id) => console.log(id))}</div>;
+}
+
 function Home() {
   return (
     <React.StrictMode>
       <CssBaseline />
       <AppBar position="relative" color="primary">
         <Toolbar>
-          <HomeImage className='mainIcon'/>
+          <HomeImage className="mainIcon" />
           <Typography>This is an Appbar</Typography>
         </Toolbar>
       </AppBar>
       <main>
-      <Container>
-        <Box>
-          <CreateButton />
-        </Box>
-        <ListElement name="Weekend Warmup" competitors="16" date="29.04.2022" />
-        <ListElement name="Saturday Showdown" competitors="8" date="30.04.2022"/>
-        <ListElement name="Sunday Funday" competitors="64" date="01.05.2022" />
-      </Container>
+        <Container>
+          <Box>
+            <CreateButton />
+          </Box>
+          <ListElement
+            name="Weekend Warmup"
+            competitors="16"
+            date="29.04.2022"
+          />
+          <ListElement
+            name="Saturday Showdown"
+            competitors="8"
+            date="30.04.2022"
+          />
+          <ListElement
+            name="Sunday Funday"
+            competitors="64"
+            date="01.05.2022"
+          />
+          <TournamentList />
+        </Container>
       </main>
-      <footer className="footer">
-
-      </footer>
+      <footer className="footer"></footer>
     </React.StrictMode>
   );
 }
