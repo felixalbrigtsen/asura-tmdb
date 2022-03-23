@@ -2,8 +2,6 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import Appbar from "./components/appbar";
 
-import CssBaseline from '@mui/material/CssBaseline'
-
 function CreateButton(props) {
   return (
     <Link to="/">
@@ -33,8 +31,8 @@ function CreateForm(props) {
   return (
     <>
       <form>
-        <label for="name">Tournament Name:</label>
-        <input type="text" id="name" />
+        <label for="name">Tournament Name: <input type="text" id="name" /></label>
+        
         <br />
         <label for="description">Description:</label>
         <input type="text" id="description" />
@@ -58,7 +56,6 @@ function CreateForm(props) {
 export default function CreateTournament(props) {
   return (
     <>
-      <CssBaseline />
       <Appbar /> 
       <CreateForm />
       <ParticipantLimit />
