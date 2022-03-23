@@ -10,7 +10,7 @@ package Administrators {
 
     note "Manager extends admin" as MgrNote
     mgr .l. MgrNote
-    MgrNote .l. adm
+    MgrNote .l.|> adm
 }
 
 actor User as u1
