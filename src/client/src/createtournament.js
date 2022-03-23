@@ -31,7 +31,7 @@ function ParticipantLimit(props) {
 
 function CreateForm(props) {
   return (
-    <React.Fragment>
+    <>
       <form>
         <label for="name">Tournament Name:</label>
         <input type="text" id="name" />
@@ -51,18 +51,18 @@ function CreateForm(props) {
         <input type="time" id="time" />
         <br />
       </form>
-    </React.Fragment>
+    </>
   );
 }
 
 export default function CreateTournament(props) {
   return (
-    <React.Fragment>
+    <>
       <CssBaseline />
       <Appbar /> 
       <CreateForm />
       <ParticipantLimit />
       <CreateButton />
-    </React.Fragment>
+    </>
   );
 }

@@ -62,24 +62,24 @@ function TournamentList() {
     fetch("https://jsonplaceholder.typicode.com/todos/1")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setData(data.data);
       })
-      .catch((err) => console.log("oopsie"));
+      .catch((err) => console.log(err.message));
   }, []);
-  return <div>{data && data.map((id) => console.log(id))}</div>;
+  return <div>{data && data.map((data, i) => <div>{i}</div>)}</div>;
 }
+//<ListElement name={data[i].name} competitors={data[i].teamLimit} date={data[i].startTime}/>
 
 function Home() {
   return (
     <React.StrictMode>
-      <CssBaseline />
       <Appbar />
       <main>
         <Container>
           <Box>
             <CreateButton />
           </Box>
-          <ListElement
+          {/* <ListElement
             name="Weekend Warmup"
             competitors="16"
             date="29.04.2022"
@@ -93,7 +93,7 @@ function Home() {
             name="Sunday Funday"
             competitors="64"
             date="01.05.2022"
-          />
+          /> */}
           <TournamentList />
         </Container>
       </main>

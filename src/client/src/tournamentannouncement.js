@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import HomeImage from "./components/homeimage";
+import Appbar from './components/appbar';
 
 function Announcement() {
   return (
@@ -26,9 +26,9 @@ function Announcement() {
 
 export default function TournamentAnnouncement() {
   return (
-    <React.Fragment>
-      <HomeImage />
+    <>
+      <Appbar />
       <Announcement />
-    </React.Fragment>
+    </>
   );
 }

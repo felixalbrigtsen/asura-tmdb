@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { AlertContainer, alert } from "react-custom-alert";
-import HomeImage from "./components/homeimage";
+import Appbar from './components/appbar';
 import SaveButton from "./components/savebutton";
 
 function ManageTournament(props) {
@@ -60,7 +60,7 @@ function InviteButton(props) {
 export default function TournamentManager() {
   return (
     <React.Fragment>
-      <HomeImage />
+      <Appbar />
       <ManageTournament />
       <AnnounceButton />
       <InviteButton />
