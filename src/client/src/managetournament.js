@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { AlertContainer, alert } from "react-custom-alert";
 import HomeImage from "./components/homeimage";
 import SaveButton from "./components/savebutton";
 
@@ -39,18 +40,23 @@ function AnnounceButton(props) {
 }
 
 function InviteButton(props) {
+  function event() {
+    copy();
+    alertSuccess();
+  }
+  const copy = () => {
+    navigator.clipboard.writeText("discord.gg/asura");
+  };
+  const alertSuccess = () =>
+    alert({ message: "Copied to clipboard.", type: "success" });
   return (
-    <button
-      id="createInvLink"
-      onClick={() => {
-        return <div>Hei</div>;
-      }}
-    >
-      Create Invite Link
+    <button id="createInvLink" onClick={event}>
+      Copy Invite Link
     </button>
   );
 }
 
+//navigator.clipboard.writeText("discord.gg/asura")
 export default function TournamentManager() {
   return (
     <React.Fragment>
@@ -59,6 +65,7 @@ export default function TournamentManager() {
       <AnnounceButton />
       <InviteButton />
       <SaveButton />
+      <AlertContainer floatingTime={5000} />
     </React.Fragment>
   );
 }
