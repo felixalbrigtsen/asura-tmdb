@@ -19,6 +19,13 @@ code {
 }
 
 .mainIcon{
-  height: 40px;
-  width: 40px;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  /* border: 5px dotted salmon; */
+  border: 3px solid darkslateblue;
+  background-color: white;
+  margin: 5px;
+  margin-bottom: 0; 
+  /* margin: 50% calc(2vw + 50%) 50% 50%; */
 }

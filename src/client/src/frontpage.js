@@ -9,18 +9,21 @@ import TournamentMatches from "./tournamentmatches";
 import TeamEditor from "./teameditor";
 import Appbar from './components/appbar';
 
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import { Button, Container, Typography, Grid, Box } from "@mui/material";
+import { Card, CardActions,CardACtionsArea, CardContent, CardHeader, CardMedia, Collapse, Paper } from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { maxWidth } from "@mui/system";
 
 function CreateButton(props) {
   return (
     <Link to="/create" style={{ textDecoration: "none" }}>
-      <Button variant="contained" color="primary">
-        Create Tournament
+      <Button variant="contained" color="success" style={{ margin: '2.5% 0 0 0'}}>
+        <Box sx={{
+          marginRight: '2%',
+        }}>
+          Create Tournament
+        </Box>
+        <AddCircleIcon />
       </Button>
     </Link>
   );
@@ -36,38 +39,92 @@ function OverviewButton(props) {
   );
 }
 
-function ListElement(props) {
+function TournamentListItem(props) {
   return (
-    <Container maxWidth="lg" align="start">
-      <Grid container spacing={2}>
-        <Grid item xs={5}>
-          <Typography noWrap>
-            {props.name}, {props.competitors} competitors, Date: {props.date}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <ManageButton />
-        </Grid>
-        <Grid item>
-          <OverviewButton />
-        </Grid>
-      </Grid>
+    <Container maxWidth="lg" align="start" sx={{
+      margin:'2.5% 0'
+    }}>
+        <Paper elevation={8}>
+          <Card>
+            <CardMedia 
+              component="img"
+              alt="tournament image"
+              height="140"
+              image="https://source.unsplash.com/random"
+            />
+            <CardContent>
+              <Typography variant="h3" component="div" align="center">
+                {props.tournament.name}
+              </Typography>
+              <Typography variant="h5" color="text.primary">
+                {props.tournament.description}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Start: {props.tournament.startTime.toLocaleString()}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                End: {props.tournament.endTime.toLocaleString()}
+              </Typography>
+              <Typography variant="h5" color="text.primary" gutterBottom>
+                Players todo / {props.tournament.teamLimit} 
+              </Typography>
+              <Box sx={{
+                margin: 'auto',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                }} component="span">
+                  <Box sx={{
+                    margin: '0 2% 0 2'
+                  }}>
+                    <ManageButton tournamentId={props.tournament.id}/>
+                  </Box>
+                  <Box sx={{
+                    margin: '0 2% 0 2%'
+                  }}>
+                    <OverviewButton />  
+                  </Box>
+              </Box>
+            </CardContent>
+          </Card>     
+        </Paper>   
     </Container>
   );
 }
 
 function TournamentList() {
   let [data, setData] = React.useState(null);
+  let [tournamentList, setTournamentList] = React.useState([]);
+
   React.useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos/1")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.data);
+    fetch("http://10.24.1.213:3000/api/tournament/getTournaments")
+      .then(res => res.json())
+      .then(data => {
+        
+        if (data.status != "OK") {
+          // Do your error thing
+          console.error(data);
+          return;
+        }
+
+        let tournaments = Object.values(data.data);
+        for (let i = 0; i < tournaments.length; i++) {
+          tournaments[i].startTime = new Date(tournaments[i].startTime);
+          tournaments[i].endTime = new Date(tournaments[i].endTime);
+        }
+
+        setTournamentList(tournaments);
       })
       .catch((err) => console.log(err.message));
   }, []);
-  return <div>{data && data.map((data, i) => <div>{i}</div>)}</div>;
+
+  return <>
+    {/* {tournamentList && tournamentList.map((tournamentObject, i) => <TournamentListItem key={tournamentObject.id.toString()} name={tournamentObject.name} description={tournamentObject.description} startDate={tournamentObject.startTime} endDate={tournamentObject.endTime} teamLimit={tournamentObject.teamLimit} />)} */}
+    {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
+ 
+  </>;
 }
+
 //<ListElement name={data[i].name} competitors={data[i].teamLimit} date={data[i].startTime}/>
 
 function Home() {
@@ -75,10 +132,12 @@ function Home() {
     <React.StrictMode>
       <Appbar />
       <main>
-        <Container>
-          <Box>
+        <Container align="center">
             <CreateButton />
-          </Box>
+            <Typography variant="h2" style={{margin:'2% 0'}}>
+              Tournaments
+            </Typography>
+            <TournamentList />
           {/* <ListElement
             name="Weekend Warmup"
             competitors="16"
@@ -94,7 +153,7 @@ function Home() {
             competitors="64"
             date="01.05.2022"
           /> */}
-          <TournamentList />
+          
         </Container>
       </main>
       <footer className="footer"></footer>
@@ -108,8 +167,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<CreateTournament />} />
-        <Route path="/tournament" element={<TournamentOverview />} />
-        <Route path="/tournament/manage" element={<TournamentManager />} />
+        <Route path="/tournament/" element={<TournamentOverview />} />
+        <Route path="/tournament/:id/manage" element={<TournamentManager />} />
         <Route path="/tournament/teams" element={<TeamEditor />} />
         <Route path="/tournament/matches" element={<TournamentMatches />} />
         <Route

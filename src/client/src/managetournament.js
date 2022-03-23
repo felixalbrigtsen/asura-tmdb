@@ -3,29 +3,58 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { AlertContainer, alert } from "react-custom-alert";
 import Appbar from './components/appbar';
 import SaveButton from "./components/savebutton";
+import { useParams } from 'react-router-dom'
+
+import { Button, TextField, MenuItem, InputLabel, Select, Container, Slider } from '@mui/material'
 
 function ManageTournament(props) {
+  const { id } = useParams()
+  let [tournamentInfo, setTournamentInfo] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch(`http://10.24.1.213:3000/api/tournament/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        
+        if (data.status != "OK") {
+          // Do your error thing
+          console.error(data.data);
+          return;
+        }
+        
+        setTournamentInfo(data.data);
+        document.getElementById("editName").value = data.data.name;
+      })
+      .catch((err) => console.log(err.message));
+  }, []);
+
   return (
     <>
       <form>
-        <label>Edit name: </label>
-        <input type="text" id="editName" />
-        <br />
-        <label>Edit description: </label>
-        <input type="text" id="editDesc" />
-        <br />
-        <label>Edit image: </label>
+        <Container>
+        <InputLabel htmlFor="editName">Edit name: </InputLabel>
+        <TextField type="text" id="editName" />
+        <InputLabel htmlFor="editDesc">Edit description: </InputLabel>
+        <TextField type="text" id="editDesc" />
+        <InputLabel htmlFor="editImage">
+          Edit image: 
+          <br />
+          <Button variant="outlined" component="span" color="primary">
+            Upload
+          </Button>
+        </InputLabel>
         <input
           type="file"
           id="editImage"
-          accept="image/png, image/jpeg, image/jpg"
+          accept="image/png, image/jpeg, image/jpg, image/gif, image/svg"
+          style={{ display: 'none' }}
         />
-        <br />
-        <label>Edit start time: </label>
-        <input type="date" id="editDate" />
-        <input type="time" id="editTime" />
-        <br />
-        <br />
+        <InputLabel htmlFor="editStartDate">Edit Start Time:</InputLabel>
+        <TextField type="datetime-local" id="editStartDate" />
+        
+        <InputLabel htmlFor="editEndDate">Edit End Time:</InputLabel>
+        <TextField type="datetime-local" id="editEndDate" />
+        </Container>
       </form>
     </>
   );
@@ -34,7 +63,7 @@ function ManageTournament(props) {
 function AnnounceButton(props) {
   return (
     <Link to="/tournament/manage/announcement">
-      <button id="sendAnnon">Send Tournament Announcement</button>
+      <Button id="sendAnnon" variant="outlined" color="primary">Send Tournament Announcement</Button>
     </Link>
   );
 }
@@ -50,14 +79,13 @@ function InviteButton(props) {
   const alertSuccess = () =>
     alert({ message: "Copied to clipboard.", type: "success" });
   return (
-    <button id="createInvLink" onClick={event}>
+    <Button id="createInvLink" onClick={event} variant="outlined" color="primary">
       Copy Invite Link
-    </button>
+    </Button>
   );
 }
 
-//navigator.clipboard.writeText("discord.gg/asura")
-export default function TournamentManager() {
+export default function TournamentManager(props) {
   return (
     <>
       <Appbar />

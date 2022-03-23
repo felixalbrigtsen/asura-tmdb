@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 
 export default function ManageButton(props) {
   return (
-    <Link to="/tournament/manage" style={{textDecoration:'none'}}>
+    <Link to={`/tournament/${props.tournamentId}/manage`} style={{textDecoration:'none'}}>
       <Button className="ManageButton" variant="contained" color="primary">Manage Tournament</Button>
     </Link>
   );
