@@ -5,7 +5,7 @@ import logo from "./../Asura2222.png";
 export default function HomeImage() {
   return (
     <Link to="/">
-      <img src={logo} alt="Tournament logo"></img>
+      <img src={logo} alt="Tournament logo" className="mainIcon"></img>
     </Link>
   );
 }
