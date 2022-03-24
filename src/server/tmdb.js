@@ -4,11 +4,12 @@
 module.exports = {
   getMatchesByTournamentId: getMatchesByTournamentId,
   getTournaments: getTournaments,
+  getTournament, getTournament,
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
+  createTournament: createTournament,
 }
 
-const { query } = require("express");
 const mysql = require("mysql");
 
 let connection = mysql.createConnection({
@@ -44,6 +45,25 @@ function getTournaments() {
   });
 }
 
+function getTournament(tournamentId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM tournaments WHERE id = ?", [mysql.escape(tournamentId)], (err, tournaments) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        if (tournaments.length == 0) {
+          reject("No such tournament exists");
+        }
+        //TODO number of competing teams
+
+        let tournament = tournaments[0];
+        resolve(tournament);
+      }
+    });
+  });
+}
+
 // Returns the match of the exact given id.
 function getMatch(matchId) {
   return new Promise(function(resolve, reject) {
@@ -54,7 +74,9 @@ function getMatch(matchId) {
         if (matches.length == 0) {
           reject("No such match exists");
         }
-        resolve(matches[0]);
+        
+        let match = matches[0];
+        resolve(match);
       }
     });
   });
@@ -123,6 +145,22 @@ function setMatchWinner(matchId, winnerId) {
         });
 
       });
+  });
+}
+
+function createTournament(name, description, startDate, endDate, teamLimit) {
+  startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
+  endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
+  return new Promise(function(resolve, reject) {
+    connection.query("INSERT INTO tournaments (name, description, startTime, endTime, teamLimit) VALUES (?, ?, ?, ?, ?)", 
+    [mysql.escape(name), mysql.escape(description), startDate, endDate, teamLimit], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve("Tournament created");
+      }
+    });
   });
 }
 
