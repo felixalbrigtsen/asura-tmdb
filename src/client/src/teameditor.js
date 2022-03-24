@@ -29,18 +29,19 @@ function TeamChanger() {
           variant="filled"
           label="Members:"
         />
+        <br />
+        <button>Save Team</button>
       </form>
     </>
   );
 }
-
+var teams = {
+  "team 1": ["tom", "eric", "gustav"],
+  "team 2": ["emma", "mari", "ida"],
+  "team 3": ["ola", "ole", "ost"],
+  "team 4": ["christine", "kristine", "kristhine"],
+};
 function TeamList() {
-  let teams = {
-    "team 1": ["tom", "eric", "gustav"],
-    "team 2": ["emma", "mari", "ida"],
-    "team 3": ["ola", "ole", "ost"],
-    "team 4": ["christine", "kristine", "kristhine"],
-  };
   const [teamInput, setteamInput] = React.useState("");
   const [membersInput, setmembersInput] = React.useState("");
   React.useEffect(() => {
@@ -49,6 +50,7 @@ function TeamList() {
   });
   return (
     <div>
+      Registered teams:
       <ul>
         {Object.entries(teams).map(([team, players]) => (
           <li key={team}>
@@ -67,12 +69,36 @@ function TeamList() {
   );
 }
 
+function TeamRemover() {
+  return (
+    <div>
+      Remove team:{" "}
+      <select>
+        {Object.entries(teams).map(([team, players]) => (
+          <option value={team}>{team}</option>
+        ))}
+      </select>
+      <button>Remove</button>
+    </div>
+  );
+}
+
+function Save_Button() {
+  return (
+    <Link to="/tournament">
+      <button>Save and Exit</button>
+    </Link>
+  );
+}
+
 export default function TeamEditor() {
   return (
     <>
       <Appbar />
       <TeamChanger />
       <TeamList />
+      <TeamRemover />
+      <Save_Button />
     </>
   );
 }
