@@ -51,6 +51,7 @@ api.get("/tournament/:tournamentId", (req, res) => {
     // .then(console.log("lol"))
 });
 
+
 api.get("/tournament/:tournamentId/getMatches", (req, res) => {
   let tournamentId = req.params.tournamentId;
   if (isNaN(tournamentId)) {
@@ -61,6 +62,18 @@ api.get("/tournament/:tournamentId/getMatches", (req, res) => {
   tmdb.getMatchesByTournamentId(tournamentId)
   .then(matches => res.send({"status": "OK", "data": matches}))
   .catch(err => res.send({"status": "error", "data": err}));
+});
+
+api.get("/tournament/:tournamentId/getTeams", (req, res) => {
+  let tournamentId = req.params.tournamentId;
+  if (!tournamentId || isNaN(tournamentId)) {
+    res.json({"status": "error", "data": "tournamentId must be a number"});
+    return
+  }
+  tournamentId = parseInt(tournamentId);
+  tmdb.getTeamsByTournamentId(tournamentId)
+    .then(teams => res.send({"status": "OK", "data": teams}))
+    .catch(err => res.send({"status": "error", "data": err}));
 });
 
 api.get("/match/:matchId/getMatch", (req, res) => {

@@ -8,6 +8,7 @@ module.exports = {
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
   createTournament: createTournament,
+  getTeamsByTournamentId: getTeamsByTournamentId,
 }
 
 const mysql = require("mysql");
@@ -159,6 +160,19 @@ function createTournament(name, description, startDate, endDate, teamLimit) {
         reject(err);
       } else {
         resolve("Tournament created");
+      }
+    });
+  });
+}
+
+function getTeamsByTournamentId(tournamentId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM teams WHERE tournamentId = ?", [mysql.escape(tournamentId)], (err, teams) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(teams);
       }
     });
   });
