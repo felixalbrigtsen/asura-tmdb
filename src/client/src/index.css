@@ -10,7 +10,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #eeeeee;
+  background-color: #f0f2f2;
 }
 
 code {
@@ -23,9 +23,13 @@ code {
   width: 60px;
   border-radius: 50%;
   /* border: 5px dotted salmon; */
-  border: 3px solid darkslateblue;
+  border: 3px solid #1ab35a;
   background-color: white;
   margin: 5px;
   margin-bottom: 0; 
   /* margin: 50% calc(2vw + 50%) 50% 50%; */
+}
+
+a {
+  text-decoration: none;
 }

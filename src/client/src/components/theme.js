@@ -9,45 +9,62 @@ const theme = createTheme({
     //   secondary: {
     //   },
       pewterblue: {
-          main: '#8fbcbb',
+        main: '#8fbcbb',
+        contrastText: '#fff',
       },
       darkskyblue: {
-        main: '#88c0d0'
+        main: '#88c0d0',
+        contrastText: '#fff',
       },
       darkpastelblue:{
-          main: '#81a1c1'
+        main: '#81a1c1',
+        contrastText: '#fff',
       },
       rackley: {
-          main: '#5e81ac'
+        main: '#3270a6',
+        contrastText: '#fff',
       },
       gainsboro:{
-          main: '#d8dee9'
+        main: '#d8dee9',
+        contrastText: '#fff',
       },
       brightgrey: {
-          main: '#e5e9f0',
-          light: '#e5e9f0'
+        main: '#e5e9f0',
+        contrastText: '#fff',
       },
       lightslategray: {
-        main: '#79869c'
+        main: '#79869c',
+        contrastText: '#fff',
       },
       cadetblue: {
-        main: '#a0aaba'
+        main: '#a0aaba',
+        contrastText: '#fff',
       },
       red: {
-          main: '#bf616a',  
+        main: '#bf616a', 
+        contrastText: '#fff', 
       },
       copper: {
         main: '#d08770',
+        contrastText: '#fff',
       },
       gold: {
         main: '#ebcb8b',
+        contrastText: '#fff',
       },
       green: {
         main: '#a3be8c',
+        contrastText: '#fff',
       },
       grape: {
-        main: '#b48ead',
+        main: '#b76bbf',
+        contrastText: '#fff',
+      },
+      background: {
+        default: '#f0f2f2',
       }
+      // contrastThreshold: 5,
+      // tonalOffset: 0.2,
     },
   });
 

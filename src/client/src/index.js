@@ -9,7 +9,7 @@ ReactDOM.render(
   <>
   <ThemeProvider theme={theme}>
     <App />
-    </ThemeProvider>
+  </ThemeProvider>
   </>,
   document.getElementById("root")
 );

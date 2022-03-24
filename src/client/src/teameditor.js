@@ -1,15 +1,7 @@
 import * as React from "react";
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-router-dom";
 import Appbar from "./components/appbar";
-import {
-  Button,
-  TextField,
-  MenuItem,
-  InputLabel,
-  Select,
-  Container,
-  Slider,
-} from "@mui/material";
+import { Button, TextField, MenuItem, InputLabel, Select, Container, Slider} from "@mui/material";
 
 function TeamChanger() {
   return (
@@ -41,7 +33,7 @@ var teams = {
   "team 3": ["ola", "ole", "ost"],
   "team 4": ["christine", "kristine", "kristhine"],
 };
-function TeamList() {
+function TeamList(props) {
   const [teamInput, setteamInput] = React.useState("");
   const [membersInput, setmembersInput] = React.useState("");
   React.useEffect(() => {
@@ -49,6 +41,7 @@ function TeamList() {
     document.getElementById("membersInput").value = membersInput;
   });
   return (
+    <>
     <div>
       Registered teams:
       <ul>
@@ -58,38 +51,41 @@ function TeamList() {
               onClick={() => {
                 setteamInput(team);
                 setmembersInput(players);
-              }}
-            >
+              }}>
               {team}
             </button>
           </li>
         ))}
       </ul>
-    </div>
-  );
-}
-
-function TeamRemover() {
-  return (
+    </div>,
     <div>
-      Remove team:{" "}
-      <select>
-        {Object.entries(teams).map(([team, players]) => (
-          <option value={team}>{team}</option>
-        ))}
-      </select>
-      <button>Remove</button>
-    </div>
+    Remove team:{" "}
+    <select>
+      {Object.entries(teams).map(([team, players]) => (
+        <option value={team}>{team}</option>
+      ))}
+    </select>
+    <button>Remove</button>
+  </div>
+  <Link to={`/`}>
+    {/* Link to {props.tournament.id} when teams can be fetched */}
+      <button>Save and Exit</button>
+  </Link>
+  </>
   );
 }
 
-function Save_Button() {
-  return (
-    <Link to="/tournament">
-      <button>Save and Exit</button>
-    </Link>
-  );
-}
+// function TeamRemover() {
+//   return (
+//     'lol'
+//   );
+// }
+
+// function Save_Button() {
+//   return (
+//     'lol'
+//   );
+// }
 
 export default function TeamEditor() {
   return (
@@ -97,8 +93,8 @@ export default function TeamEditor() {
       <Appbar />
       <TeamChanger />
       <TeamList />
-      <TeamRemover />
-      <Save_Button />
+      {/* <TeamRemover />
+      <Save_Button /> */}
     </>
   );
 }

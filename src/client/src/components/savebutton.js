@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 
 export default function SaveButton(props) {
   return (
-    <Link to="/" style={{textDecoration:'none'}}>
+    <Link to="/">
       <Button variant="outlined" color="primary">Save and Exit</Button>
     </Link>
   );

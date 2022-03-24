@@ -54,7 +54,7 @@ function submitTournament(event) {
   formData.append("teamLimit", tournamentMaxTeams);
   let body = new URLSearchParams(formData);
 
-  fetch("http://10.24.1.213:3000/api/tournament/create", {
+  fetch(process.env.REACT_APP_BACKEND_URL + "/api/tournament/create", {
     method: "POST",
     body: body
   })

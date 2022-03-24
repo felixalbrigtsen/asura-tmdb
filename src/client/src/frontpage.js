@@ -1,6 +1,5 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import ManageButton from "./components/managebutton";
 import CreateTournament from "./createtournament.js";
 import TournamentOverview from "./tournamentoverview.js";
 import TournamentManager from "./managetournament.js";
@@ -8,15 +7,13 @@ import TournamentAnnouncement from "./tournamentannouncement";
 import TournamentMatches from "./tournamentmatches";
 import TeamEditor from "./teameditor";
 import Appbar from './components/appbar';
-
 import { Button, Container, Typography, Grid, Box } from "@mui/material";
 import { Card, CardActions,CardACtionsArea, CardContent, CardHeader, CardMedia, Collapse, Paper } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { maxWidth, palette } from "@mui/system";
 
 function CreateButton(props) {
   return (
-    <Link to="/create" style={{ textDecoration: "none" }}>
+    <Link to="/create">
       <Button variant="contained" color="success" style={{ margin: '2.5% 0 0 0'}}>
         <Box sx={{
           marginRight: '2%',
@@ -24,16 +21,6 @@ function CreateButton(props) {
           Create Tournament
         </Box>
         <AddCircleIcon />
-      </Button>
-    </Link>
-  );
-}
-
-function OverviewButton(props) {
-  return (
-    <Link to="/tournament" style={{ textDecoration: "none" }}>
-      <Button variant="contained" color="success">
-        View Tournament
       </Button>
     </Link>
   );
@@ -53,36 +40,29 @@ function TournamentListItem(props) {
               image="https://source.unsplash.com/random"
             />
             <CardContent>
-              <Typography variant="h3" component="div" align="center">
-                {props.tournament.name}
-              </Typography>
-              <Typography variant="h5" color="text.primary">
-                {props.tournament.description}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Start: {props.tournament.startTime.toLocaleString()}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                End: {props.tournament.endTime.toLocaleString()}
-              </Typography>
-              <Typography variant="h5" color="text.primary" gutterBottom>
-                Players todo / {props.tournament.teamLimit} 
-              </Typography>
+              <Typography variant="h3" component="div" align="center">{props.tournament.name} </Typography>
+              <Typography variant="h5" color="text.primary">{props.tournament.description}</Typography>
+              <Typography variant="body2" color="text.secondary"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
+              <Typography variant="body2" color="text.secondary"> End: {props.tournament.endTime.toLocaleString()} </Typography>
+              <Typography variant="h5" color="text.primary" gutterBottom> Players todo / {props.tournament.teamLimit} </Typography>
+
               <Box sx={{
                 margin: 'auto',
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'center',
                 }} component="span">
-                  <Box sx={{
-                    margin: '0 2% 0 2'
-                  }}>
-                    <ManageButton tournamentId={props.tournament.id}/>
+                  <Box sx={{margin: '0 2% 0 2'}}>
+                    <Link to={`/tournament/${props.tournament.id}/manage`}>
+                      <Button className="ManageButton" variant="contained" color="primary">Manage Tournament</Button>
+                    </Link>
                   </Box>
-                  <Box sx={{
-                    margin: '0 2% 0 2%'
-                  }}>
-                    <OverviewButton />  
+                  <Box sx={{margin: '0 2% 0 2%'}}>
+                  <Link to={`/tournament/${props.tournament.id}`} >
+                    <Button variant="contained" color="success">
+                      View Tournament
+                    </Button>
+                  </Link>
                   </Box>
               </Box>
             </CardContent>
@@ -97,7 +77,7 @@ function TournamentList() {
   let [tournamentList, setTournamentList] = React.useState([]);
 
   React.useEffect(() => {
-    fetch("http://10.24.1.213:3000/api/tournament/getTournaments")
+    fetch(process.env.REACT_APP_BACKEND_URL + "/api/tournament/getTournaments")
       .then(res => res.json())
       .then(data => {
         
@@ -167,9 +147,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<CreateTournament />} />
-        <Route path="/tournament/" element={<TournamentOverview />} />
-        <Route path="/tournament/:id/manage" element={<TournamentManager />} />
-        <Route path="/tournament/teams" element={<TeamEditor />} />
+        <Route path="/tournament/:tournamentId" element={<TournamentOverview />} />
+        <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
+        <Route path="/tournament/:tournamentId/teams" element={<TeamEditor />} />
         <Route path="/tournament/matches" element={<TournamentMatches />} />
         <Route
           path="/tournament/manage/announcement"

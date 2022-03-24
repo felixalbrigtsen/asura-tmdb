@@ -8,11 +8,11 @@ import { useParams } from 'react-router-dom'
 import { Button, TextField, MenuItem, InputLabel, Select, Container, Slider } from '@mui/material'
 
 function ManageTournament(props) {
-  const { id } = useParams()
+  const { tournamentId } = useParams()
   let [tournamentInfo, setTournamentInfo] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`http://10.24.1.213:3000/api/tournament/${id}`)
+    fetch(process.env.BACKEND_URL + `/api/tournament/${tournamentId}`)
       .then(res => res.json())
       .then(data => {
         
