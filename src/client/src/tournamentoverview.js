@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Appbar from './components/appbar';
 import { useParams } from 'react-router-dom'
 import { Button } from "@mui/material";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import "./components/tournamentBracket.css";
 
 function MatchPair(props) {
@@ -43,6 +42,7 @@ function TournamentTier(props) {
     for (let i = 0; i < matchPairCount; i++) {
       matchPairs.push(<MatchPair teams={props.teams} matches={props.matches.slice(i * 2, i * 2 + 2)} key={i} />);
     }
+
     return (
       <section className={`round ${roundTypes[props.tier]}`}>
         {matchPairs}
@@ -66,7 +66,7 @@ function Match(props) {
     let teamId = curryTeamId;
     console.log(teamId);
     if (!teamId || teamId == null) {
-      console.log("oops");
+      showError("No team selected");
       return;
     }
     let formData = new FormData();
@@ -122,7 +122,7 @@ function BracketViewer(props) {
         let tournament = data.data;
         setTournament(tournament);
       })
-      .catch((err) => console.log(err.message));
+      .catch(err => showError(err));
 
 
     fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/getMatches`)
@@ -148,7 +148,7 @@ function BracketViewer(props) {
         
         setMatches(tiers);
       })
-      .catch((err) => console.log(err.message));
+      .catch(err => showError(err));
 
     fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/getTeams`)
       .then(res => res.json())
@@ -161,7 +161,7 @@ function BracketViewer(props) {
         let teams = data.data;
         setTeams(teams);
       })
-      .catch((err) => console.log(err.message));
+      .catch(err => showError(err));
   }, []);
 
   return (
@@ -176,42 +176,12 @@ function BracketViewer(props) {
   );
 }
 
-// // api.post("/match/:matchId/setWinner"
-// function SelectWinnerButton(props) {
-//   const setWinner = function() {
-//     let formData = new FormData();
-//     formData.append("winner", props.teamId);
-//     let body = new URLSearchParams(formData);
-
-//     fetch(process.env.REACT_APP_BACKEND_URL + `/api/match/${props.matchId}`, {
-//       method: "POST",
-//       body: body
-//     })
-//       .then(response => response.json())
-//       .then(data => {
-//         if (data.status === "OK") {
-//           alert("Tournament created successfully");
-//           window.location.href = "/";
-//         } else {
-//           showError(data.data)
-//         }
-//       })
-//       .catch(error => showError(error));
-//   }
-//   return (
-//     <Button className="selectWinnerButton" variant="contained" color="success" onClick={setWinner} disabled={props.disableButton} >
-//       +
-//     </Button>
-//   );
-// }
-
 function showError(error) {
   alert("Something went wrong. \n" + error);
   console.error(error);
 }
 
 export default function TournamentOverview(props) {
-  // Use-effect hook here
   const { tournamentId } = useParams();
 
   return (

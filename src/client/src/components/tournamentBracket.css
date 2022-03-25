@@ -29,11 +29,12 @@ html {
 .bracket .round .winners>div.matchups .matchup .participants {
 	border-radius: 0.25rem;
 	overflow: hidden;
+	border: 1px solid gray;
 }
 
 .bracket .round .winners>div.matchups .matchup .participants .participant {
 	box-sizing: border-box;
-	color: #858585;
+	color:  #404040;
 	border-left: 0.25rem solid #858585;
 	background: white;
 	width: 14rem;
@@ -42,7 +43,7 @@ html {
 }
 
 .bracket .round .winners>div.matchups .matchup .participants .participant.winner {
-	color: #60c645;
+	color: green;
 	border-color: #60c645;
 }
 
