@@ -7,8 +7,8 @@ import TournamentAnnouncement from "./tournamentannouncement";
 import TournamentMatches from "./tournamentmatches";
 import TeamEditor from "./teameditor";
 import Appbar from './components/appbar';
-import { Button, Container, Typography, Grid, Box } from "@mui/material";
-import { Card, CardActions,CardACtionsArea, CardContent, CardHeader, CardMedia, Collapse, Paper } from "@mui/material";
+import { Button, Container, Typography, Box } from "@mui/material";
+import { Card, CardContent, CardMedia, Paper } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function CreateButton(props) {
@@ -73,16 +73,13 @@ function TournamentListItem(props) {
 }
 
 function TournamentList() {
-  let [data, setData] = React.useState(null);
   let [tournamentList, setTournamentList] = React.useState([]);
 
   React.useEffect(() => {
     fetch(process.env.REACT_APP_BACKEND_URL + "/api/tournament/getTournaments")
       .then(res => res.json())
       .then(data => {
-        
-        if (data.status != "OK") {
-          // Do your error thing
+        if (data.status !== "OK") {
           console.error(data);
           return;
         }
@@ -99,7 +96,6 @@ function TournamentList() {
   }, []);
 
   return <>
-    {/* {tournamentList && tournamentList.map((tournamentObject, i) => <TournamentListItem key={tournamentObject.id.toString()} name={tournamentObject.name} description={tournamentObject.description} startDate={tournamentObject.startTime} endDate={tournamentObject.endTime} teamLimit={tournamentObject.teamLimit} />)} */}
     {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
  
   </>;

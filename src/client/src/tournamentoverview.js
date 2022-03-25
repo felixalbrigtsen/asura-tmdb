@@ -1,65 +1,120 @@
 import * as React from "react";
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Appbar from './components/appbar';
 import { useParams } from 'react-router-dom'
 import { Button } from "@mui/material";
-import TournamentBracket from "./components/tournamentBracket";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import "./components/tournamentBracket.css";
 
-function TournamentTier(props) {
-  let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals"];
-  let connector;
-  if (props.tier != 0) {
-    connector = <div className="connector">
+function MatchPair(props) {
+  let match1 = <Match teams={props.teams} match={props.matches[0]} key={0} />;
+  let match2 = <Match teams={props.teams} match={props.matches[1]} key={1} />;
+
+  return <div className="winners">
+    <div className="matchups">
+      {match1}
+      {match2}
+    </div>
+    <div className="connector">
       <div className="merger"></div>
       <div className="line"></div>
-    </div>;
-  }
+    </div>
+  </div>
+}
 
-  return <section className={`round ${roundTypes[props.tier]}`}><div className="winners">
+function TournamentTier(props) {
+  // One round/tier of the tournament, as used by BracketViewer
+  let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
+  
+  if (props.tier === 0) {
+    // The final, just a single match without the bracket lines
+    return (
+      <section className="round finals"><div className="winners">
         <div className="matchups">
-          {props.matches.map((match, i) => {
-            return <Match teams={props.teams} match={match} key={i} />
-          })}
+          <Match teams={props.teams} match={props.matches[0]} key={0} />
         </div>
-        {connector}
       </div>
     </section>
+    );
+  } else {
+    // The rest of the rounds/tiers, divide into pairs of two matches
+    let matchPairCount = props.matches.length / 2;
+    let matchPairs = [];
+    for (let i = 0; i < matchPairCount; i++) {
+      matchPairs.push(<MatchPair teams={props.teams} matches={props.matches.slice(i * 2, i * 2 + 2)} key={i} />);
+    }
+    return (
+      <section className={`round ${roundTypes[props.tier]}`}>
+        {matchPairs}
+      </section>
+    );
+  }
 }
 
 function Match(props) {
-  let team1;
-  let team2;
-  if (props.match.team1Id != null) {
-    team1 = <div className='participant'><span>{props.match.team1Id}</span></div>;
-  } else {
-    team1 = <div className='participant'><span>TBA</span></div>;
+  // A single match object, as used by MatchPair and TournamentTier
+  let team1Name = "TBA";
+  let team2Name = "TBA";
+  if (props.match.team1Id !== null) {
+    team1Name = props.teams.find(team => team.id === props.match.team1Id).name;
   }
-  
-  if (props.match.team2Id != null) {
-    team2 = <div className='participant'><span>{props.match.team2Id}</span></div>;
-  } else {
-    team2 = <div className='participant'><span>TBA</span></div>;
+  if (props.match.team2Id !== null) {
+    team2Name = props.teams.find(team => team.id === props.match.team2Id).name;
   }
 
-  return <div className="matchup">
-    <div className="participants">
-      {/* <div class="participant winner"><span>{if (props.match.team1Id) { props.match.team1Id} else { "TBA" }}</span></div>
-      <div class="participant"><span>{props.match.team2Id}</span></div> */}
-      {team1}
-      {team2}
+  let setWinner = curryTeamId => event => {
+    let teamId = curryTeamId;
+    console.log(teamId);
+    if (!teamId || teamId == null) {
+      console.log("oops");
+      return;
+    }
+    let formData = new FormData();
+    formData.append("winnerId",teamId);
+    let body = new URLSearchParams(formData);
+    fetch(process.env.REACT_APP_BACKEND_URL + `/api/match/${props.match.id}/setWinner`, {
+      method: "POST",
+      body: body
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "OK") {
+          //Refresh when winner is set successfully
+          window.location.reload();
+        } else {
+          showError(data.data)
+        }
+      })
+      .catch(error => showError(error));
+  }
+
+  return (
+    <div className="matchup">
+      <div className="participants">
+        {/* Team 1 (Winner-status?) (Team name) */}
+        <div onClick={setWinner(props.match.team1Id)} className={`participant ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner" : ""}`}>
+          <span>{team1Name}</span>
+        </div>
+        {/* Team 2 (Winner-status?) (Team name) */}
+        <div onClick={setWinner(props.match.team2Id)} className={`participant ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
+          <span>{team2Name}</span>
+        </div>
+      </div>
     </div>
-  </div>;
+  );
 }
 
 function BracketViewer(props) {
   const [tournament, setTournament] = React.useState(null);
-  const [matches, setMatches] = React.useState([]);
-  const [teams, setTeams] = React.useState([]);
+  const [matches, setMatches] = React.useState(null);
+  const [teams, setTeams] = React.useState(null);
+
+  // One fetch statement for each of the three state variables
   React.useEffect(() => {
     fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}`)
       .then(res => res.json())
       .then(data => {
-        if (data.status != "OK") {
+        if (data.status !== "OK") {
           // Do your error thing
           console.error(data);
           return;
@@ -73,14 +128,15 @@ function BracketViewer(props) {
     fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/getMatches`)
       .then(res => res.json())
       .then(data => {
-        if (data.status != "OK") {
+        if (data.status !== "OK") {
           // Do your error thing
           console.error(data);
           return;
         }
         let matches = data.data;
+        // Group all matches by their round/tier
         let tiers = matches.reduce((tiers, match) => {
-          if (tiers[match.tier] == undefined) {
+          if (!tiers[match.tier]) {
             tiers[match.tier] = [];
           }
           tiers[match.tier].push(match);
@@ -97,24 +153,61 @@ function BracketViewer(props) {
     fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/getTeams`)
       .then(res => res.json())
       .then(data=>{
-        if(data.status != "OK"){
+        if(data.status !== "OK"){
           console.error(data)
           return;
         }
+        console.log(data);
         let teams = data.data;
         setTeams(teams);
       })
       .catch((err) => console.log(err.message));
-    
   }, []);
 
-  return <div className="bracket">
-    {matches.map(tier => {
-      let tierNum = tier[0].tier;
-      return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+  return (
+      (matches && teams) ?
+        <div className="bracket">
+          {matches.map(tier => {
+            let tierNum = tier[0].tier;
+            return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+          })}
+        </div>
+      : <div className="loader"><h2>Loading...</h2></div>     
+  );
+}
 
-    })}
-  </div>;
+// // api.post("/match/:matchId/setWinner"
+// function SelectWinnerButton(props) {
+//   const setWinner = function() {
+//     let formData = new FormData();
+//     formData.append("winner", props.teamId);
+//     let body = new URLSearchParams(formData);
+
+//     fetch(process.env.REACT_APP_BACKEND_URL + `/api/match/${props.matchId}`, {
+//       method: "POST",
+//       body: body
+//     })
+//       .then(response => response.json())
+//       .then(data => {
+//         if (data.status === "OK") {
+//           alert("Tournament created successfully");
+//           window.location.href = "/";
+//         } else {
+//           showError(data.data)
+//         }
+//       })
+//       .catch(error => showError(error));
+//   }
+//   return (
+//     <Button className="selectWinnerButton" variant="contained" color="success" onClick={setWinner} disabled={props.disableButton} >
+//       +
+//     </Button>
+//   );
+// }
+
+function showError(error) {
+  alert("Something went wrong. \n" + error);
+  console.error(error);
 }
 
 export default function TournamentOverview(props) {
@@ -128,11 +221,9 @@ export default function TournamentOverview(props) {
         <Button className="ManageButton" variant="contained" color="rackley">Manage Tournament</Button>
       </Link>
       <Link to={`/tournament/${tournamentId}/teams`}>
-        <Button className="OverviewButton" variant="contained" color="grape">
-          Manage Teams
-        </Button>
+        <Button className="OverviewButton" variant="contained" color="grape">Manage Teams</Button>
       </Link>
-
+      
       <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
     </>
   );

@@ -16,7 +16,7 @@ function ManageTournament(props) {
       .then(res => res.json())
       .then(data => {
         
-        if (data.status != "OK") {
+        if (data.status !== "OK") {
           // Do your error thing
           console.error(data.data);
           return;
