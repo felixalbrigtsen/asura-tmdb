@@ -84,8 +84,8 @@ function ManageTournament(props) {
         setTournamentInfo(data.data);
         document.getElementById("editName").value = data.data.name;
         document.getElementById("editDesc").value = data.data.description;
-        document.getElementById("editStartDate").value = data.data.startTime;
-        document.getElementById("editEndDate").value = data.data.endTime;
+        document.getElementById("editStartDate").value = data.data.startTime.slice(0, 16);
+        document.getElementById("editEndDate").value = data.data.endTime.slice(0, 16);
       })
       .catch((err) => console.log(err.message));
   }, []);
