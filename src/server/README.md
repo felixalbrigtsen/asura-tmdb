@@ -8,7 +8,7 @@
 DB_HOST=mysql.stud.ntnu.no
 DB_USER=dbusername
 DB_PASSWORD=dbpassword
-DB_DATABASE=dbnamei
+DB_DATABASE=dbname
 ```
 * Build the client (separate instructions)
 * Start the server `npm start`

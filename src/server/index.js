@@ -7,7 +7,7 @@ let tmdb = require("./tmdb.js");
 
 // #region Express setup
 const app = express();
-const port = 3000;
+const port = 3001;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
@@ -88,7 +88,6 @@ api.get("/match/:matchId/getMatch", (req, res) => {
   .catch(err => res.send({"status": "error", "data": err}));
 });
 
-// JSON body: {"winner": teamId}
 api.post("/match/:matchId/setWinner", (req, res) => {
   let matchId = req.params.matchId;
   let winnerId = req.body.winnerId;
