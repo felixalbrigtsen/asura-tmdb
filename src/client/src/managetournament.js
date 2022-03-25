@@ -5,12 +5,13 @@ import Appbar from "./components/appbar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, MenuItem, InputLabel, Select, Container, Slider} from "@mui/material";
 
-function submitChanges(event) {
+let submitChanges = curryTournamentId => event => {
   event.preventDefault();
+  let tournamentId = curryTournamentId;
   //TODO use refs to get values
   let tournamentName = document.getElementById("editName").value;
   let tournamentDescription = document.getElementById("editDesc").value;
-  let tournamentImageFile = document.getElementById("editImage").files[0];
+  // let tournamentImageFile = document.getElementById("editImage").files[0];
   let tournamentStartDate = document.getElementById("editStartDate").value;
   let tournamentEndDate = document.getElementById("editEndDate").value;
 
@@ -50,15 +51,15 @@ function submitChanges(event) {
   // formData.append("teamLimit", tournamentMaxTeams);
   let body = new URLSearchParams(formData);
 
-  fetch(process.env.REACT_APP_BACKEND_URL + "/api/tournament/create", {
+  fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${tournamentId}/edit`, {
     method: "POST",
     body: body,
   })
     .then((response) => response.json())
     .then((data) => {
-      if (data.status == "OK") {
-        alert("Tournament managed successfully");
-        window.location.href = "/";
+      if (data.status === "OK") {
+        alert("Tournament Changed successfully");
+        window.location.href = `/tournament/${tournamentId}`;
       } else {
         showError(data.data);
       }
@@ -119,7 +120,7 @@ function ManageTournament(props) {
           <Button
             type="submit"
             variant="contained"
-            onClick={submitChanges}
+            onClick={submitChanges(props.tournamentId)}
             color="primary"
           >
             Save Tournament Details
