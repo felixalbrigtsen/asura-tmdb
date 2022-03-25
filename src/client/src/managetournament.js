@@ -8,18 +8,16 @@ import { useParams } from 'react-router-dom'
 import { Button, TextField, MenuItem, InputLabel, Select, Container, Slider } from '@mui/material'
 
 function ManageTournament(props) {
-  const { tournamentId } = useParams()
   let [tournamentInfo, setTournamentInfo] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(process.env.BACKEND_URL + `/api/tournament/${tournamentId}`)
+    console.log(props.tournamentId);
+    fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}`)
       .then(res => res.json())
       .then(data => {
         
         if (data.status !== "OK") {
-          // Do your error thing
-          console.error(data.data);
-          return;
+          showError(data.data);
         }
         
         setTournamentInfo(data.data);
@@ -68,6 +66,11 @@ function AnnounceButton(props) {
   );
 }
 
+function showError(error) {
+  alert("Something went wrong. \n" + error);
+  console.error(error);
+}
+
 function InviteButton(props) {
   function event() {
     copy();
@@ -86,10 +89,11 @@ function InviteButton(props) {
 }
 
 export default function TournamentManager(props) {
+  const { tournamentId } = useParams()
   return (
     <>
       <Appbar />
-      <ManageTournament />
+      <ManageTournament tournamentId={tournamentId} />
       <AnnounceButton />
       <InviteButton />
       <SaveButton />
