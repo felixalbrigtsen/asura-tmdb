@@ -21,6 +21,7 @@ api.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+api.use(require('express-log-url'));
 
 // #endregion
 
@@ -158,6 +159,48 @@ api.post("/tournament/create", (req, res) => {
   }
 
   tmdb.createTournament(name, description, startDate, endDate, teamLimit)
+    .catch(err => res.json({"status": "error", "data": err}))
+    .then(msg => res.json({"status": "OK", "data": msg}));
+});
+
+api.post("/tournament/:tournamentId/edit", (req, res) => {
+  let tournamentId = req.params.tournamentId;
+  if (isNaN(tournamentId)) {
+    res.json({"status": "error", "data": "tournamentId must be a number"});
+    return
+  }
+  tournamentId = parseInt(tournamentId);
+  let name = req.body.name;
+  let description = req.body.description;
+  let startDate = req.body.startDate;
+  let endDate = req.body.endDate;
+  console.log(startDate);
+  if (name == undefined || name == "" || description == undefined || description == "") {
+    res.json({"status": "error", "data": "name and description must be provided"});
+    return
+  }
+  if (startDate == undefined || endDate == undefined) {
+    res.json({"status": "error", "data": "startDate and endDate must be defined"});
+    return
+  }
+  try {
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+  } catch (err) {
+    res.json({"status": "error", "data": "startDate and endDate must be valid dates"});
+    return
+  }
+  // let today = new Date();
+  // if (startDate < today) {
+  //   res.json({"status": "error", "data": "startDate cannot be in the past"});
+  //   return
+  // }
+  if (startDate > endDate) {
+    res.json({"status": "error", "data": "startDate cannot be after endDate"});
+    return
+  }
+
+  tmdb.editTournament(tournamentId, name, description, startDate, endDate)
     .catch(err => res.json({"status": "error", "data": err}))
     .then(msg => res.json({"status": "OK", "data": msg}));
 });

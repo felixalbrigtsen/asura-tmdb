@@ -8,6 +8,7 @@ module.exports = {
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
   createTournament: createTournament,
+  editTournament: editTournament,
   getTeamsByTournamentId: getTeamsByTournamentId,
 }
 
@@ -84,8 +85,8 @@ function getMatch(matchId) {
 }
 
 // Removes a given team from a given match. This is done by setting the teamId-property containing the given team to null.
-function unsetContestant(matchId, teamId) {
-  let match = getMatch(matchId);
+async function unsetContestant(matchId, teamId) {
+  let match = await getMatch(matchId);
   if (match.team1Id == teamId) {
     connection.query("UPDATE matches SET team1Id = NULL WHERE id = ?", [mysql.escape(matchId)], (err, result) => {
       if (err) { console.log(err); }
@@ -110,8 +111,11 @@ function setMatchWinner(matchId, winnerId) {
           reject("Winner must be one of the teams in the match");
         }
 
-        // Final match doesn't have a parent
+        // Final match doesn't have a parent, skip this step
         if (match.parentMatchId != null) {
+          if (match.winnerId != null) {
+            unsetContestant(match.parentMatchId, match.winnerId);
+          }
           // Enter the winner of the match into the parent match
           getMatch(match.parentMatchId)
             .catch(err =>reject(err))
@@ -159,7 +163,43 @@ function createTournament(name, description, startDate, endDate, teamLimit) {
         console.log(err);
         reject(err);
       } else {
+
+        // Create the matches for the tournament
+        let tournamentId = sets.insertId;
+        let tiers = Math.log2(teamLimit);
+        for (let tier = 0; tier < tiers; tier++) {
+          let matchCount = Math.pow(2, tier);
+          for (let matchId = 0; matchId < matchCount; matchId++) {
+            let parentMatchId = null;
+            if (tier > 0) {
+              parentMatchId = Math.pow(2, tier - 1) + Math.floor((matchId - (matchId % 2)) / 2);
+            }
+            connection.query("INSERT INTO matches (tournamentId, parentMatchId, tier) VALUES (?, ?, ?)", 
+            [tournamentId, parentMatchId, tier], (err, sets) => {
+              if (err) {
+                console.error("Could not create match:");
+                console.log(err);
+              }
+            });
+          }
+        }
         resolve("Tournament created");
+      }
+    });
+  });
+}
+
+function editTournament(tournamentId, name, description, startDate, endDate) {
+  startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
+  endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
+  return new Promise(function(resolve, reject) {
+    connection.query("UPDATE tournaments SET name = ?, description = ?, startTime = ?, endTime = ? WHERE id = ?",
+    [mysql.escape(name), mysql.escape(description), startDate, endDate, mysql.escape(tournamentId)], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve("Tournament updated");
       }
     });
   });
