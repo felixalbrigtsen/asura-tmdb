@@ -39,6 +39,7 @@ api.get("/tournament/getTournaments", (req, res) => {
   .catch(err => res.json({"status": "error", "data": err}));
 });
 
+// #region tournament/:tournamentId
 api.get("/tournament/:tournamentId", (req, res) => {
   let tournamentId = req.params.tournamentId;
   if (isNaN(tournamentId)) {
@@ -48,10 +49,7 @@ api.get("/tournament/:tournamentId", (req, res) => {
   tmdb.getTournament(parseInt(tournamentId))
     .catch(err => res.json({"status": "error", "data": err}))
     .then(tournament => res.json({"status": "OK", "data": tournament}));
-    // .then(tournament => res.json({"status": "OK", "data": tournament}));
-    // .then(console.log("lol"))
 });
-
 
 api.get("/tournament/:tournamentId/getMatches", (req, res) => {
   let tournamentId = req.params.tournamentId;
@@ -76,8 +74,12 @@ api.get("/tournament/:tournamentId/getTeams", (req, res) => {
     .then(teams => res.send({"status": "OK", "data": teams}))
     .catch(err => res.send({"status": "error", "data": err}));
 });
+// #endregion
 
-api.get("/match/:matchId/getMatch", (req, res) => {
+// #region match/:matchId
+
+
+api.get("/match/:matchId", (req, res) => {
   let matchId = req.params.matchId;
   if (isNaN(matchId)) {
     res.json({"status": "error", "data": "matchId must be a number"});
@@ -107,6 +109,40 @@ api.post("/match/:matchId/setWinner", (req, res) => {
   .then(match => res.send({"status": "OK", "data": match}))
   .catch(err => res.send({"status": "error", "data": err}));
 });
+// #endregion
+
+// #region team/:teamId
+api.get("/team/:teamId", (req, res) => {
+  let teamId = req.params.teamId;
+  if (isNaN(teamId)) {
+    res.json({"status": "error", "data": "teamId must be a number"});
+    return
+  }
+  teamId = parseInt(teamId);
+  tmdb.getTeam(teamId)
+  .then(match => res.send({"status": "OK", "data": match}))
+  .catch(err => res.send({"status": "error", "data": err}));
+});
+
+api.post("/team/:teamId/edit", (req, res) => {
+  let teamId = req.params.teamId;
+  let teamName = req.body.teamName;
+  if (isNaN(teamId)) {
+    res.json({"status": "error", "data": "teamId must be a number"});
+    return
+  }
+  if (teamName == undefined) {
+    res.json({"status": "error", "data": "teamName must be a string"});
+    return
+  }
+  teamId = parseInt(teamId);
+  tmdb.editTeam(teamId, teamName)
+    .then(match => res.send({"status": "OK", "data": match}))
+    .catch(err => res.send({"status": "error", "data": err}));
+});
+  
+
+// #endregion
 
 //Takes JSON body
 api.post("/tournament/create", (req, res) => {

@@ -5,6 +5,8 @@ module.exports = {
   getMatchesByTournamentId: getMatchesByTournamentId,
   getTournaments: getTournaments,
   getTournament, getTournament,
+  getTeam: getTeam,
+  editTeam: editTeam,
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
   createTournament: createTournament,
@@ -21,55 +23,16 @@ let connection = mysql.createConnection({
   database: process.env.DB_DATABASE
 });
 
-function getMatchesByTournamentId(tournamentId) {
-  return new Promise(function(resolve, reject) {
-    connection.query("SELECT * FROM matches WHERE tournamentId = ?", [mysql.escape(tournamentId)], (err, matches) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-      } else {
-        resolve(matches);
-      }
-    });
-  });
+function escapeString(str) {
+  // return mysql.escape(str);
+  return str;
 }
 
-function getTournaments() {
-  return new Promise(function(resolve, reject) {
-    connection.query("SELECT * FROM tournaments", (err, tournaments) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-      } else {
-        resolve(tournaments);
-      }
-    });
-  });
-}
-
-function getTournament(tournamentId) {
-  return new Promise(function(resolve, reject) {
-    connection.query("SELECT * FROM tournaments WHERE id = ?", [mysql.escape(tournamentId)], (err, tournaments) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-      } else {
-        if (tournaments.length == 0) {
-          reject("No such tournament exists");
-        }
-        //TODO number of competing teams
-
-        let tournament = tournaments[0];
-        resolve(tournament);
-      }
-    });
-  });
-}
-
+// #region match
 // Returns the match of the exact given id.
 function getMatch(matchId) {
   return new Promise(function(resolve, reject) {
-    connection.query("SELECT * FROM matches WHERE id = ?", [mysql.escape(matchId)], (err, matches) => {
+    connection.query("SELECT * FROM matches WHERE id = ?", [escapeString(matchId)], (err, matches) => {
       if (err) {
         reject(err);
       } else {
@@ -88,11 +51,11 @@ function getMatch(matchId) {
 async function unsetContestant(matchId, teamId) {
   let match = await getMatch(matchId);
   if (match.team1Id == teamId) {
-    connection.query("UPDATE matches SET team1Id = NULL WHERE id = ?", [mysql.escape(matchId)], (err, result) => {
+    connection.query("UPDATE matches SET team1Id = NULL WHERE id = ?", [escapeString(matchId)], (err, result) => {
       if (err) { console.log(err); }
     });
   } else if (match.team2Id == teamId) {
-    connection.query("UPDATE matches SET team2Id = NULL WHERE id = ?", [mysql.escape(matchId)], (err, result) => {
+    connection.query("UPDATE matches SET team2Id = NULL WHERE id = ?", [escapeString(matchId)], (err, result) => {
       if (err) { console.log(err); }
     });
   } else {
@@ -122,12 +85,12 @@ function setMatchWinner(matchId, winnerId) {
             .then(parentMatch => {
               if (parentMatch.team1Id == null) {
                 connection.query("UPDATE matches SET team1Id = ? WHERE id = ?", 
-                [mysql.escape(winnerId), mysql.escape(parentMatch.id)], (err, sets) => {
+                [escapeString(winnerId), escapeString(parentMatch.id)], (err, sets) => {
                   if (err) { reject(err); }
                 });
               } else if (parentMatch.team2Id == null) {
                 connection.query("UPDATE matches SET team2Id = ? WHERE id = ?", 
-                [mysql.escape(winnerId), mysql.escape(parentMatch.id)], (err, sets) => {
+                [escapeString(winnerId), escapeString(parentMatch.id)], (err, sets) => {
                   if (err) { reject(err); }
                 });
               } else {
@@ -138,7 +101,7 @@ function setMatchWinner(matchId, winnerId) {
 
         // Lastly, if all checks passed, actually set the winnerId property
         connection.query("UPDATE matches SET winnerId = ? WHERE id = ?", 
-        [mysql.escape(winnerId), mysql.escape(matchId)], (err, sets) => {
+        [escapeString(winnerId), escapeString(matchId)], (err, sets) => {
           if (err) {
             // If this update fails, we need to undo the parent match update
             unsetContestant(parentMatchId, winnerId);
@@ -152,13 +115,61 @@ function setMatchWinner(matchId, winnerId) {
       });
   });
 }
+// #endregion
+
+// #region tournament
+
+function getTournaments() {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM tournaments", (err, tournaments) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(tournaments);
+      }
+    });
+  });
+}
+
+function getTournament(tournamentId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM tournaments WHERE id = ?", [escapeString(tournamentId)], (err, tournaments) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        if (tournaments.length == 0) {
+          reject("No such tournament exists");
+        }
+        //TODO number of competing teams
+
+        let tournament = tournaments[0];
+        resolve(tournament);
+      }
+    });
+  });
+}
+
+function getMatchesByTournamentId(tournamentId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM matches WHERE tournamentId = ?", [escapeString(tournamentId)], (err, matches) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(matches);
+      }
+    });
+  });
+}
 
 function createTournament(name, description, startDate, endDate, teamLimit) {
   startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
   endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
   return new Promise(function(resolve, reject) {
     connection.query("INSERT INTO tournaments (name, description, startTime, endTime, teamLimit) VALUES (?, ?, ?, ?, ?)", 
-    [mysql.escape(name), mysql.escape(description), startDate, endDate, teamLimit], (err, sets) => {
+    [escapeString(name), escapeString(description), startDate, endDate, teamLimit], (err, sets) => {
       if (err) {
         console.log(err);
         reject(err);
@@ -194,7 +205,7 @@ function editTournament(tournamentId, name, description, startDate, endDate) {
   endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
   return new Promise(function(resolve, reject) {
     connection.query("UPDATE tournaments SET name = ?, description = ?, startTime = ?, endTime = ? WHERE id = ?",
-    [mysql.escape(name), mysql.escape(description), startDate, endDate, mysql.escape(tournamentId)], (err, sets) => {
+    [escapeString(name), escapeString(description), startDate, endDate, escapeString(tournamentId)], (err, sets) => {
       if (err) {
         console.log(err);
         reject(err);
@@ -207,7 +218,7 @@ function editTournament(tournamentId, name, description, startDate, endDate) {
 
 function getTeamsByTournamentId(tournamentId) {
   return new Promise(function(resolve, reject) {
-    connection.query("SELECT * FROM teams WHERE tournamentId = ?", [mysql.escape(tournamentId)], (err, teams) => {
+    connection.query("SELECT * FROM teams WHERE tournamentId = ?", [escapeString(tournamentId)], (err, teams) => {
       if (err) {
         console.log(err);
         reject(err);
@@ -217,7 +228,40 @@ function getTeamsByTournamentId(tournamentId) {
     });
   });
 }
+// #endregion
 
+// #region team
+
+function getTeam(teamId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM teams WHERE id = ?", [escapeString(teamId)], (err, teams) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        if (teams.length == 0) {
+          reject("No such team exists");
+        }
+        resolve(teams[0]);
+      }
+    });
+  });
+}
+
+function editTeam(teamId, name) {
+  return new Promise(function(resolve, reject) {
+    connection.query("UPDATE teams SET name = ? WHERE id = ?", [escapeString(name), escapeString(teamId)], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve("Team updated");
+      }
+    });
+  });
+}
+
+// #endregion
 
 // Dangerous function, use with caution. 
 // Used to initialize and manage the database by management tools, not by the main application.
