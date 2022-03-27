@@ -15,19 +15,19 @@ let submitChanges = curryTournamentId => event => {
   let tournamentStartDate = document.getElementById("editStartDate").value;
   let tournamentEndDate = document.getElementById("editEndDate").value;
 
-  if (!tournamentName || tournamentName == "") {
+  if (!tournamentName || tournamentName === "") {
     alert("Tournament name cannot be empty");
     return;
   }
-  if (!tournamentDescription || tournamentDescription == "") {
+  if (!tournamentDescription || tournamentDescription === "") {
     alert("Tournament description cannot be empty");
     return;
   }
-  if (!tournamentStartDate || tournamentStartDate == "") {
+  if (!tournamentStartDate || tournamentStartDate === "") {
     alert("Tournament start date cannot be empty");
     return;
   }
-  if (!tournamentEndDate || tournamentEndDate == "") {
+  if (!tournamentEndDate || tournamentEndDate === "") {
     alert("Tournament end date cannot be empty");
     return;
   }
@@ -88,7 +88,7 @@ function ManageTournament(props) {
         document.getElementById("editStartDate").value = data.data.startTime.slice(0, 16);
         document.getElementById("editEndDate").value = data.data.endTime.slice(0, 16);
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => showError(err));
   }, []);
 
   return (

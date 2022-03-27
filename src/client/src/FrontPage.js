@@ -1,11 +1,11 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import CreateTournament from "./createtournament.js";
-import TournamentOverview from "./tournamentoverview.js";
+import TournamentOverview from "./TournamentOverview.js";
 import TournamentManager from "./managetournament.js";
-import TournamentAnnouncement from "./tournamentannouncement";
-import TournamentMatches from "./tournamentmatches";
-import TeamEditor from "./teameditor";
+import TournamentAnnouncement from "./TournamentAnnouncement";
+import TournamentMatches from "./TournamentMatches";
+import TournamentTeams from "./TournamentTeams";
 import Appbar from './components/appbar';
 import { Button, Container, Typography, Box } from "@mui/material";
 import { Card, CardContent, CardMedia, Paper } from "@mui/material";
@@ -145,7 +145,7 @@ export default function App() {
         <Route path="/create" element={<CreateTournament />} />
         <Route path="/tournament/:tournamentId" element={<TournamentOverview />} />
         <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
-        <Route path="/tournament/:tournamentId/teams" element={<TeamEditor />} />
+        <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />
         <Route path="/tournament/matches" element={<TournamentMatches />} />
         <Route
           path="/tournament/manage/announcement"

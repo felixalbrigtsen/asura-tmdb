@@ -130,18 +130,7 @@ function TournamentForm(props) {
           <option value={64}>64</option>
           <option value={128}>128</option>
         </select>
-        <Slider
-          aria-label="Teams"
-          defaultValue={1}
-          // value={value}
-          // onChange={console.log(value)}
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          min={1}
-          max={7}
-          id="max-teams-slider"
-          >
+        <Slider aria-label="Teams" defaultValue={1} valueLabelDisplay="auto" step={1} marks min={1} max={7} id="max-teams-slider" >
         </Slider>
 
         {/* go brrrr */}
