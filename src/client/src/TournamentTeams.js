@@ -64,7 +64,7 @@ function TeamList(props) {
         <TableHead>
           <TableRow>
             <TableCell>Team Name</TableCell>
-            <TableCell align="right">Team Members</TableCell>
+            {/* <TableCell align="right">Team Members</TableCell> */}
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -75,7 +75,7 @@ function TeamList(props) {
               <TableCell component="th" scope="row"> <b>
                 {team.name}
               </b></TableCell>
-              <TableCell align="right">{team.members}</TableCell>
+              {/* <TableCell align="right">{team.members}</TableCell> */}
               <TableCell align="center">
                 <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)}>Edit</Button>
                 <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {props.onDelete(team.id); }}>Delete</Button>
@@ -164,7 +164,7 @@ function TeamEditor(props) {
       <h2><b>Edit Team:</b></h2>
       <form>
         <TextField id="teamNameInput" label="Team Name" value={team.name || ""} onChange={nameInputChanged} sx={{width: "80%"}} />
-        <PlayerList players={players} setPlayers={setPlayers} />
+        {/* <PlayerList players={players} setPlayers={setPlayers} /> */}
         <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={saveTeam}>Save</Button>
       </form>
       </div>
