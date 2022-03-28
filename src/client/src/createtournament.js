@@ -2,7 +2,7 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import Appbar from "./components/appbar";
 
-import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid } from '@mui/material'
+import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material'
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 function submitTournament(event) {
@@ -80,6 +80,38 @@ function showError(error) {
 }
 
 function TournamentForm(props) {
+  
+  const marks = [
+    {
+      value: 1,
+      label: "2",
+    },
+    {
+      value: 2,
+      label: "4",
+    },
+    {
+      value: 3,
+      label: "8",
+    },
+    {
+      value: 4,
+      label: "16",
+    },
+    {
+      value: 5,
+      label: "32",
+    },
+    {
+      value: 6,
+      label: "64",
+    },
+    {
+      value: 7,
+      label: "128",
+    },
+  ];
+
   return (
     <>
     <form>
@@ -89,9 +121,9 @@ function TournamentForm(props) {
         {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
         <TextField type="text" id="descriptionInput" label="Description" placeholder="Descrption" InputLabelProps={{shrink: true}}/>        
         <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={-20} justifyContent="center">
-            <Grid item xs={2}>
-              <Container>Edit Image:</Container>
+          <Grid container spacing={1} justifyContent="center" wrap="wrap">
+            <Grid item xs={3}>
+              <Typography>Edit Image:</Typography>
             </Grid>
             <Grid item xs={2}>
               <Container>
@@ -129,7 +161,7 @@ function TournamentForm(props) {
           <MenuItem value={64}>64</MenuItem>
           <MenuItem value={128}>128</MenuItem>
         </Select> */}
-        <select id="max-teams-select">
+        {/* <select id="max-teams-select">
           <option value={2}>2</option>
           <option value={4}>4</option>
           <option value={8}>8</option>
@@ -137,9 +169,18 @@ function TournamentForm(props) {
           <option value={32}>32</option>
           <option value={64}>64</option>
           <option value={128}>128</option>
-        </select>
-        <Slider aria-label="Teams" defaultValue={1} valueLabelDisplay="auto" step={1} marks min={1} max={7} id="max-teams-slider" name="max-teams-slider" >
-        </Slider>
+        </select> */}
+        
+        <Box sx={{flexGrow: 1}}>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={8}>
+              <Container>
+                <Slider aria-label="Teams" defaultValue={1} valueLabelDisplay="off" step={1} marks={marks} min={1} max={7} id="max-teams-slider" name="max-teams-slider" >
+                </Slider>
+              </Container>
+            </Grid>
+          </Grid>
+        </Box>
 
         {/* go brrrr */}
         <br /><br />
@@ -155,7 +196,7 @@ export default function CreateTournament(props) {
   return (
     <>
       <Appbar pageTitle="New tournament" /> 
-      <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
+      <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 20px"}} component={Container} direction="column" align="center">
       <TournamentForm />
       </Paper>
     </>
