@@ -1,6 +1,6 @@
 import * as React from "react";
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import { AlertContainer, alert } from "react-custom-alert";
+import { BrowserRouter as Link } from "react-router-dom";
+// import { AlertContainer, alert } from "react-custom-alert";
 import Appbar from "./components/appbar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack} from "@mui/material";
@@ -177,7 +177,7 @@ export default function TournamentManager(props) {
       <ManageTournament tournamentId={tournamentId} />
       <AnnounceButton />
       <InviteButton />
-      <AlertContainer floatingTime={5000} />
+      {/* <AlertContainer floatingTime={5000} /> */}
     </Paper>
     </>
   );
