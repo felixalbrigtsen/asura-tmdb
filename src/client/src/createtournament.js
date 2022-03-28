@@ -83,7 +83,7 @@ function TournamentForm(props) {
   return (
     <>
     <form>
-    <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={4} align="center">
+    <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={3} align="center">
         {/* <InputLabel htmlFor="nameInput">Tournament Name: </InputLabel> */}
         <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
         {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}

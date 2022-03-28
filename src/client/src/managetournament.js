@@ -96,9 +96,9 @@ function ManageTournament(props) {
     <form>
     <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={2} align="center">
           {/* <InputLabel htmlFor="editName">Edit name: </InputLabel> */}
-          <TextField type="text" id="editName" label="Edit Name:" InputLabelProps={{shrink: true}}/>
+          <TextField type="text" id="editName" label="Edit Name:" placeholder="Edit Name" InputLabelProps={{shrink: true}}/>
           {/* <InputLabel htmlFor="editDesc">Edit description: </InputLabel> */}
-          <TextField type="text" id="editDesc" label="Edit Description:" InputLabelProps={{shrink: true}} />
+          <TextField type="text" id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
           
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={-20} justifyContent="center">
