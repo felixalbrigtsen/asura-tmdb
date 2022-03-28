@@ -1,8 +1,8 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import CreateTournament from "./createtournament.js";
+import TournamentCreator from "./TournamentCreator.js";
 import TournamentOverview from "./TournamentOverview.js";
-import TournamentManager from "./managetournament.js";
+import TournamentManager from "./TournamentManager.js";
 import TournamentAnnouncement from "./TournamentAnnouncement";
 import TournamentMatches from "./TournamentMatches";
 import TournamentTeams from "./TournamentTeams";
@@ -141,7 +141,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/create" element={<CreateTournament />} />
+        <Route path="/create" element={<TournamentCreator />} />
         <Route path="/tournament/:tournamentId" element={<TournamentOverview />} />
         <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
         <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />

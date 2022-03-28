@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter as Link } from "react-router-dom";
+import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 // import { AlertContainer, alert } from "react-custom-alert";
 import Appbar from "./components/appbar";
 import { useParams } from "react-router-dom";
@@ -174,7 +174,7 @@ export default function TournamentManager(props) {
     <Appbar pageTitle="Edit Tournament" />
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
       <ManageTournament tournamentId={tournamentId} />
-      <AnnounceButton />
+      {/* <AnnounceButton /> */}
       <InviteButton />
       {/* <AlertContainer floatingTime={5000} /> */}
     </Paper>

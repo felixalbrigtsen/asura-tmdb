@@ -192,7 +192,7 @@ function TournamentForm(props) {
   );
 }
 
-export default function CreateTournament(props) {
+export default function TournamentCreator(props) {
   return (
     <>
       <Appbar pageTitle="New tournament" /> 
