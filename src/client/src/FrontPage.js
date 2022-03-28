@@ -75,7 +75,7 @@ function TournamentList() {
   let [tournamentList, setTournamentList] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_BACKEND_URL + "/api/tournament/getTournaments")
+    fetch(process.env.REACT_APP_API_URL + `/tournament/getTournaments`)
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {

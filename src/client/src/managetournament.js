@@ -52,7 +52,7 @@ let submitChanges = curryTournamentId => event => {
   // formData.append("teamLimit", tournamentMaxTeams);
   let body = new URLSearchParams(formData);
 
-  fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${tournamentId}/edit`, {
+  fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}/edit`, {
     method: "POST",
     body: body,
   })
@@ -73,8 +73,7 @@ function ManageTournament(props) {
 
   React.useEffect(() => {
     fetch(
-      process.env.REACT_APP_BACKEND_URL +
-        `/api/tournament/${props.tournamentId}`
+      process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`
     )
       .then((res) => res.json())
       .then((data) => {

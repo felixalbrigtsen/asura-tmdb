@@ -4,6 +4,7 @@
   "description": "DCST1008 Project - Server - Asura Tournament Management System",
   "author": "felixalb, kristoju, jonajha, krisleri",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",

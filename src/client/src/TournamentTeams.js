@@ -22,7 +22,7 @@ function TeamCreator(props) {
     formData.append("name", teamName);
     let body = new URLSearchParams(formData)
 
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/createTeam`, {
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}/createTeam`, {
       method: "POST",
       body: body
     })
@@ -103,7 +103,7 @@ function TeamEditor(props) {
       setTeam({});
       return;
     }
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/team/${props.selectedTeamId}`)
+    fetch(process.env.REACT_APP_API_URL + `/team/${props.selectedTeamId}`)
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
@@ -141,7 +141,7 @@ function TeamEditor(props) {
     formData.append("name", team.name);
     console.log(team);
     let body = new URLSearchParams(formData)
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/team/${team.id}/edit`, {
+    fetch(process.env.REACT_APP_API_URL + `/team/${team.id}/edit`, {
       method: "POST",
       body: body
     })
@@ -178,7 +178,7 @@ export default function TournamentTeams(props) {
   const { tournamentId } = useParams();
 
   function getTeams() {
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${tournamentId}/getTeams`)
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}/getTeams`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status !== "OK") {

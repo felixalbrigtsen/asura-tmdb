@@ -71,7 +71,7 @@ function Match(props) {
     let formData = new FormData();
     formData.append("winnerId",teamId);
     let body = new URLSearchParams(formData);
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/match/${props.match.id}/setWinner`, {
+    fetch(process.env.REACT_APP_API_URL + `/match/${props.match.id}/setWinner`, {
       method: "POST",
       body: body
     })
@@ -110,7 +110,7 @@ function BracketViewer(props) {
 
   // One fetch statement for each of the three state variables
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}`)
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
@@ -124,7 +124,7 @@ function BracketViewer(props) {
       .catch(err => showError(err));
 
 
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/getMatches`)
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}/getMatches`)
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
@@ -149,7 +149,7 @@ function BracketViewer(props) {
       })
       .catch(err => showError(err));
 
-    fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/getTeams`)
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}/getTeams`)
       .then(res => res.json())
       .then(data=>{
         if(data.status !== "OK"){
