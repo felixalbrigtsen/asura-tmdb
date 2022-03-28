@@ -126,13 +126,14 @@ api.get("/team/:teamId", (req, res) => {
 
 api.post("/team/:teamId/edit", (req, res) => {
   let teamId = req.params.teamId;
-  let teamName = req.body.teamName;
+  let teamName = req.body.name;
+  console.log(req.body);
   if (isNaN(teamId)) {
     res.json({"status": "error", "data": "teamId must be a number"});
     return
   }
-  if (teamName == undefined) {
-    res.json({"status": "error", "data": "teamName must be a string"});
+  if (teamName == undefined || teamName == "") {
+    res.json({"status": "error", "data": "teamName must be a non-empty string"});
     return
   }
   teamId = parseInt(teamId);
@@ -157,7 +158,7 @@ api.post("/tournament/create", (req, res) => {
   let name = req.body.name;
   let description = req.body.description;
   let teamLimit = req.body.teamLimit;
-  let startDate = req.body.startDate;
+  let startDate = req.body.startDate; //TODO: timezones, 2 hr skips
   let endDate = req.body.endDate;
   if (name == undefined || name == "" || description == undefined || description == "") {
     res.json({"status": "error", "data": "name and description must be provided"});
@@ -195,8 +196,9 @@ api.post("/tournament/create", (req, res) => {
   }
 
   tmdb.createTournament(name, description, startDate, endDate, teamLimit)
-    .catch(err => res.json({"status": "error", "data": err}))
-    .then(msg => res.json({"status": "OK", "data": msg}));
+    .then(msg => res.json({"status": "OK", "data": msg}))
+    .catch(err => res.json({"status": "error", "data": err}));
+    
 });
 
 api.post("/tournament/:tournamentId/edit", (req, res) => {
@@ -237,7 +239,28 @@ api.post("/tournament/:tournamentId/edit", (req, res) => {
   }
 
   tmdb.editTournament(tournamentId, name, description, startDate, endDate)
-    .catch(err => res.json({"status": "error", "data": err}))
-    .then(msg => res.json({"status": "OK", "data": msg}));
+    .then(msg => res.json({"status": "OK", "data": msg}))
+    .catch(err => res.json({"status": "error", "data": err}));
+    
 });
+
+api.post("/tournament/:tournamentId/createTeam", (req, res) => {
+  let tournamentId = req.params.tournamentId;
+  if (isNaN(tournamentId)) {
+    res.json({"status": "error", "data": "tournamentId must be a number"});
+    return;
+  }
+  tournamentId = parseInt(tournamentId);
+  let teamName = req.body.name;
+  if (teamName == undefined || teamName == "") {
+    res.json({"status": "error", "data": "teamName must be a non-empty string"});
+    return;
+  }
+  
+  tmdb.createTeam(tournamentId, teamName)
+    .then(msg => res.json({"status": "OK", "data": msg}))
+    .catch(err => res.json({"status": "error", "data": err}));
+});
+    
+  
 // #endregion

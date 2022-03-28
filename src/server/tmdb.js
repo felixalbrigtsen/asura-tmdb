@@ -6,6 +6,7 @@ module.exports = {
   getTournaments: getTournaments,
   getTournament, getTournament,
   getTeam: getTeam,
+  createTeam: createTeam,
   editTeam: editTeam,
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
@@ -121,18 +122,30 @@ function setMatchWinner(matchId, winnerId) {
 
 function getTournaments() {
   return new Promise(function(resolve, reject) {
-    connection.query("SELECT * FROM tournaments", (err, tournaments) => {
+    // 1. Get the list of tournament IDs
+    // 2. getTournament() for each ID
+    // 3. Return list of tournaments
+    let tournamentList = [];
+    connection.query("SELECT id FROM tournaments", async (err, tournamentIds) => {
       if (err) {
         console.log(err);
         reject(err);
       } else {
+        let tournaments = await Promise.all(tournamentIds.map(async function(tournament){
+          return await getTournament(tournament.id);
+        }));
         resolve(tournaments);
       }
     });
+
   });
 }
 
 function getTournament(tournamentId) {
+  // 1. Get the tournament
+  // 2. Get all teams associated with the tournament
+  // 3. Associate the teams with the tournament
+  // 4. Return the tournament
   return new Promise(function(resolve, reject) {
     connection.query("SELECT * FROM tournaments WHERE id = ?", [escapeString(tournamentId)], (err, tournaments) => {
       if (err) {
@@ -142,10 +155,14 @@ function getTournament(tournamentId) {
         if (tournaments.length == 0) {
           reject("No such tournament exists");
         }
-        //TODO number of competing teams
-
-        let tournament = tournaments[0];
-        resolve(tournament);
+        
+        getTeamsByTournamentId(tournamentId)
+          .catch(err => reject(err))
+          .then(teams => {
+            let tournament = tournaments[0];
+            tournament.teamCount = teams.length;
+            resolve(tournament);
+          });
       }
     });
   });
@@ -194,7 +211,7 @@ function createTournament(name, description, startDate, endDate, teamLimit) {
             });
           }
         }
-        resolve("Tournament created");
+        resolve({message: "Tournament created", tournamentId: sets.insertId});
       }
     });
   });
@@ -248,7 +265,14 @@ function getTeam(teamId) {
   });
 }
 
-function editTeam(teamId, name) {
+async function editTeam(teamId, name) {
+  let team = await getTeam(teamId);
+  if (!team) {
+    return Promise.reject("No such team exists");
+  }
+  if (team.name == name) {
+    return {message: "Team name unchanged"};
+  }
   return new Promise(function(resolve, reject) {
     connection.query("UPDATE teams SET name = ? WHERE id = ?", [escapeString(name), escapeString(teamId)], (err, sets) => {
       if (err) {
@@ -256,6 +280,31 @@ function editTeam(teamId, name) {
         reject(err);
       } else {
         resolve("Team updated");
+      }
+    });
+  });
+}
+
+async function createTeam(tournamentId, name) {
+  //Check that the tournament exists
+  let tournament = await getTournament(tournamentId);
+
+  return new Promise(function(resolve, reject) {
+    if (!tournament) {
+      reject("No such tournament exists");
+      return;
+    }
+    if (tournament.teamLimit <= tournament.teamCount) {
+      reject("Tournament is full");
+      return;
+    }
+
+    connection.query("INSERT INTO teams (tournamentId, name) VALUES (?, ?)", [escapeString(tournamentId), escapeString(name)], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve({message: "Team created", teamId: sets.insertId});
       }
     });
   });
