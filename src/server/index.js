@@ -27,9 +27,8 @@ api.use(require('express-log-url'));
 
 // #region frontend
 // Serve static files from the React app
-api.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "landing.html"));
-});
+app.use('/static', express.static(path.join(__dirname, 'clientbuild')));
+
 // #endregion
 
 // #region API
