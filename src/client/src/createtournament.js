@@ -60,9 +60,12 @@ function submitTournament(event) {
   })
     .then(response => response.json())
     .then(data => {
-      if (data.status == "OK") {
+      if (data.status === "OK") {
         alert("Tournament created successfully");
-        window.location.href = "/";
+        let tournamentId = data.data.tournamentId;
+        if (tournamentId) {
+          window.location.href = "/tournament/" + tournamentId;
+        }
       } else {
         showError(data.data)
       }
