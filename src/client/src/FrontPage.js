@@ -37,7 +37,7 @@ function TournamentListItem(props) {
               component="img"
               alt="tournament image"
               height="140"
-              image="https://source.unsplash.com/random"
+              image="Asura_Rex.png"
             />
             <CardContent>
               <Typography variant="h3" component="div" align="center">{props.tournament.name} </Typography>
