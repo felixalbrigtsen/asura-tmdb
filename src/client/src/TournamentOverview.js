@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import Appbar from './components/appbar';
 import { useParams } from 'react-router-dom'
-import { Button } from "@mui/material";
+import { Button, Paper, Stack } from "@mui/material";
 import "./components/tournamentBracket.css";
 
 function MatchPair(props) {
@@ -64,7 +64,6 @@ function Match(props) {
 
   let setWinner = curryTeamId => event => {
     let teamId = curryTeamId;
-    console.log(teamId);
     if (!teamId || teamId == null) {
       showError("No team selected");
       return;
@@ -157,7 +156,6 @@ function BracketViewer(props) {
           console.error(data)
           return;
         }
-        console.log(data);
         let teams = data.data;
         setTeams(teams);
       })
@@ -186,13 +184,16 @@ export default function TournamentOverview(props) {
 
   return (
     <>
-      <Appbar />
-      <Link to={`/tournament/${tournamentId}/manage`}>
-        <Button className="ManageButton" variant="contained" color="rackley">Manage Tournament</Button>
-      </Link>
-      <Link to={`/tournament/${tournamentId}/teams`}>
-        <Button className="OverviewButton" variant="contained" color="grape">Manage Teams</Button>
-      </Link>
+      <Appbar pageTitle="Tournament matches" />
+      <Paper sx={{width: "90vw", margin: "10px auto"}} component={Stack} direction="row" justifyContent="center">
+        <Link to={`/tournament/${tournamentId}/manage`} >
+          <Button className="ManageButton" variant="contained" color="rackley" sx={{margin: "15px", fontSize: "1.2em"}} >Manage Tournament</Button>
+        </Link>
+        <Link to={`/tournament/${tournamentId}/teams`} >
+          <Button className="OverviewButton" variant="contained" color="secondary" sx={{margin: "15px", fontSize: "1.2em"}} >Manage Teams</Button>
+        </Link>
+      </Paper>
+     
       
       <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
     </>

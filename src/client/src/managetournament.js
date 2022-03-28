@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { AlertContainer, alert } from "react-custom-alert";
 import Appbar from "./components/appbar";
 import { useParams } from "react-router-dom";
-import { Button, TextField, MenuItem, InputLabel, Select, Container, Slider} from "@mui/material";
+import { Button, TextField, Grid, Box, Container, Paper, Stack} from "@mui/material";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 let submitChanges = curryTournamentId => event => {
   event.preventDefault();
@@ -71,7 +72,6 @@ function ManageTournament(props) {
   let [tournamentInfo, setTournamentInfo] = React.useState([]);
 
   React.useEffect(() => {
-    console.log(props.tournamentId);
     fetch(
       process.env.REACT_APP_BACKEND_URL +
         `/api/tournament/${props.tournamentId}`
@@ -93,40 +93,40 @@ function ManageTournament(props) {
 
   return (
     <>
-      <form>
-        <Container>
-          <InputLabel htmlFor="editName">Edit name: </InputLabel>
-          <TextField type="text" id="editName" />
-          <InputLabel htmlFor="editDesc">Edit description: </InputLabel>
-          <TextField type="text" id="editDesc" />
-          <InputLabel htmlFor="editImage">
-            Edit image:
-            <br />
-            <Button variant="outlined" component="span" color="primary">
-              Upload
-            </Button>
-          </InputLabel>
-          <input
-            type="file"
-            id="editImage"
-            accept="image/png, image/jpeg, image/jpg, image/gif, image/svg"
-            style={{ display: "none" }}
-          />
-          <InputLabel htmlFor="editStartDate">Edit Start Time:</InputLabel>
-          <TextField type="datetime-local" id="editStartDate" />
-
-          <InputLabel htmlFor="editEndDate">Edit End Time:</InputLabel>
-          <TextField type="datetime-local" id="editEndDate" />
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={submitChanges(props.tournamentId)}
-            color="primary"
-          >
+    <form>
+    <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={2} align="center">
+          {/* <InputLabel htmlFor="editName">Edit name: </InputLabel> */}
+          <TextField type="text" id="editName" label="Edit Name:" InputLabelProps={{shrink: true}}/>
+          {/* <InputLabel htmlFor="editDesc">Edit description: </InputLabel> */}
+          <TextField type="text" id="editDesc" label="Edit Description:" InputLabelProps={{shrink: true}} />
+          
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={-20} justifyContent="center">
+                  <Grid item xs={2}>
+                    <Container>Edit Image:</Container>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Container>
+                    <label htmlFor="editImage">
+                      <Button variant="contained" component="span" endIcon={<FileUploadIcon />}>
+                        Upload 
+                      </Button>
+                      <input accept="image/*" id="editImage" multiple type="file" style={{ display: 'none' }} />
+                      </label>
+                    </Container>
+                  </Grid>
+                </Grid>
+              </Box>
+          {/* <InputLabel htmlFor="editStartDate">Edit Start Time:</InputLabel> */}
+          <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
+          {/* <InputLabel htmlFor="editEndDate">Edit End Time:</InputLabel> */}
+          <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/>
+          <Button type="submit" variant="contained" onClick={submitChanges(props.tournamentId)} color="primary" >
             Save Tournament Details
           </Button>
-        </Container>
-      </form>
+      
+      </Stack>
+    </form>
     </>
   );
 }
@@ -172,11 +172,13 @@ export default function TournamentManager(props) {
   const { tournamentId } = useParams();
   return (
     <>
-      <Appbar />
+    <Appbar pageTitle="Edit Tournament" />
+    <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
       <ManageTournament tournamentId={tournamentId} />
       <AnnounceButton />
       <InviteButton />
       <AlertContainer floatingTime={5000} />
+    </Paper>
     </>
   );
 }

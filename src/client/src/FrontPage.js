@@ -28,9 +28,7 @@ function CreateButton(props) {
 
 function TournamentListItem(props) {
   return (
-    <Container maxWidth="lg" align="start" sx={{
-      margin:'2.5% 0'
-    }}>
+    <Container maxWidth="lg" align="start" sx={{margin:'2.5% 0'}}>
         <Paper elevation={8}>
           <Card>
             <CardMedia 
@@ -44,7 +42,7 @@ function TournamentListItem(props) {
               <Typography variant="h5" color="text.primary">{props.tournament.description}</Typography>
               <Typography variant="body2" color="text.secondary"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
               <Typography variant="body2" color="text.secondary"> End: {props.tournament.endTime.toLocaleString()} </Typography>
-              <Typography variant="h5" color="text.primary" gutterBottom> Players todo / {props.tournament.teamLimit} </Typography>
+              <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
 
               <Box sx={{
                 margin: 'auto',
@@ -52,7 +50,7 @@ function TournamentListItem(props) {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 }} component="span">
-                  <Box sx={{margin: '0 2% 0 2'}}>
+                  <Box sx={{margin: '0 2% 0 2%'}}>
                     <Link to={`/tournament/${props.tournament.id}/manage`}>
                       <Button className="ManageButton" variant="contained" color="primary">Manage Tournament</Button>
                     </Link>
@@ -106,7 +104,7 @@ function TournamentList() {
 function Home() {
   return (
     <React.StrictMode>
-      <Appbar />
+      <Appbar pageTitle="Tournaments" />
       <main>
         <Container align="center">
             <CreateButton />

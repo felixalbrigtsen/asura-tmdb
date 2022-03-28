@@ -1,15 +1,60 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-router-dom";
 import Appbar from "./components/appbar";
-import { Button, TextField, Stack, MenuItem, InputLabel, Select, Container, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Paper, Typography} from "@mui/material";
+import { Button, TextField, Stack, MenuItem, Box, InputLabel, Select, Container, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Paper, Typography} from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 
 function showError(error) {
   alert("Something went wrong. \n" + error);
   console.error(error);
 }
 
-function TeamList(props) {
+function TeamCreator(props) {
+  function postCreate() {
+    let teamName = document.getElementById("teamNameInput").value;
+    if (!teamName) {
+      showError("Team name is required");
+      return;
+    }
 
+    let formData = new FormData();
+    formData.append("name", teamName);
+    let body = new URLSearchParams(formData)
+
+    fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${props.tournamentId}/createTeam`, {
+      method: "POST",
+      body: body
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status !== "OK") {
+        showError(data.data);
+        return;
+      }
+      document.getElementById("teamNameInput").value = "";
+      props.onTeamCreated();
+    }
+    )
+  }
+
+  return (
+    <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px"}} component={Stack} direction="column">
+      <div align="center">
+        <TextField id="teamNameInput" sx={{ width: "70%" }} label="Team Name" variant="outlined" />
+        {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
+        <Button variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
+          <Box sx={{padding: "10px"}}>
+            Create Team
+          </Box>
+          <AddCircleIcon />
+        </Button>
+      </div>
+    </Paper>
+  )
+}
+
+function TeamList(props) {
   return (
   <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
   <div align="center" >
@@ -32,7 +77,7 @@ function TeamList(props) {
               </b></TableCell>
               <TableCell align="right">{team.members}</TableCell>
               <TableCell align="center">
-                <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setselectedTeamId(team.id)}>Edit</Button>
+                <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)}>Edit</Button>
                 <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {props.onDelete(team.id); }}>Delete</Button>
               </TableCell>
             </TableRow>
@@ -75,7 +120,7 @@ function TeamEditor(props) {
     formData.append("name", document.getElementById("teamNameInput").value);
   }
 
-  if (props.selectedTeamId == -1 || !team) {
+  if (props.selectedTeamId === -1 || !team) {
     return (
       <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
         <div align="center" >
@@ -86,7 +131,31 @@ function TeamEditor(props) {
   }
   
   function nameInputChanged(event) {
-    setTeam({...team, name: event.target.value});
+    let newTeam = {...team};
+    newTeam.name = event.target.value;
+    setTeam(newTeam);
+  }
+
+  function saveTeam() {
+    let formData = new FormData();
+    formData.append("name", team.name);
+    console.log(team);
+    let body = new URLSearchParams(formData)
+    fetch(process.env.REACT_APP_BACKEND_URL + `/api/team/${team.id}/edit`, {
+      method: "POST",
+      body: body
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status !== "OK") {
+        showError(data.data);
+        return;
+      }
+      setTeam(data.data);
+      props.setTeams(props.teams.map(listTeam => listTeam.id === team.id ? team : listTeam));
+      props.setSelectedTeamId(-1);
+    }
+    );
   }
 
   return (
@@ -94,8 +163,9 @@ function TeamEditor(props) {
     <div align="center">
       <h2><b>Edit Team:</b></h2>
       <form>
-        <TextField id="teamNameInput" label="Team Name" value={team.name || ""} onChange={nameInputChanged} />
+        <TextField id="teamNameInput" label="Team Name" value={team.name || ""} onChange={nameInputChanged} sx={{width: "80%"}} />
         <PlayerList players={players} setPlayers={setPlayers} />
+        <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={saveTeam}>Save</Button>
       </form>
       </div>
     </Paper>
@@ -104,10 +174,10 @@ function TeamEditor(props) {
 
 export default function TournamentTeams(props) {
   const [teams, setTeams] = React.useState([]);
-  const [selectedTeamId, setselectedTeamId] = React.useState(-1);
+  const [selectedTeamId, setSelectedTeamId] = React.useState(-1);
   const { tournamentId } = useParams();
 
-  React.useEffect(() => {
+  function getTeams() {
     fetch(process.env.REACT_APP_BACKEND_URL + `/api/tournament/${tournamentId}/getTeams`)
       .then((res) => res.json())
       .then((data) => {
@@ -118,14 +188,18 @@ export default function TournamentTeams(props) {
         //setselectedTeamId(teams[0].id);
       })
       .catch((err) => showError(err));
+  }
+  React.useEffect(() => {
+    getTeams()
   }, []);
   
   return (
     <>
-    <Appbar />
+    <Appbar pageTitle="Edit teams" />
     <div className="tournamentTeams">
-      <TeamList teams={teams} selectedTeamId={selectedTeamId} setselectedTeamId={setselectedTeamId} />
-      <TeamEditor teams={teams} selectedTeamId={selectedTeamId} />
+      <TeamCreator tournamentId={tournamentId} teams={teams} onTeamCreated={getTeams} />
+      <TeamList teams={teams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
+      <TeamEditor teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
     </div>
     </>
   );

@@ -2,7 +2,8 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import Appbar from "./components/appbar";
 
-import { Button, TextField, MenuItem, InputLabel, Select, Container, Slider } from '@mui/material'
+import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid } from '@mui/material'
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 function submitTournament(event) {
   event.preventDefault();
@@ -82,29 +83,33 @@ function TournamentForm(props) {
   return (
     <>
     <form>
-    <Container maxWidth="md">
-        <InputLabel htmlFor="nameInput">Tournament Name: </InputLabel>
-        <TextField type="text" id="nameInput" variant="filled" label="Tournament Name" />
-        <InputLabel htmlFor="descriptionInput">Description: </InputLabel>
-        <TextField type="text" id="descriptionInput" variant="filled" label="Description"/>        
-        <InputLabel htmlFor="editImage">
-        Tournament Image:
-        <br />
-          <Button variant="outlined" component="span" color="primary">
-            Upload
-          </Button>
-       </InputLabel>
-        <input
-          type="file"
-          id="editImage"
-          accept="image/png, image/jpeg, image/jpg, image/gif, image/svg"
-          style={{ display: 'none' }}
-        />
-        <InputLabel htmlFor="startDatePicker">Start Time:</InputLabel>
-        <TextField type="datetime-local" id="startDatePicker" />
+    <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={4} align="center">
+        {/* <InputLabel htmlFor="nameInput">Tournament Name: </InputLabel> */}
+        <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
+        {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
+        <TextField type="text" id="descriptionInput" label="Description" placeholder="Descrption" InputLabelProps={{shrink: true}}/>        
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={-20} justifyContent="center">
+            <Grid item xs={2}>
+              <Container>Edit Image:</Container>
+            </Grid>
+            <Grid item xs={2}>
+              <Container>
+                <label htmlFor="editImage">
+                  <Button variant="contained" component="span" endIcon={<FileUploadIcon />}>
+                    Upload 
+                  </Button>
+                  <input accept="image/*" id="editImage" multiple type="file" style={{ display: 'none' }} />
+                </label>
+              </Container>
+            </Grid>
+          </Grid>
+        </Box>
+        {/* <InputLabel htmlFor="startDatePicker">Start Time:</InputLabel> */}
+        <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}}/>
         
-        <InputLabel htmlFor="endDatePicker">End Time:</InputLabel>
-        <TextField type="datetime-local" id="endDatePicker" />
+        {/* <InputLabel htmlFor="endDatePicker">End Time:</InputLabel> */}
+        <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}}/>
 
         <InputLabel id="max-teams-label">Maximum number of teams</InputLabel>
         {/* <Select
@@ -133,14 +138,14 @@ function TournamentForm(props) {
           <option value={64}>64</option>
           <option value={128}>128</option>
         </select>
-        <Slider aria-label="Teams" defaultValue={1} valueLabelDisplay="auto" step={1} marks min={1} max={7} id="max-teams-slider" >
+        <Slider aria-label="Teams" defaultValue={1} valueLabelDisplay="auto" step={1} marks min={1} max={7} id="max-teams-slider" name="max-teams-slider" >
         </Slider>
 
         {/* go brrrr */}
         <br /><br />
         
         <Button type="submit" variant="contained" onClick={submitTournament} color="primary">Create Tournament!</Button>
-      </Container>
+      </Stack>
       </form>
     </>
   );
@@ -149,8 +154,10 @@ function TournamentForm(props) {
 export default function CreateTournament(props) {
   return (
     <>
-      <Appbar /> 
+      <Appbar pageTitle="New tournament" /> 
+      <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
       <TournamentForm />
+      </Paper>
     </>
   );
 }
