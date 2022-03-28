@@ -5,15 +5,10 @@ import Appbar from "./components/appbar";
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material'
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
-function submitTournament(event) {
-  event.preventDefault();
+function postTournament(tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams) {
+  // event.preventDefault();
   //TODO use refs to get values
-  let tournamentName = document.getElementById("nameInput").value;
-  let tournamentDescription = document.getElementById("descriptionInput").value;
-  let tournamentImageFile = document.getElementById("editImage").files[0];
-  let tournamentStartDate = document.getElementById("startDatePicker").value;
-  let tournamentEndDate = document.getElementById("endDatePicker").value;
-  let tournamentMaxTeams = document.getElementById("max-teams-select").value;
+
   
   if (!tournamentName || tournamentName == "") {
     alert("Tournament name cannot be empty");
@@ -80,36 +75,32 @@ function showError(error) {
 }
 
 function TournamentForm(props) {
-  
+  const [maxTeamsExponent, setMaxTeamsExponent] = React.useState(1);
+  function sliderUpdate(event) {
+    setMaxTeamsExponent(event.target.value);
+  }
+
+  function submitTournament(event) {
+    event.preventDefault();
+    console.log(maxTeamsExponent)
+    let maxTeams = Math.pow(2, maxTeamsExponent);
+    postTournament(
+      document.getElementById("nameInput").value,
+      document.getElementById("descriptionInput").value,
+      document.getElementById("startDatePicker").value,
+      document.getElementById("endDatePicker").value,
+      maxTeams
+    );
+  }
+
   const marks = [
-    {
-      value: 1,
-      label: "2",
-    },
-    {
-      value: 2,
-      label: "4",
-    },
-    {
-      value: 3,
-      label: "8",
-    },
-    {
-      value: 4,
-      label: "16",
-    },
-    {
-      value: 5,
-      label: "32",
-    },
-    {
-      value: 6,
-      label: "64",
-    },
-    {
-      value: 7,
-      label: "128",
-    },
+    {  value: 1,  label: "2",},
+    {  value: 2,  label: "4",},
+    {  value: 3,  label: "8",},
+    {  value: 4,  label: "16",},
+    {  value: 5,  label: "32",},
+    {  value: 6,  label: "64",},
+    {  value: 7,  label: "128",}
   ];
 
   return (
@@ -144,38 +135,12 @@ function TournamentForm(props) {
         <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}}/>
 
         <InputLabel id="max-teams-label">Maximum number of teams</InputLabel>
-        {/* <Select
-          labelId="max-teams-label"
-          id="max-teams-select"
-          onChange={(event) => {
-            console.log(event.target.value);
-          } }
-          value={8}
-          label="Max Teams"
-        >
-          <MenuItem value={2}>2</MenuItem>
-          <MenuItem value={4}>4</MenuItem>
-          <MenuItem value={8}>8</MenuItem>
-          <MenuItem value={16}>16</MenuItem>
-          <MenuItem value={32}>32</MenuItem>
-          <MenuItem value={64}>64</MenuItem>
-          <MenuItem value={128}>128</MenuItem>
-        </Select> */}
-        {/* <select id="max-teams-select">
-          <option value={2}>2</option>
-          <option value={4}>4</option>
-          <option value={8}>8</option>
-          <option value={16}>16</option>
-          <option value={32}>32</option>
-          <option value={64}>64</option>
-          <option value={128}>128</option>
-        </select> */}
         
         <Box sx={{flexGrow: 1}}>
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={8}>
               <Container>
-                <Slider aria-label="Teams" defaultValue={1} valueLabelDisplay="off" step={1} marks={marks} min={1} max={7} id="max-teams-slider" name="max-teams-slider" >
+                <Slider aria-label="Teams" valueLabelDisplay="off" step={1} marks={marks} min={1} max={7} onChange={sliderUpdate} id="max-teams-slider" name="max-teams-slider" >
                 </Slider>
               </Container>
             </Grid>
