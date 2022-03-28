@@ -7,7 +7,7 @@ let tmdb = require("./tmdb.js");
 
 // #region Express setup
 const app = express();
-const port = 3001;
+const port = 3000;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
@@ -27,7 +27,8 @@ api.use(require('express-log-url'));
 
 // #region frontend
 // Serve static files from the React app
-app.use('/static', express.static(path.join(__dirname, 'clientbuild')));
+app.use('/', express.static(path.join(__dirname, 'clientbuild')));
+app.use('/tournament/', express.static(path.join(__dirname, 'clientbuild')));
 
 // #endregion
 
