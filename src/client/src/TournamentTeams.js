@@ -12,19 +12,6 @@ function showError(error) {
   console.error(error);
 }
 
-function ReturnButton() {
-  const { tournamentId } = useParams();
-  return(
-  <Link to={`/tournament/${tournamentId}`}>
-    <Button type="button" variant="contained" color="primary" >
-      <Box>
-        Return to Tournament
-      </Box>
-    </Button>
-  </Link>
-  )
-}
-
 function TeamCreator(props) {
   function postCreate() {
     let teamName = document.getElementById("teamNameInput").value;
@@ -206,7 +193,6 @@ export default function TournamentTeams(props) {
     <>
     <Appbar pageTitle="Edit teams" />
     <TournamentBar pageTitle="Edit Teams" />
-    <ReturnButton />
     <div className="tournamentTeams">
       <TeamCreator tournamentId={tournamentId} teams={teams} onTeamCreated={getTeams} />
       <TeamList teams={teams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
