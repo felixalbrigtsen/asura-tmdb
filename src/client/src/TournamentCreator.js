@@ -106,7 +106,7 @@ function TournamentForm(props) {
         {/* <InputLabel htmlFor="nameInput">Tournament Name: </InputLabel> */}
         <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
         {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
-        <TextField type="text" id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
+        <TextField type="text" multiline={true} id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
         {/* <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={1} justifyContent="center" wrap="wrap">
             <Grid item xs={3}>
