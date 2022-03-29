@@ -100,7 +100,7 @@ function ManageTournament(props) {
           {/* <InputLabel htmlFor="editDesc">Edit description: </InputLabel> */}
           <TextField type="text" id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
           
-              <Box sx={{ flexGrow: 1 }}>
+              {/* <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={-20} justifyContent="center">
                   <Grid item xs={2}>
                     <Container>Edit Image:</Container>
@@ -116,7 +116,7 @@ function ManageTournament(props) {
                     </Container>
                   </Grid>
                 </Grid>
-              </Box>
+              </Box> */}
           {/* <InputLabel htmlFor="editStartDate">Edit Start Time:</InputLabel> */}
           <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
           {/* <InputLabel htmlFor="editEndDate">Edit End Time:</InputLabel> */}

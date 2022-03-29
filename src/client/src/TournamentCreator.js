@@ -111,7 +111,7 @@ function TournamentForm(props) {
         <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
         {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
         <TextField type="text" id="descriptionInput" label="Description" placeholder="Descrption" InputLabelProps={{shrink: true}}/>        
-        <Box sx={{ flexGrow: 1 }}>
+        {/* <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={1} justifyContent="center" wrap="wrap">
             <Grid item xs={3}>
               <Typography>Edit Image:</Typography>
@@ -127,7 +127,7 @@ function TournamentForm(props) {
               </Container>
             </Grid>
           </Grid>
-        </Box>
+        </Box> */}
         {/* <InputLabel htmlFor="startDatePicker">Start Time:</InputLabel> */}
         <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}}/>
         
