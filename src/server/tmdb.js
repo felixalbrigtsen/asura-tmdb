@@ -299,30 +299,57 @@ async function createTeam(tournamentId, name) {
       return;
     }
 
-    connection.query("INSERT INTO teams (tournamentId, name) VALUES (?, ?)", [escapeString(tournamentId), escapeString(name)], (err, sets) => {
+    connection.query("INSERT INTO teams (tournamentId, name) VALUES (?, ?)", [escapeString(tournamentId), escapeString(name)], async (err, sets) => {
       if (err) {
         console.log(err);
         reject(err);
       } else {
+        await assignFirstMatch(sets.insertId, tournamentId);
         resolve({message: "Team created", teamId: sets.insertId});
       }
     });
   });
 }
 
-// #endregion
 
-// Dangerous function, use with caution. 
-// Used to initialize and manage the database by management tools, not by the main application.
-function executeStatement(statement) {
+//Private function, assigns a starting match to the given team
+async function assignFirstMatch(teamId, tournamentId) {
+  let tournament = await getTournament(tournamentId);
+  let matches = await getMatchesByTournamentId(tournamentId);
+  
+  let highTier = Math.log2(tournament.teamLimit)-1;
+  console.log(highTier);
+  let highTierMatches = matches.filter(match => match.tier == highTier);
+  console.log(matches);
+
   return new Promise(function(resolve, reject) {
-    connection.query(statement, (err, sets) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-      } else {
-        resolve(sets);
+    for (let match of highTierMatches) {
+      if (match.team1Id == null) {
+        console.log("Assigning team " + teamId + " to match " + match.id + " as team 1");
+        connection.query("UPDATE matches SET team1Id = ? WHERE id = ?", [escapeString(teamId), escapeString(match.id)], (err, sets) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            resolve("Team assigned to match " + match.id);
+          }
+        });
+        return
+      } else if (match.team2Id == null) {
+        console.log("Assigning team " + teamId + " to match " + match.id + " as team 2");
+        connection.query("UPDATE matches SET team2Id = ? WHERE id = ?", [escapeString(teamId), escapeString(match.id)], (err, sets) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            resolve("Team assigned to match " + match.id);
+          }
+        });
+        return
       }
-    });
+    }
+    reject("Could not assign team to any matches");
   });
 }
+
+// #endregion

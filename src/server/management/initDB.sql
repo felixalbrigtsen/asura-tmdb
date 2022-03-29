@@ -34,7 +34,8 @@ CREATE TABLE matches (
 
     FOREIGN KEY (tournamentId) REFERENCES tournaments (id),
     FOREIGN KEY (team1Id) REFERENCES teams (id),
-    FOREIGN KEY (team2Id) REFERENCES teams (id)
+    FOREIGN KEY (team2Id) REFERENCES teams (id),
+    FOREIGN KEY (winnerId) REFERENCES teams (id)
 );
 
 CREATE TABLE players (

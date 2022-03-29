@@ -59,8 +59,9 @@ api.get("/tournament/:tournamentId", (req, res) => {
     return;
   }
   tmdb.getTournament(parseInt(tournamentId))
-    .catch(err => res.json({"status": "error", "data": err}))
-    .then(tournament => res.json({"status": "OK", "data": tournament}));
+    .then(tournament => res.json({"status": "OK", "data": tournament}))
+    .catch(err => res.json({"status": "error", "data": err}));
+    
 });
 
 api.get("/tournament/:tournamentId/getMatches", (req, res) => {
