@@ -57,6 +57,19 @@ function TeamCreator(props) {
 }
 
 function TeamList(props) {
+  const deleteTeam = teamId => {
+    fetch(process.env.REACT_APP_API_URL + `/team/${teamId}`, {method: "DELETE"})
+      .then(res => res.json())
+      .then(data => {
+        if (data.status !== "OK") {
+          showError(data.data);
+          return;
+        }
+        props.setTeams(props.teams.filter(team => team.id !== teamId));
+      })
+      .catch(error => showError(error));
+  }
+
   return (
   <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
   <div align="center" >
@@ -80,7 +93,7 @@ function TeamList(props) {
               {/* <TableCell align="right">{team.members}</TableCell> */}
               <TableCell align="center">
                 <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)} endIcon={<EditIcon />}>Edit</Button>
-                <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {props.onDelete(team.id); }} endIcon={<DeleteIcon />}>Delete</Button>
+                <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteTeam(team.id)}} endIcon={<DeleteIcon />}>Delete</Button>
               </TableCell>
             </TableRow>
 
@@ -148,7 +161,7 @@ function TeamEditor(props) {
         return;
       }
       setTeam(data.data);
-      props.setTeams(props.teams.map(listTeam => listTeam.id === team.id ? team : listTeam));
+      props.setTeams(props.teams.map(origTeam => origTeam.id === team.id ? team : origTeam));
       props.setSelectedTeamId(-1);
     }
     );
@@ -195,7 +208,7 @@ export default function TournamentTeams(props) {
     <TournamentBar pageTitle="Edit Teams" />
     <div className="tournamentTeams">
       <TeamCreator tournamentId={tournamentId} teams={teams} onTeamCreated={getTeams} />
-      <TeamList teams={teams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
+      <TeamList teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
       <TeamEditor teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
     </div>
     </>

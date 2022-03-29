@@ -6,23 +6,19 @@ import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper,
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 function postTournament(tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams) {
-  // event.preventDefault();
-  //TODO use refs to get values
-
-  
-  if (!tournamentName || tournamentName == "") {
+  if (!tournamentName || tournamentName === "") {
     alert("Tournament name cannot be empty");
     return;
   }
-  if (!tournamentDescription || tournamentDescription == "") {
+  if (!tournamentDescription || tournamentDescription === "") {
     alert("Tournament description cannot be empty");
     return;
   }
-  if (!tournamentStartDate || tournamentStartDate == "") {
+  if (!tournamentStartDate || tournamentStartDate === "") {
     alert("Tournament start date cannot be empty");
     return;
   }
-  if (!tournamentEndDate || tournamentEndDate == "") {
+  if (!tournamentEndDate || tournamentEndDate === "") {
     alert("Tournament end date cannot be empty");
     return;
   }
