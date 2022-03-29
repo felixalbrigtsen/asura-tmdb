@@ -33,6 +33,10 @@ function shorten(description, maxLength) {
 }
 
 function TournamentListItem(props) {
+  const [longDescription, setLongDescription] = React.useState(false);
+  function toggleDescription() {
+    setLongDescription(!longDescription);
+  }
   return (
         <Paper elevation={8} >
           <Card>
@@ -45,16 +49,16 @@ function TournamentListItem(props) {
             />
             <CardContent align="left">
               <Typography variant="h3" component="div" align="center">{props.tournament.name} </Typography>
-              <Typography variant="h5" color="text.primary">{shorten(props.tournament.description, 200)}</Typography>
-              <Typography variant="body2" color="text.secondary"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
-              <Typography variant="body2" color="text.secondary"> End: {props.tournament.endTime.toLocaleString()} </Typography>
+              <Typography variant="body2"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
+              <Typography variant="body2"> End: {props.tournament.endTime.toLocaleString()} </Typography>
               <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
-
-              <Box sx={{flexGrow: 1}}>
+              <Typography variant="h5" color="text.primary" color="text.secondary" onClick={toggleDescription}>{longDescription ? props.tournament.description : shorten(props.tournament.description, 200)}</Typography>
+              
+              <Box sx={{flexGrow: 1, marginTop: "20px"}}>
               <Grid container spacing={4} justifyContent="center" wrap="wrap">
                   <Grid item>
                     <Link to={`/tournament/${props.tournament.id}/manage`}>
-                      <Button className="ManageButton" variant="contained" color="primary">Manage Tournament</Button>
+                      <Button className="ManageButton" variant="contained" color="primary">Edit Tournament</Button>
                     </Link>
                   </Grid>
                   <Grid item >
