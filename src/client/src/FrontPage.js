@@ -104,10 +104,8 @@ function Home() {
             {/* <CreateButton /> */}
             <Typography variant="h3">Tournaments</Typography>
             <CreateButton />
-            <Typography variant="h2" style={{margin:'2% 0'}}>
-              Tournaments
-            </Typography>
-            <TournamentList />
+          </Box>
+          <TournamentList />
         </Container>
     </>
   );
