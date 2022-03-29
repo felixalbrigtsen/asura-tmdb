@@ -43,7 +43,7 @@ CREATE TABLE players (
     name TEXT NOT NULL,
     teamId INTEGER NOT NULL,
 
-    FOREIGN KEY (teamId) REFERENCES teams (id)
+    FOREIGN KEY (teamId) REFERENCES teams (id) ON DELETE CASCADE
 );
 
 -- Example data (Two tournaments, 4 teams, single elimination)
