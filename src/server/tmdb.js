@@ -12,6 +12,7 @@ module.exports = {
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
   createTournament: createTournament,
+  deleteTournament: deleteTournament,
   editTournament: editTournament,
   getTeamsByTournamentId: getTeamsByTournamentId,
 }
@@ -153,25 +154,30 @@ function getTournament(tournamentId) {
         console.log(err);
         reject(err);
       } else {
-        if (tournaments.length == 0) {
-          reject("No such tournament exists");
-        }
+      if (tournaments.length == 0) {
+        reject("No such tournament exists");
+        return
+      }
         
-        getTeamsByTournamentId(tournamentId)
-          .catch(err => reject(err))
-          .then(teams => {
-            let tournament = tournaments[0];
-            //TODO: CHeckh this
-//             /home/felixalb/Documents/NTNU/semester2/sysut_server/src/server/tmdb.js:163
-//             tournament.teamCount = teams.length;
-//                                  ^
+      getTeamsByTournamentId(tournamentId)
+        .catch(err => reject(err))
+        .then(teams => {
+          let tournament = tournaments[0];
+          tournament.teamCount = teams.length;
+          resolve(tournament);
+        });
+      }
+    });
+  });
+}
 
-// TypeError: Cannot set properties of undefined (setting 'teamCount')
-//     at /home/felixalb/Documents/NTNU/semester2/sysut_server/src/server/tmdb.js:163:34
-
-            tournament.teamCount = teams.length;
-            resolve(tournament);
-          });
+function deleteTournament(tournamentId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("DELETE FROM tournaments WHERE id = ?", [escapeString(tournamentId)], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
       }
     });
   });

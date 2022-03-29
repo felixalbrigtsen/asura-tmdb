@@ -20,7 +20,7 @@ CREATE TABLE teams (
     tournamentId INTEGER NOT NULL,
     name TEXT NOT NULL,
 
-    FOREIGN KEY (tournamentId) REFERENCES tournaments (id)
+    FOREIGN KEY (tournamentId) REFERENCES tournaments (id) ON DELETE CASCADE
 );
 
 CREATE TABLE matches (
@@ -32,7 +32,7 @@ CREATE TABLE matches (
     winnerId INTEGER,
     tier INTEGER,
 
-    FOREIGN KEY (tournamentId) REFERENCES tournaments (id),
+    FOREIGN KEY (tournamentId) REFERENCES tournaments (id) ON DELETE CASCADE,
     FOREIGN KEY (team1Id) REFERENCES teams (id) ON DELETE SET NULL,
     FOREIGN KEY (team2Id) REFERENCES teams (id) ON DELETE SET NULL,
     FOREIGN KEY (winnerId) REFERENCES teams (id) ON DELETE SET NULL
