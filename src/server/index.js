@@ -137,7 +137,7 @@ api.get("/team/:teamId", (req, res) => {
   .catch(err => res.send({"status": "error", "data": err}));
 });
 
-api.post("/team/:teamId/delete", (req, res) => {
+api.delete("/team/:teamId", (req, res) => {
   let teamId = req.params.teamId;
   if (isNaN(teamId)) {
     res.json({"status": "error", "data": "teamId must be a number"});
