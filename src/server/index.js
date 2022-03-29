@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 let api = express.Router();
 // app.use("/api", api);
-app.use("/", api);
+app.use("/api", api);
 
 api.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -28,17 +28,18 @@ api.use(require('express-log-url'));
 
 // #region frontend
 
-api.get("/", (req, res) => {
-  res.redirect("https://asura.feal.no/");
-});
+// api.get("/", (req, res) => {
+//   res.redirect("https://asura.feal.no/");
+// });
 // Serve static files from the React app
 // app.use('/', express.static(path.join(__dirname, 'clientbuild')));
 // app.use('/tournament/', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
 // app.use('/tournament/*', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
-// app.use('/static', express.static(path.join(__dirname, 'clientbuild/static')));
-// app.get('/*', function (req, res) {
-//   res.sendFile(path.join(__dirname, 'clientbuild', 'index.html'));
-// });
+app.use('/static', express.static(path.join(__dirname, 'clientbuild/static')));
+app.use('/static/*', express.static(path.join(__dirname, 'clientbuild/static')));
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'clientbuild', 'index.html'));
+});
 // app.use('/*', express.static(path.join(__dirname, 'clientbuild')));
 
 // #endregion
