@@ -36,6 +36,7 @@ function shorten(description, maxLength) {
 
 function TournamentListItem(props) {
   const [longDescription, setLongDescription] = React.useState(false);
+  const maxLength = 200;
   function toggleDescription() {
     setLongDescription(!longDescription);
   }
@@ -45,9 +46,11 @@ function TournamentListItem(props) {
         <Typography variant="body1" onClick={toggleDescription}>{props.tournament.description}</Typography>
         <KeyboardDoubleArrowUpIcon onClick={toggleDescription} />
       </Box> ) 
+  } else if (props.tournament.description.length < maxLength) { 
+    return <Typography variant="body1" color="text.secondary" onClick={toggleDescription}>{props.tournament.description}</Typography>
   } else {
       return <Box component={Stack} direction="row">
-        <Typography variant="body1" color="text.secondary" onClick={toggleDescription}>{shorten(props.tournament.description, 200)}</Typography>
+        <Typography variant="body1" color="text.secondary" onClick={toggleDescription}>{shorten(props.tournament.description, maxLength)}</Typography>
         <KeyboardDoubleArrowDownIcon onClick={toggleDescription} />
       </Box>;
     }
