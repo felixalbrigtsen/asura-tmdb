@@ -6,7 +6,7 @@ import TournamentManager from "./TournamentManager.js";
 import TournamentAnnouncement from "./TournamentAnnouncement";
 import TournamentMatches from "./TournamentMatches";
 import TournamentTeams from "./TournamentTeams";
-import AppBar from './components/appbar';
+import AppBar from './components/Appbar';
 import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -45,12 +45,12 @@ function TournamentListItem(props) {
 
               <Box sx={{flexGrow: 1}}>
               <Grid container spacing={4} justifyContent="center" wrap="wrap">
-                  <Grid item sx={4}>
+                  <Grid item>
                     <Link to={`/tournament/${props.tournament.id}/manage`}>
                       <Button className="ManageButton" variant="contained" color="primary">Manage Tournament</Button>
                     </Link>
                   </Grid>
-                  <Grid item sx={4}>
+                  <Grid item >
                   <Link to={`/tournament/${props.tournament.id}`} >
                     <Button variant="contained" color="success">
                       View Tournament

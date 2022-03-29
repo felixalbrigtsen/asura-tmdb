@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import AppBar from "./components/appbar";
+import AppBar from "./components/Appbar";
 
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material'
 import FileUploadIcon from '@mui/icons-material/FileUpload';

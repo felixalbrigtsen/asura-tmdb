@@ -1,11 +1,16 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 // import { AlertContainer, alert } from "react-custom-alert";
-import AppBar from "./components/appbar";
-import TournamentBar from "./components/tournamentbar";
+import AppBar from "./components/Appbar";
+import TournamentBar from "./components/TournamentBar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack} from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+
+//Dependency for snackbar/popup
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 let submitChanges = curryTournamentId => event => {
   event.preventDefault();
@@ -68,10 +73,29 @@ let submitChanges = curryTournamentId => event => {
     })
     .catch((error) => showError(error));
 }
+let deleteTournament = tournamentId => event => {
+  event.preventDefault();
+  //TODO: https://mui.com/components/dialogs/
+  let certain = window.confirm("Are you sure? Click OK to delete tournament");
+  if (!certain) {
+    return;
+  }
 
+  fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}`, {
+    method: "DELETE",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "OK") {
+        alert("Tournament Deleted successfully");
+        window.location.href = "/";
+      } else {
+        showError(data.data);
+      }
+    })
+    .catch((error) => showError(error));
+}
 function ManageTournament(props) {
-  let [tournamentInfo, setTournamentInfo] = React.useState([]);
-
   React.useEffect(() => {
     fetch(
       process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`
@@ -81,8 +105,6 @@ function ManageTournament(props) {
         if (data.status !== "OK") {
           showError(data.data);
         }
-
-        setTournamentInfo(data.data);
         document.getElementById("editName").value = data.data.name;
         document.getElementById("editDesc").value = data.data.description;
         document.getElementById("editStartDate").value = data.data.startTime.slice(0, 16);
@@ -117,27 +139,16 @@ function ManageTournament(props) {
                   </Grid>
                 </Grid>
               </Box> */}
-          {/* <InputLabel htmlFor="editStartDate">Edit Start Time:</InputLabel> */}
           <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
-          {/* <InputLabel htmlFor="editEndDate">Edit End Time:</InputLabel> */}
           <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/>
+
           <Button type="submit" variant="contained" onClick={submitChanges(props.tournamentId)} color="primary" >
             Save Tournament Details
-          </Button>
+          </Button>          
       
       </Stack>
     </form>
     </>
-  );
-}
-
-function AnnounceButton(props) {
-  return (
-    <Link to="/tournament/manage/announcement">
-      <Button id="sendAnnon" variant="outlined" color="primary">
-        Send Tournament Announcement
-      </Button>
-    </Link>
   );
 }
 
@@ -146,25 +157,27 @@ function showError(error) {
   console.error(error);
 }
 
-function InviteButton(props) {
-  function event() {
-    copy();
-    alertSuccess();
+function ClipboardButton(props) {
+  const [open, setOpen] = React.useState(false);
+  function copyString() {
+    navigator.clipboard.writeText(props.clipboardContent || "");
+    setOpen(true);
   }
-  const copy = () => {
-    navigator.clipboard.writeText("discord.gg/asura");
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') { return }
+    setOpen(false);
   };
-  const alertSuccess = () =>
-    alert({ message: "Copied to clipboard.", type: "success" });
+  const closeAction = <>
+    <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+      <CloseIcon fontSize="small" />
+    </IconButton>
+  </>
+    
   return (
-    <Button
-      id="createInvLink"
-      onClick={event}
-      variant="outlined"
-      color="primary"
-    >
-      Copy Invite Link
-    </Button>
+    <>
+      <Button onClick={copyString} variant="outlined" color="primary" sx={{margin: "auto 5px"}} >Copy {props.name}</Button>
+      <Snackbar open={open} autoHideDuration={1500} onClose={handleClose} message={props.name + " copied to clipboard"} action={closeAction} />
+    </>
   );
 }
 
@@ -177,8 +190,14 @@ export default function TournamentManager(props) {
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
       <ManageTournament tournamentId={tournamentId} />
       {/* <AnnounceButton /> */}
-      <InviteButton />
-      {/* <AlertContainer floatingTime={5000} /> */}
+      <Box sx={{width: "100%"}}>
+        <Button variant="contained" color="error" onClick={deleteTournament(tournamentId)} sx={{margin: "auto 5px"}}>
+          Delete Tournament
+        </Button>
+        <ClipboardButton clipboardContent={"https://discord.gg/asura"} name="Discord Invite Link" />
+        <ClipboardButton clipboardContent={"https://asura.feal.no/tournament/" + tournamentId} name="Tournament Link" />
+      </Box>
+      
     </Paper>
     </>
   );

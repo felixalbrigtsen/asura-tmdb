@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import Appbar from './components/appbar';
-import TournamentBar from "./components/tournamentbar";
+import Appbar from './components/Appbar';
+import TournamentBar from "./components/TournamentBar";
 import { useParams } from 'react-router-dom'
 import { Button, Paper, Stack } from "@mui/material";
 import "./components/tournamentBracket.css";
@@ -186,8 +186,8 @@ export default function TournamentOverview(props) {
 
   return (
     <>
-      <Appbar pageTitle="Tournament matches" />
-      <TournamentBar pageTitle="Tournament Matches" />
+      <Appbar pageTitle="View Tournament" />
+      <TournamentBar pageTitle="View Tournament" />
       <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
     </>
   );
