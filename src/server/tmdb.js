@@ -160,6 +160,14 @@ function getTournament(tournamentId) {
           .catch(err => reject(err))
           .then(teams => {
             let tournament = tournaments[0];
+            //TODO: CHeckh this
+//             /home/felixalb/Documents/NTNU/semester2/sysut_server/src/server/tmdb.js:163
+//             tournament.teamCount = teams.length;
+//                                  ^
+
+// TypeError: Cannot set properties of undefined (setting 'teamCount')
+//     at /home/felixalb/Documents/NTNU/semester2/sysut_server/src/server/tmdb.js:163:34
+
             tournament.teamCount = teams.length;
             resolve(tournament);
           });
@@ -181,34 +189,46 @@ function getMatchesByTournamentId(tournamentId) {
   });
 }
 
+function createMatch(tournamentId, parentMatchId, tier) {
+  //Returns Promise<int> witht the inserted ID.
+  return new Promise(function(resolve, reject) {
+    connection.query("INSERT INTO matches (tournamentId, parentMatchId, tier) VALUES (?, ?, ?)",
+    [escapeString(tournamentId), escapeString(parentMatchId), escapeString(tier)], (err, result) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(result.insertId);
+      }
+    });
+  });
+}
+
 function createTournament(name, description, startDate, endDate, teamLimit) {
   startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
   endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
   return new Promise(function(resolve, reject) {
     connection.query("INSERT INTO tournaments (name, description, startTime, endTime, teamLimit) VALUES (?, ?, ?, ?, ?)", 
-    [escapeString(name), escapeString(description), startDate, endDate, teamLimit], (err, sets) => {
+    [escapeString(name), escapeString(description), startDate, endDate, teamLimit], async (err, sets) => {
       if (err) {
         console.log(err);
         reject(err);
       } else {
-
         // Create the matches for the tournament
+        let matchIds = [];
         let tournamentId = sets.insertId;
         let tiers = Math.log2(teamLimit);
+
         for (let tier = 0; tier < tiers; tier++) {
           let matchCount = Math.pow(2, tier);
-          for (let matchId = 0; matchId < matchCount; matchId++) {
+          for (let i = 0; i < matchCount; i++) {
             let parentMatchId = null;
             if (tier > 0) {
-              parentMatchId = Math.pow(2, tier - 1) + Math.floor((matchId - (matchId % 2)) / 2);
+              let parentMatchIndex = Math.pow(2, tier - 1) + Math.floor((i - (i % 2)) / 2) - 1;
+              parentMatchId = matchIds[parentMatchIndex];
             }
-            connection.query("INSERT INTO matches (tournamentId, parentMatchId, tier) VALUES (?, ?, ?)", 
-            [tournamentId, parentMatchId, tier], (err, sets) => {
-              if (err) {
-                console.error("Could not create match:");
-                console.log(err);
-              }
-            });
+            let newMatchId = await createMatch(tournamentId, parentMatchId, tier);
+            matchIds.push(newMatchId);
           }
         }
         resolve({message: "Tournament created", tournamentId: sets.insertId});
@@ -311,6 +331,19 @@ async function createTeam(tournamentId, name) {
   });
 }
 
+function deleteTeam(teamId) {
+  return new Promise(async function(resolve, reject) {
+    connection.query("DELETE FROM teams WHERE id = ?", [escapeString(teamId)], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+
+        resolve("Team deleted");
+      }
+    });
+  });
+}
 
 //Private function, assigns a starting match to the given team
 async function assignFirstMatch(teamId, tournamentId) {
