@@ -115,11 +115,6 @@ function TeamEditor(props) {
       .catch(error => showError(error));
   }, [props.selectedTeamId]);
 
-  function postEdit() {
-    let formData = new FormData();
-    formData.append("name", document.getElementById("teamNameInput").value);
-  }
-
   if (props.selectedTeamId === -1 || !team) {
     return (
       <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
@@ -139,7 +134,6 @@ function TeamEditor(props) {
   function saveTeam() {
     let formData = new FormData();
     formData.append("name", team.name);
-    console.log(team);
     let body = new URLSearchParams(formData)
     fetch(process.env.REACT_APP_API_URL + `/team/${team.id}/edit`, {
       method: "POST",
