@@ -8,6 +8,7 @@ module.exports = {
   getTeam: getTeam,
   createTeam: createTeam,
   editTeam: editTeam,
+  deleteTeam: deleteTeam,
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
   createTournament: createTournament,
@@ -338,7 +339,6 @@ function deleteTeam(teamId) {
         console.log(err);
         reject(err);
       } else {
-
         resolve("Team deleted");
       }
     });

@@ -137,6 +137,23 @@ api.get("/team/:teamId", (req, res) => {
   .catch(err => res.send({"status": "error", "data": err}));
 });
 
+api.post("/team/:teamId/delete", (req, res) => {
+  let teamId = req.params.teamId;
+  if (isNaN(teamId)) {
+    res.json({"status": "error", "data": "teamId must be a number"});
+    return
+  }
+  try {
+    teamId = parseInt(teamId);
+  } catch (err) {
+    res.json({"status": "error", "data": "teamId must be a number"});
+    return
+  }
+  tmdb.deleteTeam(teamId)
+    .then(match => res.send({"status": "OK", "data": match}))
+    .catch(err => res.send({"status": "error", "data": err}));
+});
+
 api.post("/team/:teamId/edit", (req, res) => {
   let teamId = req.params.teamId;
   let teamName = req.body.name;

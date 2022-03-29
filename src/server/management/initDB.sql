@@ -33,9 +33,9 @@ CREATE TABLE matches (
     tier INTEGER,
 
     FOREIGN KEY (tournamentId) REFERENCES tournaments (id),
-    FOREIGN KEY (team1Id) REFERENCES teams (id),
-    FOREIGN KEY (team2Id) REFERENCES teams (id),
-    FOREIGN KEY (winnerId) REFERENCES teams (id)
+    FOREIGN KEY (team1Id) REFERENCES teams (id) ON DELETE SET NULL,
+    FOREIGN KEY (team2Id) REFERENCES teams (id) ON DELETE SET NULL,
+    FOREIGN KEY (winnerId) REFERENCES teams (id) ON DELETE SET NULL
 );
 
 CREATE TABLE players (
