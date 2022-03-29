@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import Appbar from './components/appbar';
+import TournamentBar from "./components/tournamentbar";
 import { useParams } from 'react-router-dom'
 import { Button, Paper, Stack } from "@mui/material";
 import "./components/tournamentBracket.css";
@@ -164,6 +165,7 @@ function BracketViewer(props) {
 
   return (
       (matches && teams) ?
+        // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
         <div className="bracket">
           {matches.map(tier => {
             let tierNum = tier[0].tier;
@@ -185,16 +187,7 @@ export default function TournamentOverview(props) {
   return (
     <>
       <Appbar pageTitle="Tournament matches" />
-      <Paper sx={{width: "90vw", margin: "10px auto"}} component={Stack} direction="row" justifyContent="center">
-        <Link to={`/tournament/${tournamentId}/manage`} >
-          <Button className="ManageButton" variant="contained" color="rackley" sx={{margin: "15px", fontSize: "1.2em"}} >Manage Tournament</Button>
-        </Link>
-        <Link to={`/tournament/${tournamentId}/teams`} >
-          <Button className="OverviewButton" variant="contained" color="secondary" sx={{margin: "15px", fontSize: "1.2em"}} >Manage Teams</Button>
-        </Link>
-      </Paper>
-     
-      
+      <TournamentBar pageTitle="Tournament Matches" />
       <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
     </>
   );

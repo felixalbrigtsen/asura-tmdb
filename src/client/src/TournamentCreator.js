@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import Appbar from "./components/appbar";
+import AppBar from "./components/appbar";
 
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material'
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -160,7 +160,7 @@ function TournamentForm(props) {
 export default function TournamentCreator(props) {
   return (
     <>
-      <Appbar pageTitle="New tournament" /> 
+      <AppBar pageTitle="New tournament" /> 
       <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 20px"}} component={Container} direction="column" align="center">
       <TournamentForm />
       </Paper>

@@ -1,7 +1,8 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 // import { AlertContainer, alert } from "react-custom-alert";
-import Appbar from "./components/appbar";
+import AppBar from "./components/appbar";
+import TournamentBar from "./components/tournamentbar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack} from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -171,7 +172,8 @@ export default function TournamentManager(props) {
   const { tournamentId } = useParams();
   return (
     <>
-    <Appbar pageTitle="Edit Tournament" />
+    <AppBar pageTitle="Edit Tournament" />
+    <TournamentBar pageTitle="Edit Tournament"/>
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
       <ManageTournament tournamentId={tournamentId} />
       {/* <AnnounceButton /> */}

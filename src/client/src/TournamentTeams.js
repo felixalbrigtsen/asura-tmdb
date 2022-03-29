@@ -1,13 +1,28 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-router-dom";
 import Appbar from "./components/appbar";
+import TournamentBar from "./components/tournamentbar";
 import { Button, TextField, Stack, MenuItem, Box, InputLabel, Select, Container, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Paper, Typography} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 function showError(error) {
   alert("Something went wrong. \n" + error);
   console.error(error);
+}
+
+function ReturnButton() {
+  const { tournamentId } = useParams();
+  return(
+  <Link to={`/tournament/${tournamentId}`}>
+    <Button type="button" variant="contained" color="primary" >
+      <Box>
+        Return to Tournament
+      </Box>
+    </Button>
+  </Link>
+  )
 }
 
 function TeamCreator(props) {
@@ -77,8 +92,8 @@ function TeamList(props) {
               </b></TableCell>
               {/* <TableCell align="right">{team.members}</TableCell> */}
               <TableCell align="center">
-                <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)}>Edit</Button>
-                <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {props.onDelete(team.id); }}>Delete</Button>
+                <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)} endIcon={<EditIcon />}>Edit</Button>
+                <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {props.onDelete(team.id); }} endIcon={<DeleteIcon />}>Delete</Button>
               </TableCell>
             </TableRow>
 
@@ -196,6 +211,8 @@ export default function TournamentTeams(props) {
   return (
     <>
     <Appbar pageTitle="Edit teams" />
+    <TournamentBar pageTitle="Edit Teams" />
+    <ReturnButton />
     <div className="tournamentTeams">
       <TeamCreator tournamentId={tournamentId} teams={teams} onTeamCreated={getTeams} />
       <TeamList teams={teams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />

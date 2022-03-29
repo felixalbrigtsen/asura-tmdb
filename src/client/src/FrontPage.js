@@ -6,17 +6,16 @@ import TournamentManager from "./TournamentManager.js";
 import TournamentAnnouncement from "./TournamentAnnouncement";
 import TournamentMatches from "./TournamentMatches";
 import TournamentTeams from "./TournamentTeams";
-import Appbar from './components/appbar';
-import { Button, Container, Typography, Box } from "@mui/material";
-import { Card, CardContent, CardMedia, Paper } from "@mui/material";
+import AppBar from './components/appbar';
+import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function CreateButton(props) {
   return (
     <Link to="/create">
-      <Button variant="contained" color="success" style={{ margin: '2.5% 0 0 0'}}>
+      <Button variant="contained" color="success">
         <Box sx={{
-          marginRight: '2%',
+          paddingRight: '2%',
         }}>
           Create Tournament
         </Box>
@@ -28,8 +27,7 @@ function CreateButton(props) {
 
 function TournamentListItem(props) {
   return (
-    <Container maxWidth="lg" align="start" sx={{margin:'2.5% 0'}}>
-        <Paper elevation={8}>
+        <Paper elevation={8} >
           <Card>
             <CardMedia 
               component="img"
@@ -38,36 +36,32 @@ function TournamentListItem(props) {
               // image="Asura_Rex.png"
               image="banner2.png"
             />
-            <CardContent>
+            <CardContent align="left">
               <Typography variant="h3" component="div" align="center">{props.tournament.name} </Typography>
               <Typography variant="h5" color="text.primary">{props.tournament.description}</Typography>
               <Typography variant="body2" color="text.secondary"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
               <Typography variant="body2" color="text.secondary"> End: {props.tournament.endTime.toLocaleString()} </Typography>
               <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
 
-              <Box sx={{
-                margin: 'auto',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                }} component="span">
-                  <Box sx={{margin: '0 2% 0 2%'}}>
+              <Box sx={{flexGrow: 1}}>
+              <Grid container spacing={4} justifyContent="center" wrap="wrap">
+                  <Grid item sx={4}>
                     <Link to={`/tournament/${props.tournament.id}/manage`}>
                       <Button className="ManageButton" variant="contained" color="primary">Manage Tournament</Button>
                     </Link>
-                  </Box>
-                  <Box sx={{margin: '0 2% 0 2%'}}>
+                  </Grid>
+                  <Grid item sx={4}>
                   <Link to={`/tournament/${props.tournament.id}`} >
                     <Button variant="contained" color="success">
                       View Tournament
                     </Button>
                   </Link>
-                  </Box>
+                  </Grid>
+              </Grid>
               </Box>
             </CardContent>
           </Card>     
-        </Paper>   
-    </Container>
+        </Paper>
   );
 }
 
@@ -95,50 +89,32 @@ function TournamentList() {
   }, []);
 
   return <>
+  <Stack spacing={3} sx={{margin: "10px auto"}}>
     {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
- 
+  </Stack>
+    
   </>;
 }
-
-//<ListElement name={data[i].name} competitors={data[i].teamLimit} date={data[i].startTime}/>
-
 function Home() {
   return (
-    <React.StrictMode>
-      <Appbar pageTitle="Tournaments" />
-      <main>
-        <Container align="center">
+    <>
+      <AppBar pageTitle="Asura Tournaments" />
+        <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
+          <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
+            {/* <CreateButton /> */}
+            <Typography variant="h3">Tournaments</Typography>
             <CreateButton />
-            <Typography variant="h2" style={{margin:'2% 0'}}>
-              Tournaments
-            </Typography>
-            <TournamentList />
-          {/* <ListElement
-            name="Weekend Warmup"
-            competitors="16"
-            date="29.04.2022"
-          />
-          <ListElement
-            name="Saturday Showdown"
-            competitors="8"
-            date="30.04.2022"
-          />
-          <ListElement
-            name="Sunday Funday"
-            competitors="64"
-            date="01.05.2022"
-          /> */}
-          
+          </Box>
+          <TournamentList />
         </Container>
-      </main>
-      <footer className="footer"></footer>
-    </React.StrictMode>
+    </>
   );
 }
 
 export default function App() {
   return (
-    <Router>
+    <React.StrictMode>
+      <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<TournamentCreator />} />
@@ -152,5 +128,6 @@ export default function App() {
         />
       </Routes>
     </Router>
+    </React.StrictMode>
   );
 }
