@@ -25,6 +25,13 @@ function CreateButton(props) {
   );
 }
 
+function shorten(description, maxLength) {
+  if (description.length > maxLength) {
+    return description.substring(0, maxLength) + "...";
+  }
+  return description;
+}
+
 function TournamentListItem(props) {
   return (
         <Paper elevation={8} >
@@ -38,7 +45,7 @@ function TournamentListItem(props) {
             />
             <CardContent align="left">
               <Typography variant="h3" component="div" align="center">{props.tournament.name} </Typography>
-              <Typography variant="h5" color="text.primary">{props.tournament.description}</Typography>
+              <Typography variant="h5" color="text.primary">{shorten(props.tournament.description, 200)}</Typography>
               <Typography variant="body2" color="text.secondary"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
               <Typography variant="body2" color="text.secondary"> End: {props.tournament.endTime.toLocaleString()} </Typography>
               <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
