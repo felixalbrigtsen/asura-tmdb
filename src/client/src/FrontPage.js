@@ -59,32 +59,34 @@ function TournamentListItem(props) {
               component="img"
               alt="tournament image"
               height="140"
-              // image="Asura_Rex.png"
               image="banner2.png"
             />
             <CardContent align="left">
               <Typography variant="h3" component="div" align="center">{props.tournament.name} </Typography>
-              <Typography variant="body2"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
-              <Typography variant="body2"> End: {props.tournament.endTime.toLocaleString()} </Typography>
+              
+              <Box component={Stack} direction="column">
+                <Typography variant="body"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
+                <Typography variant="body"> End: {props.tournament.endTime.toLocaleString()} </Typography>
+              </Box>
+              
               <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
               <Description />
-              {/* <Typography variant="h5" color="text.primary" color="text.secondary" onClick={toggleDescription}>{longDescription ? props.tournament.description : (shorten(props.tournament.description, 200))}</Typography> */}
               
               <Box sx={{flexGrow: 1, marginTop: "20px"}}>
-              <Grid container spacing={4} justifyContent="center" wrap="wrap">
-                  <Grid item>
-                    <Link to={`/tournament/${props.tournament.id}/manage`}>
-                      <Button className="ManageButton" variant="contained" color="primary">Edit Tournament</Button>
+                <Grid container spacing={4} justifyContent="center" wrap="wrap">
+                    <Grid item>
+                      <Link to={`/tournament/${props.tournament.id}/manage`}>
+                        <Button className="ManageButton" variant="contained" color="primary">Edit Tournament</Button>
+                      </Link>
+                    </Grid>
+                    <Grid item >
+                    <Link to={`/tournament/${props.tournament.id}`} >
+                      <Button variant="contained" color="success">
+                        View Tournament
+                      </Button>
                     </Link>
-                  </Grid>
-                  <Grid item >
-                  <Link to={`/tournament/${props.tournament.id}`} >
-                    <Button variant="contained" color="success">
-                      View Tournament
-                    </Button>
-                  </Link>
-                  </Grid>
-              </Grid>
+                    </Grid>
+                </Grid>
               </Box>
             </CardContent>
           </Card>     

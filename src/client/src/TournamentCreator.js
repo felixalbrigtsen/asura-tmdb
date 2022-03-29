@@ -125,8 +125,8 @@ function TournamentForm(props) {
           </Grid>
         </Box> */}
         <Box>
-          <TextField type="datetime-local" InputProps={{ readOnly: true }} id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
-          <TextField type="datetime-local" InputProps={{ readOnly: true }} id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginLeft: "2%"}} />
+          <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
+          <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginLeft: "2%"}} />
         </Box>
         <InputLabel id="max-teams-label">Maximum number of teams</InputLabel>
         
