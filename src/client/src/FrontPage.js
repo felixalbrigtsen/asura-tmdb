@@ -7,8 +7,10 @@ import TournamentAnnouncement from "./TournamentAnnouncement";
 import TournamentMatches from "./TournamentMatches";
 import TournamentTeams from "./TournamentTeams";
 import AppBar from './components/Appbar';
-import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid } from "@mui/material";
+import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 function CreateButton(props) {
   return (
@@ -37,6 +39,19 @@ function TournamentListItem(props) {
   function toggleDescription() {
     setLongDescription(!longDescription);
   }
+  function Description() {
+    if (longDescription) {
+      return( <Box component={Stack} direction="row">
+        <Typography variant="body1" onClick={toggleDescription}>{props.tournament.description}</Typography>
+        <KeyboardDoubleArrowUpIcon onClick={toggleDescription} />
+      </Box> ) 
+  } else {
+      return <Box component={Stack} direction="row">
+        <Typography variant="body1" color="text.secondary" onClick={toggleDescription}>{shorten(props.tournament.description, 200)}</Typography>
+        <KeyboardDoubleArrowDownIcon onClick={toggleDescription} />
+      </Box>;
+    }
+  }
   return (
         <Paper elevation={8} >
           <Card>
@@ -52,7 +67,8 @@ function TournamentListItem(props) {
               <Typography variant="body2"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
               <Typography variant="body2"> End: {props.tournament.endTime.toLocaleString()} </Typography>
               <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
-              <Typography variant="h5" color="text.primary" color="text.secondary" onClick={toggleDescription}>{longDescription ? props.tournament.description : shorten(props.tournament.description, 200)}</Typography>
+              <Description />
+              {/* <Typography variant="h5" color="text.primary" color="text.secondary" onClick={toggleDescription}>{longDescription ? props.tournament.description : (shorten(props.tournament.description, 200))}</Typography> */}
               
               <Box sx={{flexGrow: 1, marginTop: "20px"}}>
               <Grid container spacing={4} justifyContent="center" wrap="wrap">
