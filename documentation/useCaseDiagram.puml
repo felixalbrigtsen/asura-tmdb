@@ -27,8 +27,8 @@ rectangle System {
     
     package Tournament {
         usecase "Manage tournament" as MngTou
+        usecase "Create tournament" as TouCreateT
         together {
-            usecase "Create tournament" as TouCreateT
             usecase "Edit tournament" as TouEdit
             usecase "Delete tournament" as TouDelete
             usecase "View teams" as TeamView
@@ -59,11 +59,11 @@ adm --> HomeView
 u1 --> HomeView
 
 SysLogin --> MngTou
+SysLogin --> TouCreateT
 
 SysMngAdm -l--> SysCrtAdm
 SysMngAdm -l--> SysDelAdm
 
-MngTou --> TouCreateT
 MngTou --> TouEdit
 MngTou --> TouDelete
 MngTou --> TeamView
