@@ -4,13 +4,14 @@ import TournamentCreator from "./TournamentCreator.js";
 import TournamentOverview from "./TournamentOverview.js";
 import TournamentManager from "./TournamentManager.js";
 import TournamentAnnouncement from "./TournamentAnnouncement";
-import TournamentMatches from "./TournamentMatches";
+import TournamentHistory from "./TournamentHistory";
 import TournamentTeams from "./TournamentTeams";
-import AppBar from './components/Appbar';
+import AppBar from './components/AsuraBar';
 import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import EditIcon from '@mui/icons-material/Edit';
 
 function CreateButton(props) {
   return (
@@ -79,7 +80,7 @@ function TournamentListItem(props) {
                 <Grid container spacing={4} justifyContent="center" wrap="wrap">
                     <Grid item>
                       <Link to={`/tournament/${props.tournament.id}/manage`}>
-                        <Button className="ManageButton" variant="contained" color="primary">Edit Tournament</Button>
+                        <Button className="ManageButton" variant="contained" color="primary" endIcon={<EditIcon />}>Edit Tournament</Button>
                       </Link>
                     </Grid>
                     <Grid item >
@@ -153,7 +154,7 @@ export default function App() {
         <Route path="/tournament/:tournamentId" element={<TournamentOverview />} />
         <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
         <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />
-        <Route path="/tournament/matches" element={<TournamentMatches />} />
+        <Route path="/history" element={<TournamentHistory />} />
         <Route
           path="/tournament/manage/announcement"
           element={<TournamentAnnouncement />}
