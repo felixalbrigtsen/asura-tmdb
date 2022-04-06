@@ -1,39 +1,40 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import AppBar from "./components/Appbar";
+import AppBar from "./components/AsuraBar";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 
-import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material'
+import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
-function postTournament(tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams) {
+function postTournament(showError, tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams) {
   if (!tournamentName || tournamentName === "") {
-    alert("Tournament name cannot be empty");
+    showError("Tournament name cannot be empty");
     return;
   }
   if (!tournamentDescription || tournamentDescription === "") {
-    alert("Tournament description cannot be empty");
+    showError("Tournament description cannot be empty");
     return;
   }
   if (!tournamentStartDate || tournamentStartDate === "") {
-    alert("Tournament start date cannot be empty");
+    showError("Tournament start date cannot be empty");
     return;
   }
   if (!tournamentEndDate || tournamentEndDate === "") {
-    alert("Tournament end date cannot be empty");
+    showError("Tournament end date cannot be empty");
     return;
   }
-  if (!tournamentMaxTeams || isNaN(tournamentMaxTeams) || tournamentMaxTeams < 2) {
-    alert("Tournament max teams cannot be empty");
+  if (!tournamentMaxTeams || isNaN(tournamentMaxTeams) || tournamentMaxTeams < 4) {
+    showError("Tournament max teams cannot be empty");
     return;
   }
 
   if (tournamentStartDate > tournamentEndDate) {
-    alert("Tournament start date cannot be after end date");
+    showError("Tournament start date cannot be after end date");
     return;
   }
   let today = new Date();
   if (tournamentStartDate < today || tournamentEndDate < today) {
-    alert("Tournament start and end date must be after today");
+    showError("Tournament start and end date must be after today");
     return;
   }
 
@@ -65,13 +66,9 @@ function postTournament(tournamentName, tournamentDescription, tournamentStartDa
     .catch(error => showError(error));
 
 }
-function showError(error) {
-  alert("Something went wrong. \n" + error);
-  console.error(error);
-}
 
 function TournamentForm(props) {
-  const [maxTeamsExponent, setMaxTeamsExponent] = React.useState(1);
+  const [maxTeamsExponent, setMaxTeamsExponent] = React.useState(2);
   function sliderUpdate(event) {
     setMaxTeamsExponent(event.target.value);
   }
@@ -80,11 +77,14 @@ function TournamentForm(props) {
     event.preventDefault();
     console.log(maxTeamsExponent)
     let maxTeams = Math.pow(2, maxTeamsExponent);
+    let startTime = new Date(document.getElementById("startDatePicker").value).toUTCString();
+    let endTime = new Date(document.getElementById("endDatePicker").value).toUTCString();
     postTournament(
+      props.showError,
       document.getElementById("nameInput").value,
       document.getElementById("descriptionInput").value,
-      document.getElementById("startDatePicker").value,
-      document.getElementById("endDatePicker").value,
+      startTime,
+      endTime,
       maxTeams
     );
   }
@@ -124,7 +124,7 @@ function TournamentForm(props) {
           </Grid>
         </Box> */}
         <Box>
-          <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
+          <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
           <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginLeft: "2%"}} />
         </Box>
         <InputLabel id="max-teams-label">Maximum number of teams</InputLabel>
@@ -151,12 +151,22 @@ function TournamentForm(props) {
 }
 
 export default function TournamentCreator(props) {
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  function showError(message) {
+    setOpenError(false);
+    setErrorMessage(message);
+    setOpenError(true);
+  }
+
   return (
     <>
       <AppBar pageTitle="New tournament" /> 
       <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 20px"}} component={Container} direction="column" align="center">
-      <TournamentForm />
+      <TournamentForm showError={showError} />
       </Paper>
+      
+      <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />
     </>
   );
 }
