@@ -5,7 +5,7 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import DatePicker from '@mui/lab/DatePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
@@ -113,7 +113,7 @@ function TournamentForm(props) {
         <TextField type="text" multiline={true} id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
         <Box>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
+            <DateTimePicker
               label="Start Time"
               value={value}
               id="startDatePicker"
@@ -124,7 +124,7 @@ function TournamentForm(props) {
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
+            <DateTimePicker
               label="End Time"
               value={value}
               id="endDatePicker"
