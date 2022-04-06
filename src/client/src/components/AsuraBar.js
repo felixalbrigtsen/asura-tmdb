@@ -7,7 +7,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from "./../Asura2222.png";
 
-function loggedInMenu() {
+function LoggedInMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -30,6 +30,7 @@ function loggedInMenu() {
   );  
 }
 
+
 function notLoggedInButton() {
   return (
     <>
@@ -43,7 +44,7 @@ function notLoggedInButton() {
 }
 
 export default function Appbar(props) {
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
     return (
     <>
@@ -70,7 +71,7 @@ export default function Appbar(props) {
                 <Typography component="div"><h2>{props.pageTitle || ""}</h2></Typography>
               </Grid>
               <Grid item xs={2}>
-                  { isLoggedIn ? <loggedInMenu /> : <notLoggedInButton /> } 
+                  { isLoggedIn ? <LoggedInMenu /> : <notLoggedInButton /> } 
               </Grid>
             </Grid>
           </Box>
