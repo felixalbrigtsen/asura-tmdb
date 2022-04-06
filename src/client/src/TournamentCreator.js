@@ -4,7 +4,6 @@ import AppBar from "./components/AsuraBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -90,6 +89,7 @@ function TournamentForm(props) {
       endTime,
       maxTeams
     );
+    console.log(startTime, endTime);
   }
 
   const marks = [
@@ -101,7 +101,8 @@ function TournamentForm(props) {
     {  value: 7,  label: "128",}
   ];
 
-  const [value, setValue] = React.useState([null, null]);
+  const [startValue, setStartValue] = React.useState(new Date());
+  const [endValue, setEndValue] = React.useState(new Date());
 
   return (
     <>
@@ -114,24 +115,34 @@ function TournamentForm(props) {
         <Box>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
-              label="Start Time"
-              value={value}
-              id="startDatePicker"
+              label={"Start Time"}
+              inputVariant="outlined"
+              ampm={false}
+              mask="____-__-__ __:__"
+              format="yyyy-MM-dd HH:mm"
+              inputFormat="yyyy-MM-dd HH:mm"
+              value={startValue}
               onChange={(newValue) => {
-                setValue(newValue);
+                setStartValue(newValue);
+                console.log(new Date(newValue).toUTCString());
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField id="startDatePicker" {...params} />}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
-              label="End Time"
-              value={value}
-              id="endDatePicker"
+              label={"End Time"}
+              inputVariant="outlined"
+              ampm={false}
+              mask="____-__-__ __:__"
+              format="yyyy-MM-dd HH:mm"
+              inputFormat="yyyy-MM-dd HH:mm"
+              value={endValue}
               onChange={(newValue) => {
-                setValue(newValue);
+                setEndValue(newValue);
+                console.log(new Date(newValue).toUTCString());
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField id="endDatePicker" {...params} />}
             />
           </LocalizationProvider>
           {/* <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />

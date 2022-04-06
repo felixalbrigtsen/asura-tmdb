@@ -6,9 +6,11 @@ import TournamentBar from "./components/TournamentBar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
 import { Snackbar, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 let submitChanges = curryTournamentId => event => {
   event.preventDefault();
@@ -113,9 +115,14 @@ function ManageTournament(props) {
         document.getElementById("editDesc").value = data.data.description;
         document.getElementById("editStartDate").value = data.data.startTime.slice(0, 16);
         document.getElementById("editEndDate").value = data.data.endTime.slice(0, 16);
+        console.log(data.data.endTime);
+        console.log(data.data.endTime.slice(0, 16));
       })
       .catch((err) => showError(err));
   }, []);
+  
+  const [startValue, setStartValue] = React.useState();
+  const [endValue, setEndValue] = React.useState();
 
   return (
     <>
@@ -123,9 +130,42 @@ function ManageTournament(props) {
     <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={2} align="center">
           <TextField type="text" id="editName" label="Edit Name:" placeholder="Edit Name" InputLabelProps={{shrink: true}}/>
           <TextField type="text" multiline={true} id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
-          
-          <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
-          <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/>
+          <Box>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              label={"Start Time"}
+              inputVariant="outlined"
+              ampm={false}
+              mask="____-__-__ __:__"
+              format="yyyy-MM-dd HH:mm"
+              inputFormat="yyyy-MM-dd HH:mm"
+              value={startValue}
+              onChange={(newValue) => {
+                setStartValue(newValue);
+                console.log(new Date(newValue).toUTCString());
+              }}
+              renderInput={(params) => <TextField id="editStartDate" {...params} />}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              label={"End Time"}
+              inputVariant="outlined"
+              ampm={false}
+              mask="____-__-__ __:__"
+              format="yyyy-MM-dd HH:mm:"
+              inputFormat="yyyy-MM-dd HH:mm"
+              value={endValue}             
+              onChange={(newValue) => {
+                setEndValue(newValue);
+                console.log(new Date(newValue).toUTCString());
+              }}
+              renderInput={(params) => <TextField id="editEndDate" {...params} />}
+            />
+          </LocalizationProvider>
+        </Box>
+          {/* <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
+          <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/> */}
 
           <Button type="submit" variant="contained" onClick={submitChanges(props.tournamentId)} color="primary" >
             Save Tournament Details
