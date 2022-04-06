@@ -8,6 +8,7 @@ import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/mate
 import { Snackbar, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 let submitChanges = curryTournamentId => event => {
   event.preventDefault();
@@ -184,7 +185,7 @@ export default function TournamentManager(props) {
       <ManageTournament tournamentId={tournamentId} />
       {/* <AnnounceButton /> */}
       <Box sx={{width: "100%"}}>
-        <Button variant="contained" color="error" onClick={deleteTournament(tournamentId)} sx={{margin: "auto 5px"}}>
+        <Button variant="contained" color="error" onClick={deleteTournament(tournamentId)} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
           Delete Tournament
         </Button>
         <ClipboardButton clipboardContent={"https://discord.gg/asura"} name="Discord Invite Link" />
