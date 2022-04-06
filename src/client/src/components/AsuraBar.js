@@ -16,6 +16,12 @@ function LoggedInMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const logout = () => {
+    console.log("Logged out");
+    setAnchorEl(null);
+  }
+
   return (
     <>
       <IconButton size="large" edge="start" color="inherit" aria-label="menu"  onClick={handleClick}>
@@ -24,18 +30,23 @@ function LoggedInMenu() {
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{'aria-labelledby': 'basic-button',}} sx={{position:"absolute"}}>
           <Link to="/" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<AccountCircleIcon />}>Profile</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
-          <Link to="/logout" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<LogoutIcon />}>Logout</Button></MenuItem></Link>
+          <Link to="/" style={{color:"black"}}><MenuItem onClick={logout}><Button endIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
       </Menu> 
     </> 
   );  
 }
 
 
-function notLoggedInButton() {
+function NotLoggedInButton() {
+
+  const login = () => {
+    console.log("Logged in");
+  }
+
   return (
     <>
-    <Link to="/create" style={{color:"white"}}>
-      <Button sx={{color:"white"}}>
+    <Link to="/" style={{color:"white"}}>
+      <Button sx={{color:"white"}} onclick={login}>
         Login
         </Button>
       </Link>
@@ -44,7 +55,7 @@ function notLoggedInButton() {
 }
 
 export default function Appbar(props) {
-  const isLoggedIn = false;
+    const isLoggedIn = true; // props.isLoggedIn;
 
     return (
     <>
@@ -71,7 +82,7 @@ export default function Appbar(props) {
                 <Typography component="div"><h2>{props.pageTitle || ""}</h2></Typography>
               </Grid>
               <Grid item xs={2}>
-                  { isLoggedIn ? <LoggedInMenu /> : <notLoggedInButton /> } 
+                  { isLoggedIn ? <LoggedInMenu /> : <NotLoggedInButton /> } 
               </Grid>
             </Grid>
           </Box>
