@@ -1,15 +1,12 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 // import { AlertContainer, alert } from "react-custom-alert";
-import AppBar from "./components/Appbar";
+import AppBar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from "react-router-dom";
-import { Button, TextField, Grid, Box, Container, Paper, Stack} from "@mui/material";
+import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
+import { Snackbar, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-
-//Dependency for snackbar/popup
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
 let submitChanges = curryTournamentId => event => {
@@ -21,7 +18,7 @@ let submitChanges = curryTournamentId => event => {
   // let tournamentImageFile = document.getElementById("editImage").files[0];
   let tournamentStartDate = document.getElementById("editStartDate").value;
   let tournamentEndDate = document.getElementById("editEndDate").value;
-
+  
   if (!tournamentName || tournamentName === "") {
     alert("Tournament name cannot be empty");
     return;
@@ -48,6 +45,10 @@ let submitChanges = curryTournamentId => event => {
     alert("Tournament start and end date must be after today");
     return;
   }
+
+  tournamentStartDate = new Date(tournamentStartDate).toUTCString();
+  tournamentEndDate = new Date(tournamentEndDate).toUTCString();
+
 
   let formData = new FormData();
   formData.append("name", tournamentName);
@@ -76,10 +77,11 @@ let submitChanges = curryTournamentId => event => {
 let deleteTournament = tournamentId => event => {
   event.preventDefault();
   //TODO: https://mui.com/components/dialogs/
-  let certain = window.confirm("Are you sure? Click OK to delete tournament");
-  if (!certain) {
-    return;
-  }
+  
+  // let certain = window.confirm("Are you sure? Click OK to delete tournament");
+  // if (!certain) {
+  //   return;
+  // }
 
   fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}`, {
     method: "DELETE",
@@ -87,6 +89,7 @@ let deleteTournament = tournamentId => event => {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "OK") {
+        // TODO: Replace alert with Snackbar
         alert("Tournament Deleted successfully");
         window.location.href = "/";
       } else {
@@ -117,28 +120,9 @@ function ManageTournament(props) {
     <>
     <form>
     <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={2} align="center">
-          {/* <InputLabel htmlFor="editName">Edit name: </InputLabel> */}
           <TextField type="text" id="editName" label="Edit Name:" placeholder="Edit Name" InputLabelProps={{shrink: true}}/>
-          {/* <InputLabel htmlFor="editDesc">Edit description: </InputLabel> */}
           <TextField type="text" multiline={true} id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
           
-              {/* <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={-20} justifyContent="center">
-                  <Grid item xs={2}>
-                    <Container>Edit Image:</Container>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Container>
-                    <label htmlFor="editImage">
-                      <Button variant="contained" component="span" endIcon={<FileUploadIcon />}>
-                        Upload 
-                      </Button>
-                      <input accept="image/*" id="editImage" multiple type="file" style={{ display: 'none' }} />
-                      </label>
-                    </Container>
-                  </Grid>
-                </Grid>
-              </Box> */}
           <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
           <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/>
 
@@ -183,7 +167,16 @@ function ClipboardButton(props) {
 
 export default function TournamentManager(props) {
   const { tournamentId } = useParams();
+
+  const [open, setOpen] = React.useState(false);
+  const handleConfirm = () => {
+    return true;
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
+    
     <>
     <AppBar pageTitle="Edit Tournament" />
     <TournamentBar pageTitle="Edit Tournament"/>
@@ -197,8 +190,30 @@ export default function TournamentManager(props) {
         <ClipboardButton clipboardContent={"https://discord.gg/asura"} name="Discord Invite Link" />
         <ClipboardButton clipboardContent={"https://asura.feal.no/tournament/" + tournamentId} name="Tournament Link" />
       </Box>
-      
     </Paper>
+
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        {"Delete Tournament?"}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure? Click Confirm to delete tournament
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleConfirm} autoFocus>
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+
     </>
   );
 }
