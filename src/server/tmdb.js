@@ -45,13 +45,6 @@ function handleDisconnect() {
       throw err;                                  // server variable configures this)
     }
   });
-  connection.on('connection', conn => {
-    conn.query("SET time_zone='+02:00';", error => {
-        if(error){
-            throw error
-        }
-    })
-  });
 }
 
 
