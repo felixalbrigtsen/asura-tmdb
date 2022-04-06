@@ -5,6 +5,9 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import DatePicker from '@mui/lab/DatePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 function postTournament(showError, tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams) {
   if (!tournamentName || tournamentName === "") {
@@ -98,6 +101,8 @@ function TournamentForm(props) {
     {  value: 7,  label: "128",}
   ];
 
+  const [value, setValue] = React.useState([null, null]);
+
   return (
     <>
     <form>
@@ -106,26 +111,31 @@ function TournamentForm(props) {
         <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
         {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
         <TextField type="text" multiline={true} id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
-        {/* <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={1} justifyContent="center" wrap="wrap">
-            <Grid item xs={3}>
-              <Typography>Edit Image:</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Container>
-                <label htmlFor="editImage">
-                  <Button variant="contained" component="span" endIcon={<FileUploadIcon />}>
-                    Upload 
-                  </Button>
-                  <input accept="image/*" id="editImage" multiple type="file" style={{ display: 'none' }} />
-                </label>
-              </Container>
-            </Grid>
-          </Grid>
-        </Box> */}
         <Box>
-          <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
-          <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginLeft: "2%"}} />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Start Time"
+              value={value}
+              id="startDatePicker"
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="End Time"
+              value={value}
+              id="endDatePicker"
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+          {/* <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
+          <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginLeft: "2%"}} /> */}
         </Box>
         <InputLabel id="max-teams-label">Maximum number of teams</InputLabel>
         
