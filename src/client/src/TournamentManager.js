@@ -101,7 +101,12 @@ let deleteTournament = tournamentId => event => {
     })
     .catch((error) => showError(error));
 }
+
 function ManageTournament(props) {
+
+  const [startTime, setStartTime] = React.useState([new Date(),null]);
+  const [endTime, setEndTime] = React.useState([new Date(),null]);
+  
   React.useEffect(() => {
     fetch(
       process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`
@@ -111,18 +116,14 @@ function ManageTournament(props) {
         if (data.status !== "OK") {
           showError(data.data);
         }
+        
         document.getElementById("editName").value = data.data.name;
         document.getElementById("editDesc").value = data.data.description;
-        document.getElementById("editStartDate").value = data.data.startTime.slice(0, 16);
-        document.getElementById("editEndDate").value = data.data.endTime.slice(0, 16);
-        console.log(data.data.endTime);
-        console.log(data.data.endTime.slice(0, 16));
+        setStartTime(data.data.startTime.slice(0, 16));
+        setEndTime(data.data.endTime.slice(0, 16));
       })
       .catch((err) => showError(err));
-  }, []);
-  
-  const [startValue, setStartValue] = React.useState();
-  const [endValue, setEndValue] = React.useState();
+  }, [endTime, props.tournamentId, startTime]);
 
   return (
     <>
@@ -132,32 +133,18 @@ function ManageTournament(props) {
           <TextField type="text" multiline={true} id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
           <Box>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker
-              label={"Start Time"}
-              inputVariant="outlined"
-              ampm={false}
-              mask="____-__-__ __:__"
-              format="yyyy-MM-dd HH:mm"
-              inputFormat="yyyy-MM-dd HH:mm"
-              value={startValue}
+            <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
               onChange={(newValue) => {
-                setStartValue(newValue);
+                setStartTime(newValue);
                 console.log(new Date(newValue).toUTCString());
               }}
               renderInput={(params) => <TextField id="editStartDate" {...params} />}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker
-              label={"End Time"}
-              inputVariant="outlined"
-              ampm={false}
-              mask="____-__-__ __:__"
-              format="yyyy-MM-dd HH:mm:"
-              inputFormat="yyyy-MM-dd HH:mm"
-              value={endValue}             
+            <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm:" inputFormat="yyyy-MM-dd HH:mm" value={endTime}             
               onChange={(newValue) => {
-                setEndValue(newValue);
+                setEndTime(newValue);
                 console.log(new Date(newValue).toUTCString());
               }}
               renderInput={(params) => <TextField id="editEndDate" {...params} />}
@@ -169,7 +156,7 @@ function ManageTournament(props) {
 
           <Button type="submit" variant="contained" onClick={submitChanges(props.tournamentId)} color="primary" >
             Save Tournament Details
-          </Button>          
+          </Button>   
       
       </Stack>
     </form>

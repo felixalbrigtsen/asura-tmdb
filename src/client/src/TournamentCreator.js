@@ -75,12 +75,15 @@ function TournamentForm(props) {
     setMaxTeamsExponent(event.target.value);
   }
 
+  const [startTime, setStartTime] = React.useState([new Date(), null]);
+  const [endTime, setEndTime] = React.useState([new Date(), null]);
+
   function submitTournament(event) {
     event.preventDefault();
     console.log(maxTeamsExponent)
     let maxTeams = Math.pow(2, maxTeamsExponent);
-    let startTime = new Date(document.getElementById("startDatePicker").value).toUTCString();
-    let endTime = new Date(document.getElementById("endDatePicker").value).toUTCString();
+    let startTime = new Date(startTime).toUTCString();
+    let endTime = new Date(endTime).toUTCString();
     postTournament(
       props.showError,
       document.getElementById("nameInput").value,
@@ -101,9 +104,6 @@ function TournamentForm(props) {
     {  value: 7,  label: "128",}
   ];
 
-  const [startValue, setStartValue] = React.useState(new Date());
-  const [endValue, setEndValue] = React.useState(new Date());
-
   return (
     <>
     <form>
@@ -121,9 +121,9 @@ function TournamentForm(props) {
               mask="____-__-__ __:__"
               format="yyyy-MM-dd HH:mm"
               inputFormat="yyyy-MM-dd HH:mm"
-              value={startValue}
+              value={startTime}
               onChange={(newValue) => {
-                setStartValue(newValue);
+                setStartTime(newValue);
                 console.log(new Date(newValue).toUTCString());
               }}
               renderInput={(params) => <TextField id="startDatePicker" {...params} />}
@@ -137,9 +137,9 @@ function TournamentForm(props) {
               mask="____-__-__ __:__"
               format="yyyy-MM-dd HH:mm"
               inputFormat="yyyy-MM-dd HH:mm"
-              value={endValue}
+              value={endTime}
               onChange={(newValue) => {
-                setEndValue(newValue);
+                setEndTime(newValue);
                 console.log(new Date(newValue).toUTCString());
               }}
               renderInput={(params) => <TextField id="endDatePicker" {...params} />}
