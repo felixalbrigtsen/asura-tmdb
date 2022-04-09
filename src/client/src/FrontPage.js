@@ -110,13 +110,18 @@ function TournamentList() {
           return;
         }
 
+        let today = new Date()
+        let currenttournaments = []
         let tournaments = Object.values(data.data);
         for (let i = 0; i < tournaments.length; i++) {
           tournaments[i].startTime = new Date(tournaments[i].startTime);
           tournaments[i].endTime = new Date(tournaments[i].endTime);
+          if(today - tournaments[i].endTime <= 24*60*60*1000) {
+            currenttournaments.push(tournaments[i])
+          }
         }
-
-        setTournamentList(tournaments);
+        // tournaments.filter((tournament) => today - tournament.endTime < 24*60*60*1000)
+        setTournamentList(currenttournaments);
       })
       .catch((err) => console.log(err.message));
   }, []);
