@@ -112,27 +112,34 @@ function TournamentForm(props) {
         <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
         {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
         <TextField type="text" multiline={true} id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
-        <Box>
+        <Box flexGrow={1}>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={4}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
               onChange={(newValue) => {
                 setStartTime(newValue);
                 // console.log(new Date(newValue).toUTCString());
               }}
-              renderInput={(params) => <TextField id="startDatePicker" {...params} />}
+              renderInput={(params) => <TextField id="startDatePicker" {...params} sx={{margin: "0 2.5%"}} />}
             />
-          </LocalizationProvider>
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={4}>
+          
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={endTime}
               onChange={(newValue) => {
                 setEndTime(newValue);
                 // console.log(new Date(newValue).toUTCString());
               }}
-              renderInput={(params) => <TextField id="endDatePicker" {...params} />}
+              renderInput={(params) => <TextField id="endDatePicker" {...params} sx={{margin: "0 2.5%"}} />}
             />
           </LocalizationProvider>
+          </Grid>
           {/* <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
           <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginLeft: "2%"}} /> */}
+        </Grid>
         </Box>
         <InputLabel id="max-teams-label">Maximum number of teams</InputLabel>
         
