@@ -75,8 +75,8 @@ function TournamentForm(props) {
     setMaxTeamsExponent(event.target.value);
   }
 
-  const [startTime, setStartTime] = React.useState([new Date(), null]);
-  const [endTime, setEndTime] = React.useState([new Date(), null]);
+  const [startTime, setStartTime] = React.useState([new Date(), new Date()]);
+  const [endTime, setEndTime] = React.useState([new Date(), new Date()]);
 
   function submitTournament(event) {
     event.preventDefault();
@@ -92,7 +92,7 @@ function TournamentForm(props) {
       tournamentEnd,
       maxTeams
     );
-    console.log(startTime, endTime);
+    console.log(tournamentStart, tournamentEnd);
   }
 
   const marks = [
