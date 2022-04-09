@@ -131,25 +131,25 @@ function ManageTournament(props) {
     <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={2} align="center">
           <TextField type="text" id="editName" label="Edit Name:" placeholder="Edit Name" InputLabelProps={{shrink: true}}/>
           <TextField type="text" multiline={true} id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
-          <Box>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
-              onChange={(newValue) => {
-                setStartTime(newValue);
-                console.log(new Date(newValue).toUTCString());
-              }}
-              renderInput={(params) => <TextField id="editStartDate" {...params} />}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm:" inputFormat="yyyy-MM-dd HH:mm" value={endTime}             
-              onChange={(newValue) => {
-                setEndTime(newValue);
-                console.log(new Date(newValue).toUTCString());
-              }}
-              renderInput={(params) => <TextField id="editEndDate" {...params} />}
-            />
-          </LocalizationProvider>
+          <Box sx={{flexGrow: 1}}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
+                  onChange={(newValue) => {
+                    setStartTime(newValue);
+                    console.log(new Date(newValue).toUTCString());
+                  }}
+                  renderInput={(params) => <TextField id="editStartDate" {...params} />}
+                />
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm:" inputFormat="yyyy-MM-dd HH:mm" value={endTime}             
+                  onChange={(newValue) => {
+                    setEndTime(newValue);
+                    console.log(new Date(newValue).toUTCString());
+                  }}
+                  renderInput={(params) => <TextField id="editEndDate" {...params} />}
+                />
+              </LocalizationProvider>
         </Box>
           {/* <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
           <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/> */}

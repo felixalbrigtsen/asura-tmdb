@@ -82,14 +82,14 @@ function TournamentForm(props) {
     event.preventDefault();
     console.log(maxTeamsExponent)
     let maxTeams = Math.pow(2, maxTeamsExponent);
-    let startTime = new Date(startTime).toUTCString();
-    let endTime = new Date(endTime).toUTCString();
+    let tournamentStart = new Date(startTime).toUTCString();
+    let tournamentEnd = new Date(endTime).toUTCString();
     postTournament(
       props.showError,
       document.getElementById("nameInput").value,
       document.getElementById("descriptionInput").value,
-      startTime,
-      endTime,
+      tournamentStart,
+      tournamentEnd,
       maxTeams
     );
     console.log(startTime, endTime);
@@ -114,33 +114,19 @@ function TournamentForm(props) {
         <TextField type="text" multiline={true} id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
         <Box>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker
-              label={"Start Time"}
-              inputVariant="outlined"
-              ampm={false}
-              mask="____-__-__ __:__"
-              format="yyyy-MM-dd HH:mm"
-              inputFormat="yyyy-MM-dd HH:mm"
-              value={startTime}
+            <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
               onChange={(newValue) => {
                 setStartTime(newValue);
-                console.log(new Date(newValue).toUTCString());
+                // console.log(new Date(newValue).toUTCString());
               }}
               renderInput={(params) => <TextField id="startDatePicker" {...params} />}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker
-              label={"End Time"}
-              inputVariant="outlined"
-              ampm={false}
-              mask="____-__-__ __:__"
-              format="yyyy-MM-dd HH:mm"
-              inputFormat="yyyy-MM-dd HH:mm"
-              value={endTime}
+            <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={endTime}
               onChange={(newValue) => {
                 setEndTime(newValue);
-                console.log(new Date(newValue).toUTCString());
+                // console.log(new Date(newValue).toUTCString());
               }}
               renderInput={(params) => <TextField id="endDatePicker" {...params} />}
             />
