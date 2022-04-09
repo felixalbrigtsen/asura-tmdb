@@ -132,6 +132,8 @@ function ManageTournament(props) {
           <TextField type="text" id="editName" label="Edit Name:" placeholder="Edit Name" InputLabelProps={{shrink: true}}/>
           <TextField type="text" multiline={true} id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
           <Box sx={{flexGrow: 1}}>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
                   onChange={(newValue) => {
@@ -141,6 +143,8 @@ function ManageTournament(props) {
                   renderInput={(params) => <TextField id="editStartDate" {...params} />}
                 />
               </LocalizationProvider>
+              </Grid>
+              <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm:" inputFormat="yyyy-MM-dd HH:mm" value={endTime}             
                   onChange={(newValue) => {
@@ -150,6 +154,8 @@ function ManageTournament(props) {
                   renderInput={(params) => <TextField id="editEndDate" {...params} />}
                 />
               </LocalizationProvider>
+              </Grid>
+            </Grid>
         </Box>
           {/* <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
           <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/> */}

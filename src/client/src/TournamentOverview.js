@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Appbar from './components/AsuraBar';
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from 'react-router-dom'
-import { Button, Paper, Stack } from "@mui/material";
+import { Button, Paper, Stack, CircularProgress, Box } from "@mui/material";
 import "./components/tournamentBracket.css";
 
 function MatchPair(props) {
@@ -172,7 +172,7 @@ function BracketViewer(props) {
             return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
           })}
         </div>
-      : <div className="loader"><h2>Loading...</h2></div>     
+      : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
   );
 }
 
