@@ -5,6 +5,8 @@ import TournamentBar from "./components/TournamentBar";
 import { useParams } from 'react-router-dom'
 import { Button, Paper, Stack, CircularProgress, Box } from "@mui/material";
 import "./components/tournamentBracket.css";
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 
 function MatchPair(props) {
   let match1 = <Match teams={props.teams} match={props.matches[0]} key={0} />;
@@ -29,12 +31,12 @@ function TournamentTier(props) {
   if (props.tier === 0) {
     // The final, just a single match without the bracket lines
     return (
-      <section className="round finals"><div className="winners">
+      <div className="round finals"><div className="winners">
         <div className="matchups">
           <Match teams={props.teams} match={props.matches[0]} key={0} />
         </div>
       </div>
-    </section>
+    </div>
     );
   } else {
     // The rest of the rounds/tiers, divide into pairs of two matches
@@ -45,9 +47,9 @@ function TournamentTier(props) {
     }
 
     return (
-      <section className={`round ${roundTypes[props.tier]}`}>
+      <div className={`round ${roundTypes[props.tier]}`}>
         {matchPairs}
-      </section>
+      </div>
     );
   }
 }
@@ -92,11 +94,11 @@ function Match(props) {
     <div className="matchup">
       <div className="participants">
         {/* Team 1 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team1Id)} className={`participant ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner" : ""}`}>
+        <div onClick={setWinner(props.match.team1Id)} className={`participant ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`} endIcon={<EmojiEventsIcon />}>
           <span>{team1Name}</span>
         </div>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team2Id)} className={`participant ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
+        <div onClick={setWinner(props.match.team2Id)} className={`participant ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`} endIcon={<DoDisturbIcon />}>
           <span>{team2Name}</span>
         </div>
       </div>
