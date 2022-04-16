@@ -100,8 +100,7 @@ function TournamentForm(props) {
     {  value: 3,  label: "8",},
     {  value: 4,  label: "16",},
     {  value: 5,  label: "32",},
-    {  value: 6,  label: "64",},
-    {  value: 7,  label: "128",}
+    {  value: 6,  label: "64",}
   ];
 
   return (
@@ -147,7 +146,7 @@ function TournamentForm(props) {
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={8}>
               <Container>
-                <Slider aria-label="Teams" valueLabelDisplay="off" step={1} marks={marks} min={2} max={7} onChange={sliderUpdate} id="max-teams-slider" name="max-teams-slider" >
+                <Slider aria-label="Teams" valueLabelDisplay="off" step={1} marks={marks} min={2} max={6} onChange={sliderUpdate} id="max-teams-slider" name="max-teams-slider" >
                 </Slider>
               </Container>
             </Grid>

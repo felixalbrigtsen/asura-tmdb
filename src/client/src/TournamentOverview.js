@@ -94,11 +94,11 @@ function Match(props) {
     <div className="matchup">
       <div className="participants">
         {/* Team 1 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team1Id)} className={`participant ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`} endIcon={<EmojiEventsIcon />}>
+        <div onClick={setWinner(props.match.team1Id)} className={`participant ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
           <span>{team1Name}</span>
         </div>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team2Id)} className={`participant ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`} endIcon={<DoDisturbIcon />}>
+        <div onClick={setWinner(props.match.team2Id)} className={`participant ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
           <span>{team2Name}</span>
         </div>
       </div>
