@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import TournamentCreator from "./TournamentCreator.js";
 import TournamentOverview from "./TournamentOverview.js";
 import TournamentManager from "./TournamentManager.js";
-import TournamentAnnouncement from "./TournamentAnnouncement";
 import TournamentHistory from "./TournamentHistory";
 import TournamentTeams from "./TournamentTeams";
 import AppBar from './components/AsuraBar';
@@ -144,6 +143,9 @@ function Home() {
             <CreateButton />
           </Box>
           <TournamentList />
+          <Typography variant="h5" color="#555555">
+            Finished tournaments are moved to the <Link to="/history">history-page</Link>
+          </Typography>
         </Container>
     </>
   );
@@ -160,10 +162,6 @@ export default function App() {
         <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
         <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />
         <Route path="/history" element={<TournamentHistory />} />
-        <Route
-          path="/tournament/manage/announcement"
-          element={<TournamentAnnouncement />}
-        />
       </Routes>
     </Router>
     </React.StrictMode>
