@@ -107,8 +107,8 @@ api.post("/tournament/:tournamentId/edit", (req, res) => {
     return
   }
   try {
-    startDate = new Date(startDate);
-    endDate = new Date(endDate);
+    startDate = new Date(parseInt(startDate));
+    endDate = new Date(parseInt(endDate));
   } catch (err) {
     res.json({"status": "error", "data": "startDate and endDate must be valid dates"});
     return
@@ -262,6 +262,7 @@ api.post("/tournament/create", (req, res) => {
   let teamLimit = req.body.teamLimit;
   let startDate = req.body.startDate; //TODO: timezones, 2 hr skips
   let endDate = req.body.endDate;
+  console.log(startDate, endDate);
   if (name == undefined || name == "" || description == undefined || description == "") {
     res.json({"status": "error", "data": "name and description must be provided"});
     return
@@ -281,8 +282,8 @@ api.post("/tournament/create", (req, res) => {
     return
   }
   try {
-    startDate = new Date(startDate);
-    endDate = new Date(endDate);
+    startDate = new Date(parseInt(startDate));
+    endDate = new Date(parseInt(endDate));
   } catch (err) {
     res.json({"status": "error", "data": "startDate and endDate must be valid dates"});
     return
@@ -293,14 +294,14 @@ api.post("/tournament/create", (req, res) => {
     return
   }
   if (startDate > endDate) {
-    res.json({"status": "error", "data": "startDate cannot be after endDate"});
+    res.json({"status": "error", "data": "endDate must be later than startDate"});
     return
   }
+  console.log(startDate);
 
   tmdb.createTournament(name, description, startDate, endDate, teamLimit)
     .then(msg => res.json({"status": "OK", "data": msg}))
     .catch(err => res.json({"status": "error", "data": err}));
-    
 });    
   
 // #endregion
