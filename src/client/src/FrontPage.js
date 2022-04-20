@@ -5,6 +5,7 @@ import TournamentOverview from "./TournamentOverview.js";
 import TournamentManager from "./TournamentManager.js";
 import TournamentHistory from "./TournamentHistory";
 import TournamentTeams from "./TournamentTeams";
+import LoginPage from "./LoginPage";
 import AppBar from './components/AsuraBar';
 import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -162,6 +163,7 @@ export default function App() {
         <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
         <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />
         <Route path="/history" element={<TournamentHistory />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
     </React.StrictMode>

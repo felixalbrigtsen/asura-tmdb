@@ -5,7 +5,7 @@ import Appbar from './components/Appbar';
 function MatchHistory() {
 
   return(
-    `Hei`
+    `Hei på deg din gamle sei`
   );
 }
 
