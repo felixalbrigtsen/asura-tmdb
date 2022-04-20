@@ -5,7 +5,7 @@ import AppBar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
-import { Snackbar, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DateTimePicker from '@mui/lab/DateTimePicker';
