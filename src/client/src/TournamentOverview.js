@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Appbar from './components/AsuraBar';
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from 'react-router-dom'
-import { Button, Paper, Stack, CircularProgress, Box } from "@mui/material";
+import { Button, Paper, Stack, CircularProgress, Box, Grid } from "@mui/material";
 import "./components/tournamentBracket.css";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
@@ -12,16 +12,14 @@ function MatchPair(props) {
   let match1 = <Match teams={props.teams} match={props.matches[0]} key={0} />;
   let match2 = <Match teams={props.teams} match={props.matches[1]} key={1} />;
 
-  return <div className="winners">
-    <div className="matchups">
-      {match1}
-      {match2}
-    </div>
-    <div className="connector">
-      <div className="merger"></div>
-      <div className="line"></div>
-    </div>
-  </div>
+  return (
+    <>
+      <li className="game game-top">{match1}</li>
+      <li className="game game-spacer">&nbsp;</li>
+      <li className="game game-bottom">{match2}</li>
+      <li class="spacer">&nbsp;</li>
+    </>
+  )
 }
 
 function TournamentTier(props) {
@@ -31,12 +29,10 @@ function TournamentTier(props) {
   if (props.tier === 0) {
     // The final, just a single match without the bracket lines
     return (
-      <div className="round finals"><div className="winners">
-        <div className="matchups">
-          <Match teams={props.teams} match={props.matches[0]} key={0} />
-        </div>
-      </div>
-    </div>
+      <ul className="round finals">
+        <li class="spacer">&nbsp;</li>
+        <Match teams={props.teams} match={props.matches[0]} key={0} />
+      </ul>
     );
   } else {
     // The rest of the rounds/tiers, divide into pairs of two matches
@@ -47,9 +43,10 @@ function TournamentTier(props) {
     }
 
     return (
-      <div className={`round ${roundTypes[props.tier]}`}>
+      <ul className={`round ${roundTypes[props.tier]}`}>
+        <li class="spacer">&nbsp;</li>
         {matchPairs}
-      </div>
+      </ul>
     );
   }
 }
@@ -91,18 +88,18 @@ function Match(props) {
   }
 
   return (
-    <div className="matchup">
-      <div className="participants">
+    <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team1Id)} className={`participant ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
-          <span>{team1Name}</span>
-        </div>
+        <li onClick={setWinner(props.match.team1Id)} className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
+          {team1Name}
+        </li>
+        <li class="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team2Id)} className={`participant ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
-          <span>{team2Name}</span>
-        </div>
-      </div>
-    </div>
+        <li onClick={setWinner(props.match.team2Id)} className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
+          {team2Name}
+        </li>
+        <li class="spacer">&nbsp;</li>
+    </>
   );
 }
 

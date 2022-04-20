@@ -104,8 +104,8 @@ let deleteTournament = tournamentId => event => {
 
 function ManageTournament(props) {
 
-  const [startTime, setStartTime] = React.useState([new Date(),null]);
-  const [endTime, setEndTime] = React.useState([new Date(),null]);
+  const [startTime, setStartTime] = React.useState([null,null]);
+  const [endTime, setEndTime] = React.useState([null,null]);
   
   React.useEffect(() => {
     fetch(
@@ -119,8 +119,8 @@ function ManageTournament(props) {
         
         document.getElementById("editName").value = data.data.name;
         document.getElementById("editDesc").value = data.data.description;
-        setStartTime(data.data.startTime.slice(0, 16));
-        setEndTime(data.data.endTime.slice(0, 16));
+        // setStartTime(data.data.startTime.slice(0, 16));
+        // setEndTime(data.data.endTime.slice(0, 16));
       })
       .catch((err) => showError(err));
   }, [endTime, props.tournamentId, startTime]);
