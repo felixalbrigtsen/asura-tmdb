@@ -5,7 +5,7 @@ import AppBar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
-import { Snackbar, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DateTimePicker from '@mui/lab/DateTimePicker';
@@ -49,14 +49,13 @@ let submitChanges = curryTournamentId => event => {
     return;
   }
 
-  tournamentStartDate = new Date(tournamentStartDate).toUTCString();
-  tournamentEndDate = new Date(tournamentEndDate).toUTCString();
+  tournamentStartDate = new Date(tournamentStartDate).valueOf() - new Date().getTimezoneOffset() * 60 * 1000;
+  tournamentEndDate = new Date(tournamentEndDate).valueOf() - new Date().getTimezoneOffset() * 60 * 1000;
 
 
   let formData = new FormData();
   formData.append("name", tournamentName);
   formData.append("description", tournamentDescription);
-  // formData.append("image", tournamentImageFile);
   formData.append("startDate", tournamentStartDate);
   formData.append("endDate", tournamentEndDate);
   // formData.append("teamLimit", tournamentMaxTeams);
@@ -104,8 +103,8 @@ let deleteTournament = tournamentId => event => {
 
 function ManageTournament(props) {
 
-  const [startTime, setStartTime] = React.useState([null,null]);
-  const [endTime, setEndTime] = React.useState([null,null]);
+  const [startTime, setStartTime] = React.useState(new Date());
+  const [endTime, setEndTime] = React.useState(new Date());
   
   React.useEffect(() => {
     fetch(
@@ -119,11 +118,18 @@ function ManageTournament(props) {
         
         document.getElementById("editName").value = data.data.name;
         document.getElementById("editDesc").value = data.data.description;
-        // setStartTime(data.data.startTime.slice(0, 16));
-        // setEndTime(data.data.endTime.slice(0, 16));
+        // Get the time from the server, add the local timezone offset and set the input fields
+        let startDate = new Date(data.data.startTime.slice(0, 16));
+        let endDate = new Date(data.data.endTime.slice(0, 16));
+        let localTimeOffset = new Date().getTimezoneOffset() * 60*1000; // Minutes -> Milliseconds
+        startDate = new Date(startDate.getTime() - localTimeOffset);
+        endDate = new Date(endDate.getTime() - localTimeOffset);
+
+        setStartTime(startDate);
+        setEndTime(endDate);
       })
       .catch((err) => showError(err));
-  }, [endTime, props.tournamentId, startTime]);
+  }, [props.tournamentId]);
 
   return (
     <>
@@ -136,10 +142,7 @@ function ManageTournament(props) {
             <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
-                  onChange={(newValue) => {
-                    setStartTime(newValue);
-                    console.log(new Date(newValue).toUTCString());
-                  }}
+                  onChange={setStartTime}
                   renderInput={(params) => <TextField id="editStartDate" {...params} />}
                 />
               </LocalizationProvider>
@@ -147,19 +150,13 @@ function ManageTournament(props) {
               <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm:" inputFormat="yyyy-MM-dd HH:mm" value={endTime}             
-                  onChange={(newValue) => {
-                    setEndTime(newValue);
-                    console.log(new Date(newValue).toUTCString());
-                  }}
+                  onChange={setEndTime}
                   renderInput={(params) => <TextField id="editEndDate" {...params} />}
                 />
               </LocalizationProvider>
               </Grid>
             </Grid>
         </Box>
-          {/* <TextField type="datetime-local" id="editStartDate" label="Edit Start Time" InputLabelProps={{shrink: true,}}/>
-          <TextField type="datetime-local" id="editEndDate" label="Edit End Time" InputLabelProps={{shrink: true}}/> */}
-
           <Button type="submit" variant="contained" onClick={submitChanges(props.tournamentId)} color="primary" >
             Save Tournament Details
           </Button>   
@@ -173,30 +170,6 @@ function ManageTournament(props) {
 function showError(error) {
   alert("Something went wrong. \n" + error);
   console.error(error);
-}
-
-function ClipboardButton(props) {
-  const [open, setOpen] = React.useState(false);
-  function copyString() {
-    navigator.clipboard.writeText(props.clipboardContent || "");
-    setOpen(true);
-  }
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') { return }
-    setOpen(false);
-  };
-  const closeAction = <>
-    <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-      <CloseIcon fontSize="small" />
-    </IconButton>
-  </>
-    
-  return (
-    <>
-      <Button onClick={copyString} variant="outlined" color="primary" sx={{margin: "auto 5px"}} >Copy {props.name}</Button>
-      <Snackbar open={open} autoHideDuration={1500} onClose={handleClose} message={props.name + " copied to clipboard"} action={closeAction} />
-    </>
-  );
 }
 
 export default function TournamentManager(props) {
@@ -221,8 +194,6 @@ export default function TournamentManager(props) {
         <Button variant="contained" color="error" onClick={deleteTournament(tournamentId)} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
           Delete Tournament
         </Button>
-        <ClipboardButton clipboardContent={"https://discord.gg/asura"} name="Discord Invite Link" />
-        <ClipboardButton clipboardContent={"https://asura.feal.no/tournament/" + tournamentId} name="Tournament Link" />
       </Box>
     </Paper>
 
