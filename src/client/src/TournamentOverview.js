@@ -8,62 +8,40 @@ import "./components/tournamentBracket.css";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 
-function MatchPair(props) {
-  let team1 = <Match teams={props.teams} match={props.matches[0]} key={0} />;
-  let team2 = <Match teams={props.teams} match={props.matches[1]} key={1} />;
-
-  return (
-    <>
-      <li className="game game-top">Test 1</li>
-      <li className="game game-spacer">&nbsp;</li>
-      <li className="game game-bottom">Test 2</li>
-      <li className="spacer">&nbsp;</li>
-    </>
-  )
+function showError(error) {
+  alert("Something went wrong. \n" + error);
+  console.error(error);
 }
 
-function TournamentTier(props) {
-  // One round/tier of the tournament, as used by BracketViewer
+function TournamentTier(props){
   let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
-  
-  // if (props.tier === 0) {
-  //   // The final, just a single match without the bracket lines
-  //   return (
-  //     <ul className="round finals">
-  //       <li className="spacer">&nbsp;</li>
-  //       <Match teams={props.teams} match={props.matches[0]} key={0} />
-  //     </ul>
-  //   );
-  // } else {
-    // The rest of the rounds/tiers, divide into pairs of two matches
-    let matchPairCount = props.matches.length;
-    let matchPairs = [];
-    for (let i = 0; i < matchPairCount; i++) {
-      matchPairs.push(<MatchPair teams={props.teams} matches={props.matches.slice(i * 2, i * 2 + 2)} key={i} />);
+    let matches = [];
+    for (let i = 0; i < props.matches.length; i++) {
+      matches.push(<Match teams={props.teams} match={props.matches[i]} key={i} />);
     }
-
-    return (
+    return(
       <ul className={`round ${roundTypes[props.tier]}`}>
         <li className="spacer">&nbsp;</li>
-        {matchPairs}
+        {matches}
       </ul>
-    );
-  // }
+    )
 }
 
-function Match(props) {
-  // A single match object, as used by MatchPair and TournamentTier
+
+
+function Match(props){
   let team1Name = "TBA";
   let team2Name = "TBA";
-  if (props.match.team1Id !== null) {
+  if(props.match.team1Id !== null) {
     team1Name = props.teams.find(team => team.id === props.match.team1Id).name;
   }
-  if (props.match.team2Id !== null) {
+  if(props.match.team2Id !== null) {
     team2Name = props.teams.find(team => team.id === props.match.team2Id).name;
   }
 
   let setWinner = curryTeamId => event => {
     let teamId = curryTeamId;
+    console.log(teamId)
     if (!teamId || teamId == null) {
       showError("No team selected");
       return;
@@ -90,25 +68,26 @@ function Match(props) {
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <li onClick={setWinner(props.match.team1Id)} className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
-          {team1Name}
+        <li id={props.match.team1Id} onClick={setWinner(props.match.team1Id)} className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
+          {team1Name} <span><EmojiEventsIcon alt="A trohpy"/></span>
         </li>
         <li className="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <li onClick={setWinner(props.match.team2Id)} className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
-          {team2Name}
+        <li id={props.match.team2Id} onClick={setWinner(props.match.team2Id)} className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
+          {team2Name} <span><EmojiEventsIcon alt="A trohpy"/></span>
         </li>
         <li className="spacer">&nbsp;</li>
     </>
   );
+
+
 }
 
-function BracketViewer(props) {
+function BracketViewer(props){
   const [tournament, setTournament] = React.useState(null);
   const [matches, setMatches] = React.useState(null);
   const [teams, setTeams] = React.useState(null);
 
-  // One fetch statement for each of the three state variables
   React.useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
       .then(res => res.json())
@@ -161,23 +140,17 @@ function BracketViewer(props) {
       })
       .catch(err => showError(err));
   }, []);
-
   return (
-      (matches && teams) ?
-        // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
-        <div className="bracket">
-          {matches.map(tier => {
-            let tierNum = tier[0].tier;
-            return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
-          })}
-        </div>
-      : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
-  );
-}
-
-function showError(error) {
-  alert("Something went wrong. \n" + error);
-  console.error(error);
+    (matches && teams) ?
+      // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
+      <div className="bracket">
+        {matches.map(tier => {
+          let tierNum = tier[0].tier;
+          return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+        })}
+      </div>
+    : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
+);
 }
 
 export default function TournamentOverview(props) {
