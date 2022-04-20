@@ -17,11 +17,11 @@ function postTournament(showError, tournamentName, tournamentDescription, tourna
     showError("Tournament description cannot be empty");
     return;
   }
-  if (!tournamentStartDate || tournamentStartDate === "") {
+  if (!tournamentStartDate || tournamentStartDate === "" || tournamentStartDate === 0) {
     showError("Tournament start date cannot be empty");
     return;
   }
-  if (!tournamentEndDate || tournamentEndDate === "") {
+  if (!tournamentEndDate || tournamentEndDate === "" || tournamentEndDate === 0) {
     showError("Tournament end date cannot be empty");
     return;
   }
@@ -75,15 +75,14 @@ function TournamentForm(props) {
     setMaxTeamsExponent(event.target.value);
   }
 
-  const [startTime, setStartTime] = React.useState([new Date(), new Date()]);
-  const [endTime, setEndTime] = React.useState([new Date(), new Date()]);
+  const [startTime, setStartTime] = React.useState(new Date());
+  const [endTime, setEndTime] = React.useState(new Date());
 
   function submitTournament(event) {
     event.preventDefault();
-    console.log(maxTeamsExponent)
     let maxTeams = Math.pow(2, maxTeamsExponent);
-    let tournamentStart = new Date(startTime).toUTCString();
-    let tournamentEnd = new Date(endTime).toUTCString();
+    let tournamentStart = new Date(startTime).valueOf() - new Date().getTimezoneOffset() * 60000;
+    let tournamentEnd = new Date(endTime).valueOf() - new Date().getTimezoneOffset() * 60000;
     postTournament(
       props.showError,
       document.getElementById("nameInput").value,
@@ -92,7 +91,6 @@ function TournamentForm(props) {
       tournamentEnd,
       maxTeams
     );
-    console.log(tournamentStart, tournamentEnd);
   }
 
   const marks = [
@@ -116,10 +114,7 @@ function TournamentForm(props) {
           <Grid item xs={4}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
-              onChange={(newValue) => {
-                setStartTime(newValue);
-                // console.log(new Date(newValue).toUTCString());
-              }}
+              onChange={setStartTime}
               renderInput={(params) => <TextField id="startDatePicker" {...params} sx={{margin: "0 2.5%"}} />}
             />
             </LocalizationProvider>
@@ -128,10 +123,7 @@ function TournamentForm(props) {
           
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={endTime}
-              onChange={(newValue) => {
-                setEndTime(newValue);
-                // console.log(new Date(newValue).toUTCString());
-              }}
+              onChange={setEndTime}
               renderInput={(params) => <TextField id="endDatePicker" {...params} sx={{margin: "0 2.5%"}} />}
             />
           </LocalizationProvider>
