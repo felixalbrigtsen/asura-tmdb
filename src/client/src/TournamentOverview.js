@@ -68,12 +68,12 @@ function Match(props){
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <li id={props.match.team1Id} onClick={setWinner(props.match.team1Id)} className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
+        <li onClick={setWinner(props.match.team1Id)} className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
           {team1Name} <span><EmojiEventsIcon alt="A trohpy"/></span>
         </li>
         <li className="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <li id={props.match.team2Id} onClick={setWinner(props.match.team2Id)} className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
+        <li onClick={setWinner(props.match.team2Id)} className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
           {team2Name} <span><EmojiEventsIcon alt="A trohpy"/></span>
         </li>
         <li className="spacer">&nbsp;</li>
