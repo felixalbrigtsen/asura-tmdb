@@ -27,8 +27,6 @@ function TournamentTier(props){
     )
 }
 
-
-
 function Match(props){
   let team1Name = "TBA";
   let team2Name = "TBA";
@@ -79,8 +77,6 @@ function Match(props){
         <li className="spacer">&nbsp;</li>
     </>
   );
-
-
 }
 
 function BracketViewer(props){
