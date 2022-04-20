@@ -9,15 +9,15 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 
 function MatchPair(props) {
-  let match1 = <Match teams={props.teams} match={props.matches[0]} key={0} />;
-  let match2 = <Match teams={props.teams} match={props.matches[1]} key={1} />;
+  let team1 = <Match teams={props.teams} match={props.matches[0]} key={0} />;
+  let team2 = <Match teams={props.teams} match={props.matches[1]} key={1} />;
 
   return (
     <>
-      <li className="game game-top">{match1}</li>
+      <li className="game game-top">Test 1</li>
       <li className="game game-spacer">&nbsp;</li>
-      <li className="game game-bottom">{match2}</li>
-      <li class="spacer">&nbsp;</li>
+      <li className="game game-bottom">Test 2</li>
+      <li className="spacer">&nbsp;</li>
     </>
   )
 }
@@ -26,17 +26,17 @@ function TournamentTier(props) {
   // One round/tier of the tournament, as used by BracketViewer
   let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
   
-  if (props.tier === 0) {
-    // The final, just a single match without the bracket lines
-    return (
-      <ul className="round finals">
-        <li class="spacer">&nbsp;</li>
-        <Match teams={props.teams} match={props.matches[0]} key={0} />
-      </ul>
-    );
-  } else {
+  // if (props.tier === 0) {
+  //   // The final, just a single match without the bracket lines
+  //   return (
+  //     <ul className="round finals">
+  //       <li className="spacer">&nbsp;</li>
+  //       <Match teams={props.teams} match={props.matches[0]} key={0} />
+  //     </ul>
+  //   );
+  // } else {
     // The rest of the rounds/tiers, divide into pairs of two matches
-    let matchPairCount = props.matches.length / 2;
+    let matchPairCount = props.matches.length;
     let matchPairs = [];
     for (let i = 0; i < matchPairCount; i++) {
       matchPairs.push(<MatchPair teams={props.teams} matches={props.matches.slice(i * 2, i * 2 + 2)} key={i} />);
@@ -44,11 +44,11 @@ function TournamentTier(props) {
 
     return (
       <ul className={`round ${roundTypes[props.tier]}`}>
-        <li class="spacer">&nbsp;</li>
+        <li className="spacer">&nbsp;</li>
         {matchPairs}
       </ul>
     );
-  }
+  // }
 }
 
 function Match(props) {
@@ -93,12 +93,12 @@ function Match(props) {
         <li onClick={setWinner(props.match.team1Id)} className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
           {team1Name}
         </li>
-        <li class="game game-spacer">&nbsp;</li>
+        <li className="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
         <li onClick={setWinner(props.match.team2Id)} className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
           {team2Name}
         </li>
-        <li class="spacer">&nbsp;</li>
+        <li className="spacer">&nbsp;</li>
     </>
   );
 }

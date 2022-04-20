@@ -4,6 +4,7 @@
 .bracket{
 	display:flex;
 	flex-direction:row;
+	justify-content: center;
   }
   .round{
 	display:flex;
