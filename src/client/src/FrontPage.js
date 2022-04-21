@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import TournamentCreator from "./TournamentCreator.js";
 import TournamentOverview from "./TournamentOverview.js";
 import TournamentManager from "./TournamentManager.js";
-import TournamentAnnouncement from "./TournamentAnnouncement";
 import TournamentHistory from "./TournamentHistory";
 import TournamentTeams from "./TournamentTeams";
+import LoginPage from "./LoginPage";
 import AppBar from './components/AsuraBar';
 import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -56,6 +56,34 @@ function TournamentListItem(props) {
       </Box>;
     }
   }
+
+  function Countdown() {
+    const [remainingTime, setremainingTime] = React.useState(Math.abs(props.tournament.startTime - new Date()))
+    React.useEffect(() => {
+      const interval = setInterval(() => 
+        setremainingTime(Math.abs(props.tournament.startTime - new Date()))
+      , 1000);
+      return () => {
+        clearInterval(interval);
+      };
+    }, []);
+
+    let remainingDays = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+    let remainingHours = Math.floor(remainingTime / (1000 * 60 * 60)) - remainingDays * 24
+    let remainingMins = Math.floor(remainingTime / (1000 * 60)) - (remainingDays * 24 * 60 + remainingHours * 60)
+    let remainingSecs = Math.floor(remainingTime / 1000) - (remainingDays * 24 * 60 * 60 + remainingHours * 60 * 60 + remainingMins * 60)
+    if (props.tournament.startTime < new Date()) {
+      return (<Box>
+        <Typography variant="body"> Started! </Typography>
+        </Box>)
+    } else {
+      return(<Box>
+      <Typography variant="body"> Starts in: {remainingDays} Days, {remainingHours} Hours, {remainingMins} Minutes and {remainingSecs} Seconds </Typography>
+      </Box>
+      )
+    }
+  }
+  
   return (
         <Paper elevation={8} >
           <Card>
@@ -73,7 +101,7 @@ function TournamentListItem(props) {
                 <Typography variant="body"> End: {props.tournament.endTime.toLocaleString()} </Typography>
               </Box>
               
-              <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
+              <Typography variant="h5" color="text.primary" gutterBottom> Players: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
               <Description />
               
               <Box sx={{flexGrow: 1, marginTop: "20px"}}>
@@ -92,6 +120,8 @@ function TournamentListItem(props) {
                     </Grid>
                 </Grid>
               </Box>
+
+              <Countdown />
             </CardContent>
           </Card>     
         </Paper>
@@ -144,6 +174,9 @@ function Home() {
             <CreateButton />
           </Box>
           <TournamentList />
+          <Typography variant="h5" color="#555555">
+            Finished tournaments are moved to the <Link to="/history">history-page</Link>
+          </Typography>
         </Container>
     </>
   );
@@ -160,10 +193,7 @@ export default function App() {
         <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
         <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />
         <Route path="/history" element={<TournamentHistory />} />
-        <Route
-          path="/tournament/manage/announcement"
-          element={<TournamentAnnouncement />}
-        />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
     </React.StrictMode>

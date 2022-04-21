@@ -169,16 +169,48 @@ function BracketViewer(props){
       .catch(err => showError(err));
   }, []);
   return (
-    (matches && teams) ?
-      // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
-      <div className="bracket">
-        {matches.map(tier => {
-          let tierNum = tier[0].tier;
-          return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
-        })}
-      </div>
-    : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
-);
+      (matches && teams) ?
+        // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
+        <div className="bracket">
+          {matches.map(tier => {
+            let tierNum = tier[0].tier;
+            return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+          })}
+        </div>
+      : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
+  );
+}
+
+function RemovableBar(props) {
+  const [endTime, setendTime] = React.useState(null);
+  
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status !== "OK") {
+          // Do your error thing
+          console.error(data);
+          return;
+        }
+        let endTime = data.data.endTime;
+        setendTime(endTime);
+      })
+      .catch(err => showError(err));
+    })
+    let today = new Date()
+    let yesterday = today.setDate(today.getDate() - 1)
+    let isComplete = new Date(endTime) < yesterday
+    if (isComplete) {
+      return (null)
+    } else {
+      return (<TournamentBar pageTitle="View Tournament" />)
+    }
+}
+
+function showError(error) {
+  alert("Something went wrong. \n" + error);
+  console.error(error);
 }
 
 export default function TournamentOverview(props) {
@@ -187,7 +219,7 @@ export default function TournamentOverview(props) {
   return (
     <>
       <Appbar pageTitle="View Tournament" />
-      <TournamentBar pageTitle="View Tournament" />
+      <RemovableBar tournamentId={tournamentId} />
       <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
     </>
   );

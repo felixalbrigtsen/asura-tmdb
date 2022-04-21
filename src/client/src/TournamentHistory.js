@@ -51,7 +51,7 @@ function shorten(description, maxLength) {
                   <Typography variant="body"> End: {props.tournament.endTime.toLocaleString()} </Typography>
                 </Box>
                 
-                <Typography variant="h5" color="text.primary" gutterBottom> Players {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
+                <Typography variant="h5" color="text.primary" gutterBottom> Players: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
                 <Description />
                 
                 <Box sx={{flexGrow: 1, marginTop: "20px"}}>
