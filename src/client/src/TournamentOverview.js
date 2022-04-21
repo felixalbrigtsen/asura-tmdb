@@ -3,72 +3,53 @@ import { Link } from "react-router-dom";
 import Appbar from './components/AsuraBar';
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from 'react-router-dom'
-import { Button, Paper, Stack, CircularProgress, Box } from "@mui/material";
+import { Button, IconButton, Paper, Stack, CircularProgress, Box, Grid, Typography, Container } from "@mui/material";
 import "./components/tournamentBracket.css";
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+import BackspaceIcon from '@mui/icons-material/Backspace';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-function MatchPair(props) {
-  let match1 = <Match teams={props.teams} match={props.matches[0]} key={0} />;
-  let match2 = <Match teams={props.teams} match={props.matches[1]} key={1} />;
-
-  return <div className="winners">
-    <div className="matchups">
-      {match1}
-      {match2}
-    </div>
-    <div className="connector">
-      <div className="merger"></div>
-      <div className="line"></div>
-    </div>
-  </div>
+function showError(error) {
+  alert("Something went wrong. \n" + error);
+  console.error(error);
 }
 
-function TournamentTier(props) {
-  // One round/tier of the tournament, as used by BracketViewer
+function TournamentTier(props){
   let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
-  
-  if (props.tier === 0) {
-    // The final, just a single match without the bracket lines
-    return (
-      <section className="round finals"><div className="winners">
-        <div className="matchups">
-          <Match teams={props.teams} match={props.matches[0]} key={0} />
-        </div>
-      </div>
-    </section>
-    );
-  } else {
-    // The rest of the rounds/tiers, divide into pairs of two matches
-    let matchPairCount = props.matches.length / 2;
-    let matchPairs = [];
-    for (let i = 0; i < matchPairCount; i++) {
-      matchPairs.push(<MatchPair teams={props.teams} matches={props.matches.slice(i * 2, i * 2 + 2)} key={i} />);
+    let matches = [];
+    for (let i = 0; i < props.matches.length; i++) {
+      matches.push(<Match teams={props.teams} match={props.matches[i]} key={i} />);
     }
-
-    return (
-      <section className={`round ${roundTypes[props.tier]}`}>
-        {matchPairs}
-      </section>
-    );
-  }
+    return(
+      <ul className={`round ${roundTypes[props.tier]}`}>
+        <li className="spacer">&nbsp;</li>
+        {matches}
+      </ul>
+    )
 }
 
-function Match(props) {
-  // A single match object, as used by MatchPair and TournamentTier
+function Match(props){
   let team1Name = "TBA";
   let team2Name = "TBA";
-  if (props.match.team1Id !== null) {
+  if(props.match.team1Id !== null) {
     team1Name = props.teams.find(team => team.id === props.match.team1Id).name;
   }
-  if (props.match.team2Id !== null) {
+  if(props.match.team2Id !== null) {
     team2Name = props.teams.find(team => team.id === props.match.team2Id).name;
   }
 
   let setWinner = curryTeamId => event => {
     let teamId = curryTeamId;
+    console.log(teamId)
     if (!teamId || teamId == null) {
       showError("No team selected");
       return;
     }
+    // if(props.match.winnerId === teamId){
+    //   showError("Team already won");
+    //   return;
+    // }
     let formData = new FormData();
     formData.append("winnerId",teamId);
     let body = new URLSearchParams(formData);
@@ -89,27 +70,52 @@ function Match(props) {
   }
 
   return (
-    <div className="matchup">
-      <div className="participants">
+    <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team1Id)} className={`participant ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner" : ""}`}>
-          <span>{team1Name}</span>
-        </div>
+        <li className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser"}`}>
+          <Stack direction={"row"}>
+              <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem'}}>
+                {team1Name}
+              </Typography>
+              { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
+              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton>
+              }
+              { props.match.team1Id !== null &&
+              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              }
+              {/* { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
+              <EmojiEventsIcon alt="A trohpy" color="gold" />
+              } */}
+          </Stack>
+        </li>
+        <li className="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <div onClick={setWinner(props.match.team2Id)} className={`participant ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
-          <span>{team2Name}</span>
-        </div>
-      </div>
-    </div>
+        <li className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : "loser"}`}>
+        <Stack direction={"row"} sx={{alignItems:'center'}}>
+              <Typography className={`teamName`} sx={{fontSize:'1.5rem'}}>
+                {team2Name}
+              </Typography>
+              { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
+              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton>
+              }
+              { props.match.team2Id !== null &&
+              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              }
+              {/* { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
+              <EmojiEventsIcon alt="A trohpy" color="gold" />
+              } */}
+            </Stack>
+        </li>
+        <li className="spacer">&nbsp;</li>
+    </>
   );
 }
 
-function BracketViewer(props) {
+function BracketViewer(props){
   const [tournament, setTournament] = React.useState(null);
   const [matches, setMatches] = React.useState(null);
   const [teams, setTeams] = React.useState(null);
 
-  // One fetch statement for each of the three state variables
   React.useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
       .then(res => res.json())
@@ -162,7 +168,6 @@ function BracketViewer(props) {
       })
       .catch(err => showError(err));
   }, []);
-
   return (
       (matches && teams) ?
         // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
