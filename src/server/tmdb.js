@@ -77,71 +77,81 @@ function getMatch(matchId) {
 // Removes a given team from a given match. This is done by setting the teamId-property containing the given team to null.
 async function unsetContestant(matchId, teamId) {
   let match = await getMatch(matchId);
-  if (match.team1Id == teamId) {
-    connection.query("UPDATE matches SET team1Id = NULL WHERE id = ?", [escapeString(matchId)], (err, result) => {
-      if (err) { console.log(err); }
-    });
-  } else if (match.team2Id == teamId) {
-    connection.query("UPDATE matches SET team2Id = NULL WHERE id = ?", [escapeString(matchId)], (err, result) => {
-      if (err) { console.log(err); }
-    });
-  } else {
-    console.log("Error: Team not found in match");
-  }
-}
-
-// Sets the winnerId-property of a given match.
-// Also appoints the winner as a contestant to the next(parent) match.
-function setMatchWinner(matchId, winnerId) {
   return new Promise(function(resolve, reject) {
-    getMatch(matchId)
-      .catch(err => reject(err))
-      .then(match => {
-        if (winnerId != match.team1Id && winnerId != match.team2Id) {
-          reject("Winner must be one of the teams in the match");
-        }
-
-        // Final match doesn't have a parent, skip this step
-        if (match.parentMatchId != null) {
-          if (match.winnerId != null) {
-            unsetContestant(match.parentMatchId, match.winnerId);
-          }
-          // Enter the winner of the match into the parent match
-          getMatch(match.parentMatchId)
-            .catch(err =>reject(err))
-            .then(parentMatch => {
-              if (parentMatch.team1Id == null) {
-                connection.query("UPDATE matches SET team1Id = ? WHERE id = ?", 
-                [escapeString(winnerId), escapeString(parentMatch.id)], (err, sets) => {
-                  if (err) { reject(err); }
-                });
-              } else if (parentMatch.team2Id == null) {
-                connection.query("UPDATE matches SET team2Id = ? WHERE id = ?", 
-                [escapeString(winnerId), escapeString(parentMatch.id)], (err, sets) => {
-                  if (err) { reject(err); }
-                });
-              } else {
-                reject("Parent match already has two teams");
-              }
-          });
-        }
-
-        // Lastly, if all checks passed, actually set the winnerId property
-        connection.query("UPDATE matches SET winnerId = ? WHERE id = ?", 
-        [escapeString(winnerId), escapeString(matchId)], (err, sets) => {
-          if (err) {
-            // If this update fails, we need to undo the parent match update
-            unsetContestant(parentMatchId, winnerId);
-            reject(err);
-          }
-          getMatch(matchId)
-            .catch(err => reject(err))
-            .then(match => resolve(match));
-        });
-
+    
+    if (match.team1Id == teamId) {
+      connection.query("UPDATE matches SET team1Id = NULL WHERE id = ?", [escapeString(matchId)], (err, result) => {
+        if (err) { console.log(err); reject(err); }
+        resolve();
       });
+    } else if (match.team2Id == teamId) {
+      connection.query("UPDATE matches SET team2Id = NULL WHERE id = ?", [escapeString(matchId)], (err, result) => {
+        if (err) { console.log(err); reject(err); }
+        resolve();
+      });
+    } else {
+      console.log("Error: Team not found in match");
+      reject("Error: Team not found in match");
+    }
   });
 }
+
+
+async function insertContestant(matchId, teamId, prevMatchId) {
+  let match = await getMatch(matchId);
+  connection.query("SELECT * FROM matches WHERE parentMatchId = ?", [escapeString(matchId)], (err, childMatches) => {
+    if (err) { console.log(err); }
+    let isFirst = prevMatchId == childMatches[0].id;
+    if (isFirst) {
+      if (match.team1Id != null) { return; }
+      connection.query("UPDATE matches SET team1Id = ? WHERE id = ?", 
+      [escapeString(teamId), escapeString(matchId)], (err, sets) => {
+        if (err) { console.log(err); }
+      });
+    } else {
+      if (match.team2Id != null) { return; }
+      connection.query("UPDATE matches SET team2Id = ? WHERE id = ?", 
+      [escapeString(teamId), escapeString(matchId)], (err, sets) => {
+        if (err) { console.log(err); }
+      });
+    }
+  });
+}
+
+async function setMatchWinner(matchId, winnerId) {
+  return new Promise(async function(resolve, reject) {
+    let match = await getMatch(matchId);
+    if (winnerId != match.team1Id && winnerId != match.team2Id && winnerId != null) {
+      reject("Winner id must be one of the teams in the match, or null");
+      return;
+    }
+    let oldWinnerId = match.winnerId;
+    connection.query("UPDATE matches SET winnerId = ? WHERE id = ?",[escapeString(winnerId), escapeString(matchId)], async (err, sets) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      // Remove the old winner from the next match
+      if (oldWinnerId != null && match.parentMatchId != null) {
+        let parentMatch = await getMatch(match.parentMatchId);
+        // Do not undo the match if the parent match is played and finished
+        if (parentMatch.winnerId != null) {
+          connection.query("UPDATE matches SET winnerId = ? WHERE id = ?", [escapeString(oldWinnerId), escapeString(match.parentMatchId)], (err, sets) => {});
+          reject("The next match is already played");
+          return;
+        }
+        await unsetContestant(match.parentMatchId, oldWinnerId);
+      }
+      if (match.parentMatchId != null && winnerId != null) {
+        insertContestant(match.parentMatchId, winnerId, matchId);
+      }
+
+      resolve(getMatch(matchId));
+    });
+  });
+}
+
 // #endregion
 
 // #region tournament

@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const session = require('express-session');
 require("dotenv").config();
 
 // Our self-written module for handling database operations
@@ -7,14 +8,18 @@ let tmdb = require("./tmdb.js");
 
 // #region Express setup
 const app = express();
-const port = 3000;
+const port = 3001;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: 'ASURASECRET' 
+}));
 let api = express.Router();
-// app.use("/api", api);
 app.use("/api", api);
 
 api.use(function(req, res, next) {
@@ -41,6 +46,50 @@ app.use('/static/*', express.static(path.join(__dirname, 'clientbuild/static')))
 // app.use('/*', express.static(path.join(__dirname, 'clientbuild')));
 
 // #endregion
+
+// #region PASSPORT / OAUTH
+
+const passport = require('passport');
+var userProfile;
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/success', (req, res) => res.send(userProfile));
+// app.get('/error', (req, res) => res.send("error logging in"));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
+
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
+  },
+  function(accessToken, refreshToken, profile, done) {
+      userProfile=profile;
+      return done(null, userProfile);
+  }
+));
+
+app.get('/auth/google', 
+  passport.authenticate('google', { scope : ['profile', 'email'] }));
+ 
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/error' }),
+  function(req, res) {
+    // Successful authentication, redirect success.
+    res.redirect('/success');
+  });
+
+// #endregion
+
 
 // #region API
 api.get("/tournament/getTournaments", (req, res) => {
