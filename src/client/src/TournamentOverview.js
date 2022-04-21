@@ -176,6 +176,33 @@ function BracketViewer(props) {
   );
 }
 
+function RemovableBar(props) {
+  const [endTime, setendTime] = React.useState(null);
+  
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status !== "OK") {
+          // Do your error thing
+          console.error(data);
+          return;
+        }
+        let endTime = data.data.endTime;
+        setendTime(endTime);
+      })
+      .catch(err => showError(err));
+    })
+    let today = new Date()
+    let yesterday = today.setDate(today.getDate() - 1)
+    let isComplete = new Date(endTime) < yesterday
+    if (isComplete) {
+      return (null)
+    } else {
+      return (<TournamentBar pageTitle="View Tournament" />)
+    }
+}
+
 function showError(error) {
   alert("Something went wrong. \n" + error);
   console.error(error);
@@ -187,7 +214,7 @@ export default function TournamentOverview(props) {
   return (
     <>
       <Appbar pageTitle="View Tournament" />
-      <TournamentBar pageTitle="View Tournament" />
+      <RemovableBar tournamentId={tournamentId} />
       <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
     </>
   );
