@@ -13,11 +13,11 @@
 	width:200px;
 	list-style:none;
 	padding:0;
+	font-size: 2rem;
   }
-	.round .spacer{ flex-grow:1; }
+	.round .spacer{ flex-grow:1;}
 	.round .spacer:first-child,
 	.round .spacer:last-child{ flex-grow:.5; }
-  
 	.round .game-spacer{
 	  flex-grow:1;
 	}
@@ -25,15 +25,15 @@
   /*
    *  General Styles
   */
-  /* body{
+/* body{
 	font-family:sans-serif;
-	font-size:small;
+	font-size:medium;
 	padding:10px;
 	line-height:1.4em;
   } */
 
   .teamName{
-	  max-width: 5vw;
+	  max-width: 7.5vw;
 	  overflow: hidden;
 	  word-wrap: none;
   }
@@ -44,13 +44,6 @@
   .winnerTrophy{
 	visibility: hidden;
   }
-  li.game > .removeWinner{
-	  display: none;
-  }
-
-	li.game.winner > .removeWinner{
-		display:inline-flex;
-	}
 	
 	.teamName.winner{
 	  font-weight:bold;
@@ -67,7 +60,7 @@
   
 	li.game-spacer{ 
 	  border-right:1px solid #aaa;
-	  min-height:40px;
+	  min-height:10vh;
 	}
   
 	li.game-bottom{ 
