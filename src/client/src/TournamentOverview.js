@@ -122,7 +122,7 @@ function BracketViewer(props){
       .then(data => {
         if (data.status !== "OK") {
           // Do your error thing
-          console.error(data);
+          showError(data.data);
           return;
         }
         let tournament = data.data;

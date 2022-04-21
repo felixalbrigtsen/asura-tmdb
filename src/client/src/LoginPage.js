@@ -6,6 +6,10 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 import {Button, Textfield, Stack, InputLabel, Paper, Typography} from '@mui/material';
 
 
+function ProfileView() {
+    return "lol";
+}
+
 export default function LoginPage() {
     return (
         <>
