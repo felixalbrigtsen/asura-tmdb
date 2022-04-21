@@ -25,30 +25,43 @@
   /*
    *  General Styles
   */
-  body{
+  /* body{
 	font-family:sans-serif;
 	font-size:small;
 	padding:10px;
 	line-height:1.4em;
+  } */
+
+  .teamName{
+	  max-width: 5vw;
+	  overflow: hidden;
+	  word-wrap: none;
   }
   
   li.game{
 	padding-left:20px;
   }
-  li.game > span{
+  .winnerTrophy{
 	visibility: hidden;
   }
-  
-	li.game.winner{
+  li.game > .removeWinner{
+	  display: none;
+  }
+
+	li.game.winner > .removeWinner{
+		display:inline-flex;
+	}
+	
+	.teamName.winner{
 	  font-weight:bold;
 	}
-	li.game.winner > span{
+	li.game.winner > div.winnerTrophy{
 		visibility: visible;
 	  }
-	li.game span{
+	/* li.game .winnerTrophy{
 	  float:right;
 	  margin-right:5px;
-	}
+	} */
   
 	li.game-top{ border-bottom:1px solid #aaa; }
   

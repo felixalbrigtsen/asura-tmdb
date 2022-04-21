@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import Appbar from './components/AsuraBar';
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from 'react-router-dom'
-import { Button, Paper, Stack, CircularProgress, Box, Grid } from "@mui/material";
+import { Button, IconButton, Paper, Stack, CircularProgress, Box, Grid, Typography, Container } from "@mui/material";
 import "./components/tournamentBracket.css";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+import BackspaceIcon from '@mui/icons-material/Backspace';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function showError(error) {
   alert("Something went wrong. \n" + error);
@@ -44,6 +46,10 @@ function Match(props){
       showError("No team selected");
       return;
     }
+    // if(props.match.winnerId === teamId){
+    //   showError("Team already won");
+    //   return;
+    // }
     let formData = new FormData();
     formData.append("winnerId",teamId);
     let body = new URLSearchParams(formData);
@@ -66,13 +72,27 @@ function Match(props){
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <li onClick={setWinner(props.match.team1Id)} className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : ""}`}>
-          {team1Name} <span><EmojiEventsIcon alt="A trohpy"/></span>
+        <li className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser"}`}>
+          <Stack direction={"row"}>
+              <Typography className={`teamName`}>
+                {team1Name}
+              </Typography>
+              {/* <IconButton className="removeWinner" color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> */}
+              <IconButton onClick={setWinner(props.match.team1Id)} className="selectWinner" color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              {/* <Box className="winnerTrophy"><EmojiEventsIcon alt="A trohpy" color="gold" /></Box> */}
+          </Stack>
         </li>
         <li className="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <li onClick={setWinner(props.match.team2Id)} className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : ""}`}>
-          {team2Name} <span><EmojiEventsIcon alt="A trohpy"/></span>
+        <li className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : "loser"}`}>
+        <Stack direction={"row"}>
+              <Typography className={`teamName`}>
+                {team2Name}
+              </Typography>
+              {/* <IconButton className="removeWinner" color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> */}
+              <IconButton onClick={setWinner(props.match.team1Id)} className="selectWinner" color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              {/* <Box className="winnerTrophy"><EmojiEventsIcon alt="A trohpy" color="gold" /></Box> */}
+          </Stack>
         </li>
         <li className="spacer">&nbsp;</li>
     </>
