@@ -7,6 +7,7 @@ import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper,
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { setDate } from "date-fns";
 
 function postTournament(showError, tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams) {
   if (!tournamentName || tournamentName === "") {
@@ -81,8 +82,8 @@ function TournamentForm(props) {
   function submitTournament(event) {
     event.preventDefault();
     let maxTeams = Math.pow(2, maxTeamsExponent);
-    let tournamentStart = new Date(startTime).valueOf() - new Date().getTimezoneOffset() * 60000;
-    let tournamentEnd = new Date(endTime).valueOf() - new Date().getTimezoneOffset() * 60000;
+    let tournamentStart = new Date(startTime.setSeconds(0, 0, 0)).valueOf() - new Date().getTimezoneOffset() * 60*1000;
+    let tournamentEnd = new Date(endTime.setSeconds(0, 0, 0)).valueOf() - new Date().getTimezoneOffset() * 60*1000;
     postTournament(
       props.showError,
       document.getElementById("nameInput").value,
