@@ -43,15 +43,18 @@ function TeamCreator(props) {
   return (
     <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px"}} component={Stack} direction="column">
       <div align="center">
+        <form>
         <TextField id="teamNameInput" sx={{ width: "70%" }} label="Team Name" variant="outlined" />
         {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
-        <Button variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
+        <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
           <Box sx={{padding: "10px"}}>
             Create Team
           </Box>
           <AddCircleIcon />
         </Button>
+        </form>
       </div>
+      
     </Paper>
   )
 }
@@ -92,7 +95,7 @@ function TeamList(props) {
               </b></TableCell>
               {/* <TableCell align="right">{team.members}</TableCell> */}
               <TableCell align="center">
-                <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)} endIcon={<EditIcon />}>Edit</Button>
+                <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => {props.setSelectedTeamId(team.id); window.scrollTo(0, document.body.scrollHeight)}} endIcon={<EditIcon />}>Edit</Button>
                 <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteTeam(team.id)}} endIcon={<DeleteIcon />}>Delete</Button>
               </TableCell>
             </TableRow>
@@ -146,6 +149,10 @@ function TeamEditor(props) {
     setTeam(newTeam);
   }
 
+  function handleFocus(event) {
+    event.currentTarget.select()
+  }
+
   function saveTeam() {
     let formData = new FormData();
     formData.append("name", team.name);
@@ -172,9 +179,9 @@ function TeamEditor(props) {
     <div align="center">
       <h2><b>Edit Team:</b></h2>
       <form>
-        <TextField id="teamNameInput" label="Team Name" value={team.name || ""} onChange={nameInputChanged} sx={{width: "80%"}} />
+        <TextField id="newTeamNameInput" label="Team Name" value={team.name || ""} onChange={nameInputChanged} onFocus={handleFocus} sx={{width: "80%"}} />
         {/* <PlayerList players={players} setPlayers={setPlayers} /> */}
-        <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={saveTeam}>Save</Button>
+        <Button type="submit" variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={saveTeam}>Save</Button>
       </form>
       </div>
     </Paper>
