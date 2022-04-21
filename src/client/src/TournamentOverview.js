@@ -208,10 +208,6 @@ function RemovableBar(props) {
     }
 }
 
-function showError(error) {
-  alert("Something went wrong. \n" + error);
-  console.error(error);
-}
 
 export default function TournamentOverview(props) {
   const { tournamentId } = useParams();
