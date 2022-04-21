@@ -156,41 +156,7 @@ function TournamentList() {
       .catch((err) => console.log(err.message));
   }, []);
 
-  const originalTournamentList = tournamentList
-
-  function search() {
-    let searchBase = []
-    let searchResult = []
-    tournamentList.map((tournament) => searchBase.push(tournament.name))
-    let input = document.getElementById("searchInput")
-    let inputUpperCase = input.value.toUpperCase()
-    for (let i = 0; i < searchBase.length; i++) {
-      let tournamentName = searchBase[i].toUpperCase()
-      if(tournamentName.indexOf(inputUpperCase) >= 0) {
-        searchResult.push(tournamentName)
-      }
-    }
-
-    let searchedList = []
-    for (let i = 0; i < tournamentList.length; i++) {
-      let name = tournamentList[i].name
-      for (let j = 0; j < searchResult.length; j++) {
-        if (name.toUpperCase() == searchResult[j]) {
-          searchedList.push(tournamentList[i])
-        }
-      }
-    }
-
-    if (input.value == "") {
-      console.log(originalTournamentList)
-      setTournamentList(originalTournamentList)
-    } else {
-      setTournamentList(searchedList)
-    }
-  }
-
   return <>
-  <TextField type="text" id="searchInput" label="Search" placeholder="Tournament Name" InputLabelProps={{shrink: true}} onChange={search}/>
   <Stack spacing={3} sx={{margin: "10px auto"}}>
     {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
   </Stack>

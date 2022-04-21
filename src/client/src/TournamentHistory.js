@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon } from "@mui/material";
+import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon, TextField } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
@@ -73,6 +73,7 @@ function shorten(description, maxLength) {
   
   function TournamentList() {
     let [tournamentList, setTournamentList] = React.useState([]);
+    let [originalList, setOriginalList] = React.useState([])
   
     React.useEffect(() => {
       fetch(process.env.REACT_APP_API_URL + `/tournament/getTournaments`)
@@ -95,11 +96,43 @@ function shorten(description, maxLength) {
           }
 
           setTournamentList(tournamenthistory);
+          setOriginalList(tournamenthistory)
         })
         .catch((err) => console.log(err.message));
     }, []);
+
+  function search() {
+    let searchBase = []
+    let searchResult = []
+    originalList.map((tournament) => searchBase.push(tournament.name))
+    let input = document.getElementById("searchInput")
+    let inputUpperCase = input.value.toUpperCase()
+    for (let i = 0; i < searchBase.length; i++) {
+      let tournamentName = searchBase[i].toUpperCase()
+      if(tournamentName.indexOf(inputUpperCase) >= 0) {
+        searchResult.push(tournamentName)
+      }
+    }
+
+    let searchedList = []
+    for (let i = 0; i < originalList.length; i++) {
+      let name = originalList[i].name
+      for (let j = 0; j < searchResult.length; j++) {
+        if (name.toUpperCase() == searchResult[j]) {
+          searchedList.push(originalList[i])
+        }
+      }
+    }
+
+    if (input.value == "") {
+      setTournamentList(originalList)
+    } else {
+      setTournamentList(searchedList)
+    }
+  }
   
     return <>
+    <TextField type="text" id="searchInput" label="Search" placeholder="Tournament Name" InputLabelProps={{shrink: true}} onChange={search}/>
     <Stack spacing={3} sx={{margin: "10px auto"}}>
       {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
     </Stack>
