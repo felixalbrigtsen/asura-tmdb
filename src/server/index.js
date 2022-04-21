@@ -8,7 +8,7 @@ let tmdb = require("./tmdb.js");
 
 // #region Express setup
 const app = express();
-const port = 3001;
+const port = 3000;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
@@ -36,15 +36,10 @@ api.use(require('express-log-url'));
 
 // Serve static files from the React app
 app.use('/', express.static(path.join(__dirname, 'clientbuild')));
-// app.use('/tournament/', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
+app.use('/login', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
 app.use('/tournament/*', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
 app.use('/static', express.static(path.join(__dirname, 'clientbuild/static')));
 app.use('/static/*', express.static(path.join(__dirname, 'clientbuild/static')));
-// app.get('/*', function (req, res) {
-  // res.sendFile(path.join(__dirname, 'clientbuild', 'index.html'));
-// });
-// app.use('/*', express.static(path.join(__dirname, 'clientbuild')));
-
 // #endregion
 
 // #region PASSPORT / OAUTH
