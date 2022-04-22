@@ -23,7 +23,6 @@ let submitChanges = curryTournamentId => event => {
   // let tournamentImageFile = document.getElementById("editImage").files[0];
   let tournamentStartDate = document.getElementById("editStartDate").value;
   let tournamentEndDate = document.getElementById("editEndDate").value;
-  let showError;
 
   if (!tournamentName || tournamentName === "") {
     showError("Tournament name cannot be empty");
