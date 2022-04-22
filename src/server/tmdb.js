@@ -17,6 +17,7 @@ module.exports = {
   getTeamsByTournamentId: getTeamsByTournamentId,
   getUsers: getUsers,
   getUserByEmail: getUserByEmail,
+  getUserByGoogleId: getUserByGoogleId,
   createUserBlank: createUserBlank,
   editUser: editUser,
 }
@@ -496,7 +497,7 @@ function createUserBlank(email) {
         return;
       }
       // Create a user, with only an email address
-      connection.query("INSERT INTO users (email, isManager) VALUES (?), FALSE", [escapeString(email)], (err, sets) => {
+      connection.query("INSERT INTO users (email, isManager) VALUES (?, FALSE)", [escapeString(email)], (err, sets) => {
         if (err) {
           console.log(err);
           reject(err);

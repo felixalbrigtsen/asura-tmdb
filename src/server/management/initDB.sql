@@ -40,7 +40,7 @@ CREATE TABLE matches (
 
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    googleId INTEGER,
+    googleId TEXT,
     name TEXT,
     email TEXT NOT NULL,
     isManager BOOLEAN NOT NULL
