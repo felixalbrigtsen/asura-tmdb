@@ -16,10 +16,12 @@ function showError(error) {
 }
 
 function TournamentTier(props){
+  const { tournamentId } = useParams();
+
   let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
     let matches = [];
     for (let i = 0; i < props.matches.length; i++) {
-      matches.push(<Match teams={props.teams} match={props.matches[i]} key={i} />);
+      matches.push(<Match tournamentId={tournamentId} teams={props.teams} match={props.matches[i]} key={i} />);
     }
     return(
       <ul className={`round ${roundTypes[props.tier]}`}>
