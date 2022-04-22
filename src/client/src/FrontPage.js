@@ -12,6 +12,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 function CreateButton(props) {
   return (
@@ -124,8 +125,9 @@ function TournamentListItem(props) {
                     </Grid>
                 </Grid>
               </Box>
-
+              
               <Countdown />
+              <Typography variant="body" color="text.primary"> <EmojiEventsIcon alt="A trohpy" color="gold" /> Prize: {props.tournament.teamCount} </Typography>
             </CardContent>
           </Card>     
         </Paper>
