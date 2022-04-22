@@ -80,12 +80,6 @@ let submitChanges = curryTournamentId => event => {
 let deleteTournament = tournamentId => event => {
   console.log(tournamentId);
   event.preventDefault();
-  //TODO: https://mui.com/components/dialogs/
-  
-  // let certain = window.confirm("Are you sure? Click OK to delete tournament");
-  // if (!certain) {
-  //   return;
-  // }
 
   fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}`, {
     method: "DELETE",
@@ -197,15 +191,15 @@ function ConfirmationDialogRaw(props) {
       open={open}
       {...other}
     >
-      <DialogTitle>Yes or No</DialogTitle>
+      <DialogTitle>Delete tournament?</DialogTitle>
       <DialogContent>
-        Test
+        Are you sure you want to delete the tournament? This action is not reversible!
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleCancel}>
           Cancel
         </Button>
-        <Button onClick={deleteTournament(tournamentId)}>Ok</Button>
+        <Button onClick={deleteTournament(tournamentId)}>Confirm</Button>
       </DialogActions>
     </Dialog>
   );
@@ -251,28 +245,6 @@ export default function TournamentManager(props) {
         />
       </Box>
     </Paper>
-
-    {/* <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {"Delete Tournament?"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Are you sure? Click Confirm to delete tournament
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleConfirm} autoFocus>
-          Confirm
-        </Button>
-      </DialogActions>
-    </Dialog> */}
 
     </>
   );
