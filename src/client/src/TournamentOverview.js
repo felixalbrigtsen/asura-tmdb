@@ -69,19 +69,40 @@ function Match(props){
       .catch(error => showError(error));
   }
 
+  const [endTime, setendTime] = React.useState(null);
+  
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status !== "OK") {
+          // Do your error thing
+          console.error(data);
+          return;
+        }
+        let endTime = data.data.endTime;
+        setendTime(endTime);
+      })
+      .catch(err => showError(err));
+    })
+
+  let today = new Date()
+  let yesterday = today.setDate(today.getDate() - 1)
+  let isComplete = new Date(endTime) < yesterday
+
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
         <li className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser"}`}>
           <Stack direction={"row"}>
-              <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem'}}>
+              <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team1Name}
               </Typography>
-              { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
-              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton>
+              { props.match.winnerId && (props.match.team1Id === props.match.winnerId) && !isComplete ?
+              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> : null
               }
-              { props.match.team1Id !== null &&
-              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              { props.match.team1Id !== null && !isComplete ?
+              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
               }
               {/* { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
               <EmojiEventsIcon alt="A trohpy" color="gold" />
@@ -92,14 +113,14 @@ function Match(props){
         {/* Team 2 (Winner-status?) (Team name) */}
         <li className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : "loser"}`}>
         <Stack direction={"row"} sx={{alignItems:'center'}}>
-              <Typography className={`teamName`} sx={{fontSize:'1.5rem'}}>
+              <Typography className={`teamName`} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team2Name}
               </Typography>
-              { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
-              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton>
+              { props.match.winnerId && (props.match.team2Id === props.match.winnerId) && !isComplete ?
+              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> : null
               }
-              { props.match.team2Id !== null &&
-              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              { props.match.team2Id !== null && !isComplete ?
+              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
               }
               {/* { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
               <EmojiEventsIcon alt="A trohpy" color="gold" />
