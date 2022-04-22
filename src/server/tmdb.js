@@ -446,6 +446,9 @@ function getUsers () {
         console.log(err);
         reject(err);
       } else {
+        users.forEach((user, index) => {
+          this[index].isManager = (this[index].isManager == 1);
+        });
         resolve(users);
       }
     });
@@ -462,6 +465,7 @@ function getUserByGoogleId(googleId) {
         if (users.length == 0) {
           reject("No such user exists");
         }
+        users[0].isManager = users[0].isManager == 1;
         resolve(users[0]);
       }
     });
@@ -479,6 +483,7 @@ function getUserByEmail(email) {
           reject("No such user exists");
           return;
         }
+        users[0].isManager = users[0].isManager == 1;
         resolve(users[0]);
       }
     });

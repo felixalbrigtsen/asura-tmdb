@@ -21,7 +21,8 @@ app.use(session({
   secret: process.env.COOKIE_SECRET,
   rolling: true,
   cookie: { 
-    secure: process.env.COOKIE_SECURE,
+    secure: (process.env.COOKIE_SECRET == "true"), // All env vars are strings, so cast bool manually
+    sameSite: 'strict', // Browsers will reject a "secure" cookie without this
     maxAge: 60 * 60 * 1000 // 1 hour (in milliseconds)
   }
 }));
@@ -52,6 +53,7 @@ app.use('/static/*', express.static(path.join(__dirname, 'clientbuild/static')))
 // #region PASSPORT / OAUTH
 
 const passport = require('passport');
+const { getUserByEmail } = require("./tmdb.js");
 var userProfile;
 
 app.use(passport.initialize());
@@ -88,35 +90,39 @@ app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/error' }),
   async function(req, res) {
     // Get user profile from passport
+    // This is retrieved from the callback url data ?code=...
     let user = {
       googleId: req.user.id,
-      asuraId: null,
       name: req.user.displayName,
       email: req.user.emails[0].value,
-      imgurl: req.user.photos[0].value
+      imgurl: req.user.photos[0].value,
+      asuraId: null,
     }
 
     // Check if user exists in database
     tmdb.getUserByEmail(user.email)
     .then(dbUser => {
-      user.asuraId = dbUser.id;
-      if (!dbUser.googleId) {
-        // User is "preregistered" with email only, so complete the registration
-        user.isManager = false;
-        tmdb.editUser(user.email, user)
-          .then(() => { user.asuraId = dbUser.id})
-          .catch(err => console.log(err));
+      user.asuraId = dbUser.id; // asuraId is the database id / primary key
+      if (dbUser.googleId) {
+        // User is already registered with google, simply log them in
+        req.session.user = dbUser;
       } else {
-        user = dbUser;
+        // User is "preregistered" with email only, so complete the registration
+        // This step will register the name, img and googleId
+        user.isManager = false;
+        tmdb.editUser(user.email, user).catch(err => console.log(err));
+
+        req.session.user = user;
       }
 
-      req.session.user = user;
       res.json({"status": "OK", "data": user});
+      return;
     })
     .catch(err => {
-      // User is neither registered nor preregistered
+      // User is not in the database at all, do not give them a session.
+      res.session.user = null;
       res.json({"status": "error", message: "Email is not in administrator list."});
-      return
+      return;
     });
   }
 );
@@ -330,7 +336,11 @@ api.post("/team/:teamId/edit", (req, res) => {
 // #endregion
 
 //Takes JSON body
-api.post("/tournament/create", (req, res) => {
+api.post("/tournament/create", async (req, res) => {
+  if (!(await isManager(req.session))) {
+    res.json({"status": "error", "data": "Not authorized"});
+    return
+  }
   //Check that req body is valid
   if (req.body.name == undefined || req.body.name == "") {
     res.json({"status": "error", "data": "No data supplied"});
@@ -390,6 +400,33 @@ api.post("/tournament/create", (req, res) => {
 
 // #region users
 
+function isLoggedIn(session) {
+  return new Promise((resolve, reject) => {
+    if (session.user == undefined || session.user.googleId == undefined) {
+      return resolve(false);
+    }
+    let googleId = session.user.googleId;
+  
+    tmdb.getUserByGoogleId(googleId)
+      .then(user => {return resolve(user != undefined) })
+      .catch(err => {resolve(false) });
+  });
+}
+
+
+function isManager(session) {
+  return new Promise((resolve, reject) => {
+    if (session.user == undefined || session.user.googleId == undefined) {
+      return resolve(false);
+    }
+    let googleId = session.user.googleId;
+    tmdb.getUserByGoogleId(googleId)
+      .then(user => {return resolve(user.isManager) })
+      .catch(err => {resolve(false) });
+  });
+}
+
+
 api.get("/users/getSessionUser", (req, res) => {
   if (req.session.user) {
     res.json({"status": "OK", "data": req.session.user});
@@ -415,8 +452,12 @@ api.get("/users/getUsers", (req, res) => {
   .catch(err => res.json({"status": "error", "data": err}));
 });
 
-api.post("/users/createBlank", (req, res) => {
-  let email = req.body.newUserEmail;
+api.post("/users/createBlank", async (req, res) => {
+  if (!(await isManager(req.session))) {
+    res.json({"status": "error", "data": "Not authorized"});
+    return
+  }
+  let email = req.body.email;
   // Check if the user already exists
   tmdb.getUserByEmail(email)
     .then(user => {
@@ -439,15 +480,35 @@ api.post("/users/createBlank", (req, res) => {
     });
 });
 
-api.post("/users/edit", (req, res) => {
+api.post("/users/changeManagerStatus", async (req, res) => {
+  if (!await isManager(req.session)) {
+    res.json({"status": "error", "data": "Not authorized"});
+    return
+  }
+  let emailAddress = req.body.emailAddress;
+  let isManager = req.body.isManager;
 
+
+  tmdb.getUserByEmail(emailAddress)
+    .then(user => {
+      tmdb.changeManagerStatus(user.id, isManager)
+        .then(msg => res.json({"status": "OK", "data": msg}))
+        .catch(err => res.json({"status": "error", "data": err}));
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({"status": "error", "data": "Could not update the specified user"});
+    });
 });
 
 
-api.get("/dumpsession", (req, res) => {
+api.get("/dumpsession", async (req, res) => {
   let out = {};
   out.session = req.session;
   out.header = req.headers;
+  out.isLoggedIn = await isLoggedIn(req.session);
+  out.isManager = await isManager(req.session);
+  console.log(out);
   res.json(out);
 });
 // #endregion
