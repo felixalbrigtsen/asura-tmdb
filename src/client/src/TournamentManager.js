@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import PropTypes from 'prop-types'
 
 let submitChanges = curryTournamentId => event => {
   event.preventDefault();
@@ -77,6 +78,7 @@ let submitChanges = curryTournamentId => event => {
     .catch((error) => showError(error));
 }
 let deleteTournament = tournamentId => event => {
+  console.log(tournamentId);
   event.preventDefault();
   //TODO: https://mui.com/components/dialogs/
   
@@ -172,13 +174,59 @@ function showError(error) {
   console.error(error);
 }
 
+function ConfirmationDialogRaw(props) {
+  const { tournamentId } = useParams();
+  const { onClose, value: valueProp, open, ...other } = props;
+  const [value, setValue] = React.useState(valueProp);
+  const radioGroupRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!open) {
+      setValue(valueProp);
+    }
+  }, [valueProp, open]);
+
+  const handleCancel = () => {
+    onClose();
+  };
+
+  return (
+    <Dialog
+      sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+      maxWidth="xs"
+      open={open}
+      {...other}
+    >
+      <DialogTitle>Yes or No</DialogTitle>
+      <DialogContent>
+        Test
+      </DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button onClick={deleteTournament(tournamentId)}>Ok</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+ConfirmationDialogRaw.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  value: PropTypes.string.isRequired,
+};
+
 export default function TournamentManager(props) {
   const { tournamentId } = useParams();
 
   const [open, setOpen] = React.useState(false);
-  const handleConfirm = () => {
-    return true;
+  const [value, setValue] = React.useState("");
+
+  const handleClickListItem = () => {
+    setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -191,13 +239,20 @@ export default function TournamentManager(props) {
       <ManageTournament tournamentId={tournamentId} />
       {/* <AnnounceButton /> */}
       <Box sx={{width: "100%"}}>
-        <Button variant="contained" color="error" onClick={deleteTournament(tournamentId)} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
+        <Button variant="contained" color="error" onClick={handleClickListItem} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
           Delete Tournament
         </Button>
+        <ConfirmationDialogRaw
+          id="ringtone-menu"
+          keepMounted
+          open={open}
+          onClose={handleClose}
+          value={value}
+        />
       </Box>
     </Paper>
 
-    <Dialog
+    {/* <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
@@ -217,7 +272,7 @@ export default function TournamentManager(props) {
           Confirm
         </Button>
       </DialogActions>
-    </Dialog>
+    </Dialog> */}
 
     </>
   );
