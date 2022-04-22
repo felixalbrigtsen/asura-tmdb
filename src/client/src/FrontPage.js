@@ -78,7 +78,11 @@ function TournamentListItem(props) {
         </Box>)
     } else {
       return(<Box>
-      <Typography variant="body"> Starts in: {remainingDays} Days, {remainingHours} Hours, {remainingMins} Minutes and {remainingSecs} Seconds </Typography>
+        { remainingDays > 0 ? <Typography variant="body"> {remainingDays} days </Typography> : null }
+        { remainingHours > 0 ? <Typography variant="body"> {remainingHours} hours </Typography> : null }
+        { remainingMins > 0 ? <Typography variant="body"> {remainingMins} mins </Typography> : null }
+        { remainingSecs > 0 ? <Typography variant="body"> {remainingSecs} secs </Typography> : null }
+      {/* <Typography variant="body"> Starts in: {remainingDays} Days, {remainingHours} Hours, {remainingMins} Minutes and {remainingSecs} Seconds </Typography> */}
       </Box>
       )
     }
