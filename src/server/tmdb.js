@@ -15,9 +15,15 @@ module.exports = {
   deleteTournament: deleteTournament,
   editTournament: editTournament,
   getTeamsByTournamentId: getTeamsByTournamentId,
+  getUsers: getUsers,
+  getUserByEmail: getUserByEmail,
+  createUserBlank: createUserBlank,
+  editUser: editUser,
 }
 
 const mysql = require("mysql");
+
+// #region Database setup
 
 let db_config = {
   host: process.env.DB_HOST,
@@ -54,6 +60,8 @@ function escapeString(str) {
   // return mysql.escape(str);
   return str;
 }
+
+// #endregion
 
 // #region match
 // Returns the match of the exact given id.
@@ -423,6 +431,101 @@ async function assignFirstMatch(teamId, tournamentId) {
     }
     reject("Could not assign team to any matches");
   });
+}
+
+// #endregion
+
+
+// #region users
+
+function getUsers () {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM users", (err, users) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(users);
+      }
+    });
+  });
+}
+
+function getUserByGoogleId(googleId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM users WHERE googleId = ?", [escapeString(googleId)], (err, users) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        if (users.length == 0) {
+          reject("No such user exists");
+        }
+        resolve(users[0]);
+      }
+    });
+  });
+}
+
+function getUserByEmail(email) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM users WHERE email = ?", [escapeString(email)], (err, users) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        if (users.length == 0) {
+          reject("No such user exists");
+          return;
+        }
+        resolve(users[0]);
+      }
+    });
+  });
+}
+
+function createUserBlank(email) {
+  return new Promise(function(resolve, reject) {
+    //Check that the user doesn't already exist
+    getUserByEmail(email).then(user => {
+      reject("No such user exists");
+    }).catch(err => {
+      if (err != "No such user exists") {
+        console.log(err);
+        reject(err);
+        return;
+      }
+      // Create a user, with only an email address
+      connection.query("INSERT INTO users (email, isManager) VALUES (?), FALSE", [escapeString(email)], (err, sets) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve({message: "User Created", userId: sets.insertId});
+        }
+      });
+    });
+  });
+}
+
+function editUser(email, user) {
+  return new Promise(function(resolve, reject) {
+    connection.query("UPDATE users SET googleId = ?, name = ?, isManager = ? WHERE email = ?", [escapeString(user.googleId), escapeString(user.name), escapeString(user.isManager), escapeString(email)], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        console.log(sets);
+        resolve("User updated");
+      }
+    });
+  });
+}
+
+function userIsManager(userId) {
+  getUser(userId)
+    .then(user => { return user.isManager; })
+    .catch(err => { console.log(err); return false; });
 }
 
 // #endregion

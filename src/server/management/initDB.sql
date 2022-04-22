@@ -1,9 +1,9 @@
 -- WARNING: Will delete EVERYTHING in the database!
 
-DROP TABLE IF EXISTS players;
 DROP TABLE IF EXISTS matches;
 DROP TABLE IF EXISTS teams;
 DROP TABLE IF EXISTS tournaments;
+DROP TABLE IF EXISTS users;
 
 -- Create the tables
 CREATE TABLE tournaments (
@@ -38,12 +38,12 @@ CREATE TABLE matches (
     FOREIGN KEY (winnerId) REFERENCES teams (id) ON DELETE SET NULL
 );
 
-CREATE TABLE players (
+CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    name TEXT NOT NULL,
-    teamId INTEGER NOT NULL,
-
-    FOREIGN KEY (teamId) REFERENCES teams (id) ON DELETE CASCADE
+    googleId INTEGER,
+    name TEXT,
+    email TEXT NOT NULL,
+    isManager BOOLEAN NOT NULL
 );
 
 -- Example data (Two tournaments, 4 teams, single elimination)
@@ -82,29 +82,3 @@ INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 5, 7, 8, 2);           -- 8
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 6, 9, 10, 2);            -- 9
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 6, 11, 12, 2);           -- 10
-
--- Players
-INSERT INTO players (name, teamId) VALUES ('Player 1', 1);
-INSERT INTO players (name, teamId) VALUES ('Player 2', 1);
-INSERT INTO players (name, teamId) VALUES ('Player 3', 2);
-INSERT INTO players (name, teamId) VALUES ('Player 4', 2);
-INSERT INTO players (name, teamId) VALUES ('Player 5', 3);
-INSERT INTO players (name, teamId) VALUES ('Player 6', 3);
-INSERT INTO players (name, teamId) VALUES ('Player 7', 4);
-INSERT INTO players (name, teamId) VALUES ('Player 8', 4);
-INSERT INTO players (name, teamId) VALUES ('Player 9', 5);
-INSERT INTO players (name, teamId) VALUES ('Player 10', 5);
-INSERT INTO players (name, teamId) VALUES ('Player 11', 6);
-INSERT INTO players (name, teamId) VALUES ('Player 12', 6);
-INSERT INTO players (name, teamId) VALUES ('Player 13', 7);
-INSERT INTO players (name, teamId) VALUES ('Player 14', 7);
-INSERT INTO players (name, teamId) VALUES ('Player 15', 8);
-INSERT INTO players (name, teamId) VALUES ('Player 16', 8);
-INSERT INTO players (name, teamId) VALUES ('Player 17', 9);
-INSERT INTO players (name, teamId) VALUES ('Player 18', 9);
-INSERT INTO players (name, teamId) VALUES ('Player 19', 10);
-INSERT INTO players (name, teamId) VALUES ('Player 20', 10);
-INSERT INTO players (name, teamId) VALUES ('Player 21', 11);
-INSERT INTO players (name, teamId) VALUES ('Player 22', 11);
-INSERT INTO players (name, teamId) VALUES ('Player 23', 12);
-INSERT INTO players (name, teamId) VALUES ('Player 24', 12);

@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const session = require('express-session');
+const https = require("https");
 require("dotenv").config();
 
 // Our self-written module for handling database operations
@@ -8,7 +9,7 @@ let tmdb = require("./tmdb.js");
 
 // #region Express setup
 const app = express();
-const port = 3000;
+const port = 3001;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
@@ -29,6 +30,7 @@ api.use(function(req, res, next) {
   next();
 });
 api.use(require('express-log-url'));
+app.use(require('express-log-url'));
 
 // #endregion
 
@@ -78,10 +80,17 @@ app.get('/auth/google',
  
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/error' }),
-  function(req, res) {
-    // Successful authentication, redirect success.
-    res.redirect('/success');
-  });
+  async function(req, res) {
+    // Get user profile from passport
+    let user = {
+      id: req.user.id,
+      name: req.user.displayName,
+      email: req.user.emails[0].value
+    }
+    req.session.user = user;
+    res.json(user);
+  }
+);
 
 // #endregion
 
@@ -89,8 +98,8 @@ app.get('/auth/google/callback',
 // #region API
 api.get("/tournament/getTournaments", (req, res) => {
   tmdb.getTournaments()
-  .then(tournaments => res.json({"status": "OK", "data": tournaments}))
-  .catch(err => res.json({"status": "error", "data": err}));
+    .then(tournaments => res.json({"status": "OK", "data": tournaments}))
+    .catch(err => res.json({"status": "error", "data": err}));
 });
 
 // #region tournament/:tournamentId
@@ -348,4 +357,50 @@ api.post("/tournament/create", (req, res) => {
     .catch(err => res.json({"status": "error", "data": err}));
 });    
   
+// #endregion
+
+// #region users
+
+api.get("/users/getSessionUser", (req, res) => {
+  if (req.session.user) {
+    res.json({"status": "OK", "data": req.session.user});
+  } else {
+    res.json({"status": "error", "data": "No user logged in"});
+  }
+});
+
+api.get("/users/getUsers", (req, res) => {
+  tmdb.getUsers()
+  .then(users => res.json({"status": "OK", "data": users}))
+  .catch(err => res.json({"status": "error", "data": err}));
+});
+
+api.post("/users/createBlank", (req, res) => {
+  let email = req.body.newUserEmail;
+  // Check if the user already exists
+  tmdb.getUserByEmail(email)
+    .then(user => {
+      res.json({"status": "error", "data": "User already exists", user: user});
+    })
+    .catch(err => {
+      console.log(err);
+      if (err == "No such user exists") {
+        // Create a new user
+        tmdb.createUserBlank(email)
+          .then(user => {
+            res.json({"status": "OK", "data": user});
+          })
+          .catch(err => {
+            res.json({"status": "error", "data": err});
+          });
+      } else {
+        res.json({"status": "error", "data": err});
+      }
+    });
+});
+
+api.post("/users/edit", (req, res) => {
+
+});
+
 // #endregion
