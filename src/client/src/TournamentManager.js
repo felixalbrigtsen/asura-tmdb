@@ -166,10 +166,10 @@ function ManageTournament(props) {
   );
 }
 
-// function showError(error) {
-//   alert("Something went wrong. \n" + error);
-//   console.error(error);
-// }
+function showError(error) {
+  alert("Something went wrong. \n" + error);
+  console.error(error);
+}
 
 function ConfirmationDialogRaw(props) {
   const { tournamentId } = useParams();
