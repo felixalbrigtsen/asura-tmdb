@@ -2,6 +2,7 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 // import { AlertContainer, alert } from "react-custom-alert";
 import AppBar from "./components/AsuraBar";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
@@ -16,37 +17,38 @@ import PropTypes from 'prop-types'
 let submitChanges = curryTournamentId => event => {
   event.preventDefault();
   let tournamentId = curryTournamentId;
-  //TODO use refs to get values
+  //TODO: use refs to get values
   let tournamentName = document.getElementById("editName").value;
   let tournamentDescription = document.getElementById("editDesc").value;
   // let tournamentImageFile = document.getElementById("editImage").files[0];
   let tournamentStartDate = document.getElementById("editStartDate").value;
   let tournamentEndDate = document.getElementById("editEndDate").value;
-  
+  let showError;
+
   if (!tournamentName || tournamentName === "") {
-    alert("Tournament name cannot be empty");
+    showError("Tournament name cannot be empty");
     return;
   }
   if (!tournamentDescription || tournamentDescription === "") {
-    alert("Tournament description cannot be empty");
+    showError("Tournament description cannot be empty");
     return;
   }
   if (!tournamentStartDate || tournamentStartDate === "") {
-    alert("Tournament start date cannot be empty");
+    showError("Tournament start date cannot be empty");
     return;
   }
   if (!tournamentEndDate || tournamentEndDate === "") {
-    alert("Tournament end date cannot be empty");
+    showError("Tournament end date cannot be empty");
     return;
   }
 
   if (tournamentStartDate > tournamentEndDate) {
-    alert("Tournament start date cannot be after end date");
+    showError("Tournament start date cannot be after end date");
     return;
   }
   let today = new Date();
   if (tournamentStartDate < today || tournamentEndDate < today) {
-    alert("Tournament start and end date must be after today");
+    showError("Tournament start and end date must be after today");
     return;
   }
 
@@ -77,6 +79,7 @@ let submitChanges = curryTournamentId => event => {
     })
     .catch((error) => showError(error));
 }
+
 let deleteTournament = tournamentId => event => {
   console.log(tournamentId);
   event.preventDefault();
@@ -163,10 +166,10 @@ function ManageTournament(props) {
   );
 }
 
-function showError(error) {
-  alert("Something went wrong. \n" + error);
-  console.error(error);
-}
+// function showError(error) {
+//   alert("Something went wrong. \n" + error);
+//   console.error(error);
+// }
 
 function ConfirmationDialogRaw(props) {
   const { tournamentId } = useParams();
@@ -220,17 +223,25 @@ export default function TournamentManager(props) {
   const handleClickListItem = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  function showError(message) {
+    setOpenError(false);
+    setErrorMessage(message);
+    setOpenError(true);
+  }
+
   return (
     
     <>
     <AppBar pageTitle="Edit Tournament" />
     <TournamentBar pageTitle="Edit Tournament"/>
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
-      <ManageTournament tournamentId={tournamentId} />
+      <ManageTournament tournamentId={tournamentId} showError={showError} />
       {/* <AnnounceButton /> */}
       <Box sx={{width: "100%"}}>
         <Button variant="contained" color="error" onClick={handleClickListItem} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
@@ -246,6 +257,7 @@ export default function TournamentManager(props) {
       </Box>
     </Paper>
 
+    <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />
     </>
   );
 }
