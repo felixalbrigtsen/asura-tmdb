@@ -224,7 +224,9 @@ class LoginManager {
   }
 
   isLoggedIn() {
-    return this.user.googleId !== undefined && this.user.googleId !== "" && this.user.asuraId !== undefined && this.user.asuraId !== -1;
+    let loggedIn = this.user.googleId !== "" && this.user.asuraId !== -1; 
+    console.log(loggedIn);
+    return loggedIn;
   }
   isManager() {
     return this.isLoggedIn() && this.user.isManager;
