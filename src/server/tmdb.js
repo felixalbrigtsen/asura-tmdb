@@ -441,13 +441,16 @@ async function assignFirstMatch(teamId, tournamentId) {
 
 function getUsers () {
   return new Promise(function(resolve, reject) {
-    connection.query("SELECT * FROM users", (err, users) => {
+    connection.query("SELECT * FROM users", (err, userRows) => {
       if (err) {
         console.log(err);
         reject(err);
       } else {
-        users.forEach((user, index) => {
-          this[index].isManager = (this[index].isManager == 1);
+        let users = [];
+        userRows.forEach((userRow, index) => {
+          let user = results=JSON.parse(JSON.stringify(userRow))
+          user.isManager = user.isManager == 1;
+          users.push(user);
         });
         resolve(users);
       }
