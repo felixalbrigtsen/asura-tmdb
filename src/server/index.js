@@ -45,6 +45,9 @@ app.use(require('express-log-url'));
 // Serve static files from the React app
 app.use('/', express.static(path.join(__dirname, 'clientbuild')));
 app.use('/login', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
+app.use('/history', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
+app.use('/admins', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
+app.use('/profile', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
 app.use('/tournament/*', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
 app.use('/static', express.static(path.join(__dirname, 'clientbuild/static')));
 app.use('/static/*', express.static(path.join(__dirname, 'clientbuild/static')));
@@ -83,8 +86,8 @@ passport.use(new GoogleStrategy({
 ));
 
 app.get('/auth/google', 
-  passport.authenticate('google', { scope : ['profile', 'email']
-}));
+  passport.authenticate('google', { scope : ['profile', 'email']})
+);
  
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/error' }),
