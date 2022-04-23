@@ -10,6 +10,7 @@ CREATE TABLE tournaments (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL,
     description TEXT,
+    prize TEXT,
     teamLimit INTEGER NOT NULL,
     startTime DATETIME NOT NULL,
     endTime DATETIME NOT NULL

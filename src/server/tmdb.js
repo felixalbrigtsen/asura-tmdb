@@ -274,12 +274,12 @@ function createMatch(tournamentId, parentMatchId, tier) {
   });
 }
 
-function createTournament(name, description, startDate, endDate, teamLimit) {
+function createTournament(name, description, prize, startDate, endDate, teamLimit) {
   startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
   endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
   return new Promise(function(resolve, reject) {
-    connection.query("INSERT INTO tournaments (name, description, startTime, endTime, teamLimit) VALUES (?, ?, ?, ?, ?)", 
-    [escapeString(name), escapeString(description), startDate, endDate, teamLimit], async (err, sets) => {
+    connection.query("INSERT INTO tournaments (name, description, prize, startTime, endTime, teamLimit) VALUES (?, ?, ?, ?, ?, ?)", 
+    [escapeString(name), escapeString(description), escapeString(prize), startDate, endDate, teamLimit], async (err, sets) => {
       if (err) {
         console.log(err);
         reject(err);
@@ -307,12 +307,12 @@ function createTournament(name, description, startDate, endDate, teamLimit) {
   });
 }
 
-function editTournament(tournamentId, name, description, startDate, endDate) {
+function editTournament(tournamentId, name, description, prize, startDate, endDate) {
   startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
   endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
   return new Promise(function(resolve, reject) {
-    connection.query("UPDATE tournaments SET name = ?, description = ?, startTime = ?, endTime = ? WHERE id = ?",
-    [escapeString(name), escapeString(description), startDate, endDate, escapeString(tournamentId)], (err, sets) => {
+    connection.query("UPDATE tournaments SET name = ?, description = ?, prize = ?, startTime = ?, endTime = ? WHERE id = ?",
+    [escapeString(name), escapeString(description), escapeString(prize), startDate, endDate, escapeString(tournamentId)], (err, sets) => {
       if (err) {
         console.log(err);
         reject(err);

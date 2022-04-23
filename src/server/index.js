@@ -183,6 +183,7 @@ api.post("/tournament/:tournamentId/edit", (req, res) => {
   tournamentId = parseInt(tournamentId);
   let name = req.body.name;
   let description = req.body.description;
+  let prize = req.body.prize;
   let startDate = req.body.startDate;
   let endDate = req.body.endDate;
   console.log(startDate);
@@ -211,7 +212,7 @@ api.post("/tournament/:tournamentId/edit", (req, res) => {
     return
   }
 
-  tmdb.editTournament(tournamentId, name, description, startDate, endDate)
+  tmdb.editTournament(tournamentId, name, description, prize, startDate, endDate)
     .then(msg => res.json({"status": "OK", "data": msg}))
     .catch(err => res.json({"status": "error", "data": err}));
     
@@ -370,6 +371,7 @@ api.post("/tournament/create", async (req, res) => {
   console.log(req.get("Content-Type"));
   let name = req.body.name;
   let description = req.body.description;
+  let prize = req.body.prize;
   let teamLimit = req.body.teamLimit;
   let startDate = req.body.startDate; //TODO: timezones, 2 hr skips
   let endDate = req.body.endDate;
@@ -410,7 +412,7 @@ api.post("/tournament/create", async (req, res) => {
   }
   console.log(startDate);
 
-  tmdb.createTournament(name, description, startDate, endDate, teamLimit)
+  tmdb.createTournament(name, description, prize, startDate, endDate, teamLimit)
     .then(msg => res.json({"status": "OK", "data": msg}))
     .catch(err => res.json({"status": "error", "data": err}));
 });    
