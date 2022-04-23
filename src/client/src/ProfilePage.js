@@ -5,16 +5,17 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material';
 
 export default function ProfilePage(props) {
-    if (!props.login) {
-        return <h1>Something went very wrong</h1>
-    }
+    const [loggedIn, setLoggedIn] = React.useState(props.login.isLoggedIn());
+    React.useEffect(() => {
+        setLoggedIn(props.login.isLoggedIn());
+    }, [props.login]);
+
 
     let user = props.login.user;
-    console.log(props.login);
     return (<>
         <AppBar pageTitle="Profile" />
         <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
-            {props.login.isLoggedIn() ? <>
+            {loggedIn ? <>
                 <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
                     <div align="center">
                     <h2><b>Your profile</b></h2>

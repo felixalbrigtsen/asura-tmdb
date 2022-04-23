@@ -219,6 +219,7 @@ class LoginManager {
         }
         console.log(data);
         this.user = data.data;
+        return this.user;
       })
       .catch((err) => console.log(err.message));
   }
