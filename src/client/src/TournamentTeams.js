@@ -205,7 +205,7 @@ export default function TournamentTeams(props) {
   
   return (
     <>
-    <Appbar pageTitle="Edit teams" />
+    <Appbar user={props.user} pageTitle="Edit teams" />
     <TournamentBar pageTitle="Manage Teams" />
     <div className="tournamentTeams">
       <TeamCreator tournamentId={tournamentId} teams={teams} onTeamCreated={getTeams} />

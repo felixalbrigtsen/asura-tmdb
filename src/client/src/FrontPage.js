@@ -8,7 +8,7 @@ import TournamentHistory from "./TournamentHistory";
 import TournamentTeams from "./TournamentTeams";
 import LoginPage from "./LoginPage";
 import ProfilePage from "./ProfilePage";
-import AppBar from './components/AsuraBar';
+import Appbar from './components/AsuraBar';
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import AdminsOverview from "./AdminsOverview";
@@ -19,8 +19,6 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-
-let isLoggedIn = true;
 
 function CreateButton(props) {
   return (
@@ -121,7 +119,7 @@ function TournamentListItem(props) {
               
               <Box sx={{flexGrow: 1, marginTop: "20px"}}>
                 <Grid container spacing={4} justifyContent="center" wrap="wrap">
-                    { isLoggedIn ?
+                    { props.user.isLoggedIn ?
                       <Grid item>
                       <Link to={`/tournament/${props.tournament.id}/manage`}>
                         <Button className="ManageButton" variant="contained" color="primary" endIcon={<EditIcon />}>Edit Tournament</Button>
@@ -144,7 +142,7 @@ function TournamentListItem(props) {
   );
 }
 
-function TournamentList() {
+function TournamentList(props) {
   let [tournamentList, setTournamentList] = React.useState([]);
 
   React.useEffect(() => {
@@ -174,24 +172,24 @@ function TournamentList() {
 
   return <>
   <Stack spacing={3} sx={{margin: "10px auto"}}>
-    {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
+    {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem user={props.user} key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
   </Stack>
   </>;
 }
 
-function Home() {
+function Home(props) {
   return (
     <>
-      <AppBar pageTitle="Asura Tournaments" />
+      <Appbar user={props.user} pageTitle="Asura Tournaments" />
         <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
           <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
             {/* <CreateButton /> */}
             <Typography variant="h3">Tournaments</Typography>
-            { isLoggedIn ?
+            { props.user.isLoggedIn ?
               <CreateButton /> : null
             }
           </Box>
-          <TournamentList />
+          <TournamentList user={props.user} />
           <Typography variant="h5" color="#555555">
             Finished tournaments are moved to the <Link to="/history">history-page</Link>
           </Typography>
@@ -241,24 +239,18 @@ export default function App() {
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
-          setUser({
-            isManager: false,
-            isLoggedIn: false
-          });
-          console.error(data.data);
+          setUser({ isManager: false, isLoggedIn: false });
+          console.log(data.data);
           return;
         }
-        console.log(data);
         let u  = data.data;
         u.isLoggedIn = true;
+        console.log("User is logged in")
         setUser(u);
       })
       .catch((err) => {
-        console.log(err.message);
-        setUser({
-          isManager: false,
-          isLoggedIn: false
-        });
+        showError(err.message);
+        setUser({ isManager: false, isLoggedIn: false });
       });
   }
 
@@ -286,15 +278,15 @@ export default function App() {
     <React.StrictMode>
       <Router>
       <Routes>
-        <Route path="/" element={<Home showError={showError} showSuccess={showSuccess} />} />
-        <Route path="/create" element={<TournamentCreator showError={showError} showSuccess={showSuccess} />} />
-        <Route path="/tournament/:tournamentId" element={<TournamentOverview />} />
-        <Route path="/tournament/:tournamentId/manage" element={<TournamentManager showError={showError} showSuccess={showSuccess} />} />
-        <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams showError={showError} showSuccess={showSuccess} />} />
-        <Route path="/history" element={<TournamentHistory showError={showError} showSuccess={showSuccess} />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage user={user} checkLogin={checkLogin} />} />
-        <Route path="/admins" element={<AdminsOverview />} />
+        <Route path="/" element={<Home showError={showError} showSuccess={showSuccess} user={user} />} />
+        <Route path="/create" element={<TournamentCreator showError={showError} showSuccess={showSuccess} user={user} />} />
+        <Route path="/tournament/:tournamentId" element={<TournamentOverview user={user} />} />
+        <Route path="/tournament/:tournamentId/manage" element={<TournamentManager showError={showError} showSuccess={showSuccess} user={user} />} />
+        <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams showError={showError} showSuccess={showSuccess} user={user} />} />
+        <Route path="/history" element={<TournamentHistory showError={showError} showSuccess={showSuccess} user={user} />} />
+        <Route path="/login" element={<LoginPage user={user} />} />
+        <Route path="/profile" element={<ProfilePage user={user} />} />
+        <Route path="/admins" element={<AdminsOverview user={user} />} />
       </Routes>
     </Router>
 

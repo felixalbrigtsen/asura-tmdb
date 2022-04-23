@@ -170,7 +170,7 @@ export default function TournamentCreator(props) {
 
   return (
     <>
-      <AppBar pageTitle="New tournament" /> 
+      <Appbar user={props.user} pageTitle="New tournament" /> 
       <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 20px"}} component={Container} direction="column" align="center">
       <TournamentForm />
       </Paper>

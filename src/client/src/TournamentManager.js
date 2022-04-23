@@ -222,7 +222,7 @@ export default function TournamentManager(props) {
   showSuccess = props.showSuccess;
   return (
     <>
-    <AppBar pageTitle="Edit Tournament" />
+    <Appbar user={props.user} pageTitle="Edit Tournament" />
     <TournamentBar pageTitle="Edit Tournament"/>
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
       <ManageTournament tournamentId={tournamentId} showError={showError} />

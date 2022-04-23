@@ -131,7 +131,7 @@ export default function Users(props) {
 
         return (
             <>
-            <Appbar pageTitle="Admins" />
+            <Appbar user={props.user} pageTitle="Admins" />
             <div className="admins">
                 <AdminCreator />
                 <UserList users={users}/>

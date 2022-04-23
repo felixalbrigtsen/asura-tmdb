@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import Appbar from './components/Appbar';
+import Appbar from './components/AsuraBar';
 
 function MatchHistory() {
 
@@ -12,7 +12,7 @@ function MatchHistory() {
 export default function TournamentMatches() {
   return (
     <>
-      <Appbar />
+      <Appbar user={props.user} />
       <MatchHistory />
     </>
   );

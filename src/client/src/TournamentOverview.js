@@ -10,7 +10,6 @@ import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-let isLoggedIn = true;
 
 function showError(error) {
   alert("Something went wrong. \n" + error);
@@ -208,8 +207,8 @@ export default function TournamentOverview(props) {
 
   return (
     <>
-      <Appbar pageTitle={tournament.name} />
-      { isLoggedIn && !tournament.hasEnded ? 
+      <Appbar user={props.user} pageTitle={tournament.name} />
+      { props.user.isLoggedIn && !tournament.hasEnded ? 
         <TournamentBar tournamentId={tournamentId} viewTournament={true} /> : null
       }
       <BracketViewer tournament={tournament} tournamentId={tournamentId} className="bracketViewer" />

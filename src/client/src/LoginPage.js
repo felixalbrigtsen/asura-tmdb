@@ -1,14 +1,14 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import AppBar from "./components/AsuraBar";
+import Appbar from "./components/AsuraBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 
 import {Button, Textfield, Stack, InputLabel, Paper, Typography} from '@mui/material';
 
-export default function LoginPage() {
+export default function LoginPage(props) {
     return (
         <>
-            <AppBar pageTitle="Sign in" />
+            <Appbar user={props.user} pageTitle="Sign in" />
             <Paper x={{width: "70vw", margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center">
                 <Stack  direction="column" paddingTop={'0.5%'} alignItems={'center'}>
                     <Typography>Sign in with google</Typography>

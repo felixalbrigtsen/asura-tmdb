@@ -9,8 +9,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import logo from "./../Asura2222.png";
 
-var isLoggedIn = false; // props.isLoggedIn;
-
 function LoggedInMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -22,8 +20,6 @@ function LoggedInMenu() {
   };
 
   const logout = () => {
-    console.log("Logged out");
-    isLoggedIn = false;
     setAnchorEl(null);
   }
 
@@ -35,7 +31,7 @@ function LoggedInMenu() {
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{'aria-labelledby': 'basic-button',}} sx={{position:"absolute"}}>
           <Link to="/" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<AccountCircleIcon />}>Profile</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
-          <Link to="/" style={{color:"black"}}><MenuItem onClick={logout}><Button endIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
+          <Link to="/api/logout" style={{color:"black"}}><MenuItem onClick={logout}><Button endIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
           <Link to="/admins" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<EditIcon />} >Admins</Button></MenuItem></Link>
       </Menu> 
     </> 
@@ -44,10 +40,7 @@ function LoggedInMenu() {
 
 
 function NotLoggedInButton() {
-
   const login = () => {
-    console.log("Logged in");
-    isLoggedIn = true;
   }
 
   return (
@@ -88,7 +81,7 @@ export default function Appbar(props) {
               </Grid>
               { props.pageTitle !== "Sign in" ?
                 <Grid item xs={2}>
-                  { isLoggedIn ? <LoggedInMenu /> : <NotLoggedInButton /> } 
+                  { props.user.isLogggedIn ? <LoggedInMenu /> : <NotLoggedInButton /> } 
                 </Grid> : 
                 <Grid item xs={2}>
                 </Grid>
