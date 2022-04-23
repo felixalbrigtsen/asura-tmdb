@@ -5,6 +5,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import Appbar from './components/AsuraBar';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+
 
 function shorten(description, maxLength) {
     if (description.length > maxLength) {
@@ -65,6 +67,7 @@ function shorten(description, maxLength) {
                       </Grid>
                   </Grid>
                 </Box>
+                <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trohpy" color="gold" align="vertical-center"/>  Prize: {props.tournament.prize} </Typography>
               </CardContent>
             </Card>     
           </Paper>
@@ -90,7 +93,7 @@ function shorten(description, maxLength) {
           for (let i = 0; i < tournaments.length; i++) {
             tournaments[i].startTime = new Date(tournaments[i].startTime);
             tournaments[i].endTime = new Date(tournaments[i].endTime);
-            if(today - tournaments[i].endTime >= 24*60*60*1000) {
+            if(today - tournaments[i].endTime >= 2*60*60*1000) {
                 tournamenthistory.push(tournaments[i])
             }
           }

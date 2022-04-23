@@ -60,7 +60,7 @@ function AdminCreator(props){
 
 function AdminList(props){
     const deleteAdmin = adminId => {
-        fetch(process.env.REACT_APP_API_URL + `/admins/${adminId}`, {method: "DELETE"})
+        fetch(process.env.REACT_APP_API_URL + `/users/${adminId}`, {method: "DELETE"})
             .then(res => res.json())
             .then(data => {
                 if(data.status !== "OK"){
@@ -108,7 +108,7 @@ export default function Admins(props) {
     const { adminId } = useParams();
 
     function getAdmins() {
-        fetch(process.env.REACT_APP_API_URL + `/admins/getAdmins`)
+        fetch(process.env.REACT_APP_API_URL + `/users/getUsers`)
             .then((res) => res.json())
             .then((data) =>{
                 if(data.status !== "OK") {

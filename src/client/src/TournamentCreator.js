@@ -9,7 +9,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { setDate } from "date-fns";
 
-function postTournament(showError, tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams) {
+function postTournament(tournamentName, tournamentDescription, tournamentStartDate, tournamentEndDate, tournamentMaxTeams, tournamentPrize) {
   if (!tournamentName || tournamentName === "") {
     showError("Tournament name cannot be empty");
     return;
@@ -44,10 +44,10 @@ function postTournament(showError, tournamentName, tournamentDescription, tourna
   let formData = new FormData();
   formData.append("name", tournamentName);
   formData.append("description", tournamentDescription);
-  // formData.append("image", tournamentImageFile);
   formData.append("startDate", tournamentStartDate);
   formData.append("endDate", tournamentEndDate);
   formData.append("teamLimit", tournamentMaxTeams);
+  formData.append("prize", tournamentPrize)
   let body = new URLSearchParams(formData);
 
   fetch(process.env.REACT_APP_API_URL + `/tournament/create`, {
@@ -85,12 +85,12 @@ function TournamentForm(props) {
     let tournamentStart = new Date(startTime.setSeconds(0, 0, 0)).valueOf() - new Date().getTimezoneOffset() * 60*1000;
     let tournamentEnd = new Date(endTime.setSeconds(0, 0, 0)).valueOf() - new Date().getTimezoneOffset() * 60*1000;
     postTournament(
-      props.showError,
       document.getElementById("nameInput").value,
       document.getElementById("descriptionInput").value,
       tournamentStart,
       tournamentEnd,
-      maxTeams
+      maxTeams,
+      document.getElementById("prizeInput").value
     );
   }
 
@@ -110,6 +110,7 @@ function TournamentForm(props) {
         <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
         {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
         <TextField type="text" multiline={true} id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
+        <TextField type="text" id="prizeInput" label="Prize" placeholder="Prize" InputLabelProps={{shrink: true}}/>     
         <Box flexGrow={1}>
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={4}>
@@ -156,10 +157,12 @@ function TournamentForm(props) {
   );
 }
 
+let showError = (message) => {};
+
 export default function TournamentCreator(props) {
   const [openError, setOpenError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
-  function showError(message) {
+  showError = (message) => {
     setOpenError(false);
     setErrorMessage(message);
     setOpenError(true);
@@ -169,7 +172,7 @@ export default function TournamentCreator(props) {
     <>
       <AppBar pageTitle="New tournament" /> 
       <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 20px"}} component={Container} direction="column" align="center">
-      <TournamentForm showError={showError} />
+      <TournamentForm />
       </Paper>
       
       <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />

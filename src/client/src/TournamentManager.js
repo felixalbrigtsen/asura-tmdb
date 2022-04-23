@@ -2,7 +2,6 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 // import { AlertContainer, alert } from "react-custom-alert";
 import AppBar from "./components/AsuraBar";
-import ErrorSnackbar from "./components/ErrorSnackbar";
 import TournamentBar from "./components/TournamentBar";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
@@ -23,6 +22,7 @@ let submitChanges = curryTournamentId => event => {
   // let tournamentImageFile = document.getElementById("editImage").files[0];
   let tournamentStartDate = document.getElementById("editStartDate").value;
   let tournamentEndDate = document.getElementById("editEndDate").value;
+  let tournamentPrize = document.getElementById("editPrize").value
 
   if (!tournamentName || tournamentName === "") {
     showError("Tournament name cannot be empty");
@@ -61,6 +61,7 @@ let submitChanges = curryTournamentId => event => {
   formData.append("startDate", tournamentStartDate);
   formData.append("endDate", tournamentEndDate);
   // formData.append("teamLimit", tournamentMaxTeams);
+  formData.append("prize", tournamentPrize)
   let body = new URLSearchParams(formData);
 
   fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}/edit`, {
@@ -70,7 +71,7 @@ let submitChanges = curryTournamentId => event => {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "OK") {
-        alert("Tournament Changed successfully");
+        showSuccess("Tournament Changed successfully");
         window.location.href = `/tournament/${tournamentId}`;
       } else {
         showError(data.data);
@@ -89,8 +90,7 @@ let deleteTournament = tournamentId => event => {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "OK") {
-        // TODO: Replace alert with Snackbar
-        alert("Tournament Deleted successfully");
+        showSuccess("Tournament Deleted successfully");
         window.location.href = "/";
       } else {
         showError(data.data);
@@ -116,6 +116,7 @@ function ManageTournament(props) {
         
         document.getElementById("editName").value = data.data.name;
         document.getElementById("editDesc").value = data.data.description;
+        document.getElementById("editPrize").value = data.data.prize
         // Get the time from the server, add the local timezone offset and set the input fields
         let startDate = new Date(data.data.startTime.slice(0, 16));
         let endDate = new Date(data.data.endTime.slice(0, 16));
@@ -135,6 +136,7 @@ function ManageTournament(props) {
     <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={2} align="center">
           <TextField type="text" id="editName" label="Edit Name:" placeholder="Edit Name" InputLabelProps={{shrink: true}}/>
           <TextField type="text" multiline={true} id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
+          <TextField type="text" id="editPrize" label="Edit Prize:" placeholder="Edit Prize" InputLabelProps={{shrink: true}}/>
           <Box sx={{flexGrow: 1}}>
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={4}>
@@ -165,16 +167,10 @@ function ManageTournament(props) {
   );
 }
 
-function showError(error) {
-  alert("Something went wrong. \n" + error);
-  console.error(error);
-}
-
 function ConfirmationDialogRaw(props) {
   const { tournamentId } = useParams();
   const { onClose, value: valueProp, open, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
-  const radioGroupRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!open) {
@@ -210,32 +206,21 @@ function ConfirmationDialogRaw(props) {
 ConfirmationDialogRaw.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  value: PropTypes.string.isRequired,
 };
+
+let showError = (message) => {};
+let showSuccess = (message) => {};
 
 export default function TournamentManager(props) {
   const { tournamentId } = useParams();
 
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const handleDialogClickListItem = () => { setDialogOpen(true); };
+  const handleDialogClose = () => { setDialogOpen(false); };
 
-  const handleClickListItem = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [openError, setOpenError] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState("");
-  function showError(message) {
-    setOpenError(false);
-    setErrorMessage(message);
-    setOpenError(true);
-  }
-
+  showError = props.showError;
+  showSuccess = props.showSuccess;
   return (
-    
     <>
     <AppBar pageTitle="Edit Tournament" />
     <TournamentBar pageTitle="Edit Tournament"/>
@@ -243,20 +228,17 @@ export default function TournamentManager(props) {
       <ManageTournament tournamentId={tournamentId} showError={showError} />
       {/* <AnnounceButton /> */}
       <Box sx={{width: "100%"}}>
-        <Button variant="contained" color="error" onClick={handleClickListItem} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
+        <Button variant="contained" color="error" onClick={handleDialogClickListItem} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
           Delete Tournament
         </Button>
         <ConfirmationDialogRaw
-          id="ringtone-menu"
+          id="confirmation-dialog"
           keepMounted
-          open={open}
-          onClose={handleClose}
-          value={value}
+          open={dialogOpen}
+          onClose={handleDialogClose}
         />
       </Box>
     </Paper>
-
-    <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />
     </>
   );
 }

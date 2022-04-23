@@ -18,12 +18,10 @@ function showError(error) {
 }
 
 function TournamentTier(props){
-  const { tournamentId } = useParams();
-
-  let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
+  let roundTypes = ["winner","finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
     let matches = [];
     for (let i = 0; i < props.matches.length; i++) {
-      matches.push(<Match tournamentId={tournamentId} teams={props.teams} match={props.matches[i]} key={i} />);
+      matches.push(<Match tournament={props.tournament} teams={props.teams} match={props.matches[i]} key={i} />);
     }
     return(
       <ul className={`round ${roundTypes[props.tier]}`}>
@@ -45,15 +43,11 @@ function Match(props){
 
   let setWinner = curryTeamId => event => {
     let teamId = curryTeamId;
-    console.log(teamId)
+    // console.log(teamId)
     if (!teamId || teamId == null) {
       showError("No team selected");
       return;
     }
-    // if(props.match.winnerId === teamId){
-    //   showError("Team already won");
-    //   return;
-    // }
     let formData = new FormData();
     formData.append("winnerId",teamId);
     let body = new URLSearchParams(formData);
@@ -71,43 +65,40 @@ function Match(props){
         }
       })
       .catch(error => showError(error));
-  }
+  };
 
-  const [endTime, setendTime] = React.useState(null);
-  
-  React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status !== "OK") {
-          // Do your error thing
-          console.error(data);
-          return;
-        }
-        let endTime = data.data.endTime;
-        setendTime(endTime);
-      })
-      .catch(err => showError(err));
+  let curryUnsetContestant = teamId => (e) => {
+    console.log("wack")
+    let formData = new FormData();
+    formData.append("teamId", teamId);
+    let body = new URLSearchParams(formData);
+    console.log(props.match)
+    fetch(process.env.REACT_APP_API_URL + `/match/${props.match.id}/unsetContestant`, {
+      method: "POST", 
+      body: body
     })
-
-    console.log(props)
-
-  let today = new Date()
-  let yesterday = today.setDate(today.getDate() - 1)
-  let isComplete = new Date(endTime) < yesterday
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "OK") {
+          console.log("wacky smacky");
+          window.location.reload();
+        }
+      })
+      .catch(error => showError(error));
+  }
 
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <li className={`game game-top ${props.match.winnerId && (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser"}`}>
+        <li className={`game game-top ${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`}>
           <Stack direction={"row"}>
               <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team1Name}
               </Typography>
-              { props.match.teamId !== null && !isComplete && props.match.tier !== Math.log2(4) - 1 && props.match.winnerId === null && team1Name !== "TBA" ?
-              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> : null
+              { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null ?
+              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton> : null
               }
-              { props.match.team1Id !== null && props.match.winnerId === null && !isComplete && team1Name !== "TBA" ?
+              { props.match.team1Id !== null && props.match.winnerId === null && !props.tournament.hasEnded ?
               <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
               }
               {/* { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
@@ -117,15 +108,15 @@ function Match(props){
         </li>
         <li className="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <li className={`game game-bottom ${props.match.winnerId && (props.match.team2Id === props.match.winnerId) ? "winner" : "loser"}`}>
+        <li className={`game game-bottom ${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`}>
         <Stack direction={"row"} sx={{alignItems:'center'}}>
               <Typography className={`teamName`} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team2Name}
               </Typography>
-              { props.match.teamId !== null && !isComplete && props.match.tier !== Math.log2(props.maxTeams) - 1 && props.match.winnerId === null && team2Name !== "TBA" ? 
-              <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> : null
+              { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null ? 
+              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton> : null
               }
-              { props.match.team1Id !== null && props.match.winnerId === null && !isComplete && team2Name !== "TBA" ?
+              { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded ?
               <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
               }
               {/* { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
@@ -139,25 +130,11 @@ function Match(props){
 }
 
 function BracketViewer(props){
-  const [tournament, setTournament] = React.useState(null);
+  
   const [matches, setMatches] = React.useState(null);
   const [teams, setTeams] = React.useState(null);
 
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status !== "OK") {
-          // Do your error thing
-          showError(data.data);
-          return;
-        }
-        let tournament = data.data;
-        setTournament(tournament);
-      })
-      .catch(err => showError(err));
-
-
     fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}/getMatches`)
       .then(res => res.json())
       .then(data => {
@@ -196,56 +173,46 @@ function BracketViewer(props){
       .catch(err => showError(err));
   }, []);
   return (
-      (matches && teams) ?
+      (props.tournament && matches && teams) ?
         // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
         <div className="bracket">
           {matches.map(tier => {
             let tierNum = tier[0].tier;
-            return <TournamentTier key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+            return <TournamentTier tournament={props.tournament} key={tierNum} tier={tierNum} matches={tier} teams={teams} />
           })}
         </div>
       : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
   );
 }
 
-function RemovableBar(props) {
-  const [endTime, setendTime] = React.useState(null);
-  
+export default function TournamentOverview(props) {
+  const { tournamentId } = useParams();
+  const [tournament, setTournament] = React.useState(false);
+
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}`)
+    fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}`)
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
-          // Do your error thing
-          console.error(data);
+          showError(data.data);
           return;
         }
-        let endTime = data.data.endTime;
-        setendTime(endTime);
+        let tourn = data.data;
+        let now = new Date();
+        let endTime = new Date(tourn.endTime);
+        tourn.hasEnded = (now - 2*60*60*1000) > endTime; // 2 hours in the past
+        setTournament(tourn);
       })
       .catch(err => showError(err));
-    })
-    let today = new Date()
-    let yesterday = today.setDate(today.getDate() - 1)
-    let isComplete = new Date(endTime) < yesterday
-    if (isComplete) {
-      return (null)
-    } else {
-      return (<TournamentBar pageTitle="View Tournament" />)
-    }
-}
-
-
-export default function TournamentOverview(props) {
-  const { tournamentId } = useParams();
+  }, [tournamentId]);
 
   return (
     <>
-      <Appbar pageTitle="View Tournament" />
-      { isLoggedIn ? 
-        <RemovableBar tournamentId={tournamentId} /> : null
+      <Appbar pageTitle={tournament.name} />
+      { isLoggedIn && !tournament.hasEnded ? 
+        <TournamentBar tournamentId={tournamentId} viewTournament={true} /> : null
       }
-      <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
+      <BracketViewer tournament={tournament} tournamentId={tournamentId} className="bracketViewer" />
     </>
   );
 }

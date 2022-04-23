@@ -36,6 +36,7 @@ function TeamCreator(props) {
       }
       document.getElementById("teamNameInput").value = "";
       props.onTeamCreated();
+
     }
     )
   }
@@ -108,14 +109,8 @@ function TeamList(props) {
   );
 }
 
-function PlayerList(props) {
-  // Something like https://react-list-editable.netlify.app/
-  return <h1>PlayerList coming...</h1>
-}
-
 function TeamEditor(props) {
   const [team, setTeam] = React.useState({});
-  const [players, setPlayers] = React.useState([]);
   React.useEffect(() => {
     if (props.selectedTeamId === -1) {
       setTeam({});
@@ -180,7 +175,6 @@ function TeamEditor(props) {
       <h2><b>Edit Team:</b></h2>
       <form>
         <TextField id="newTeamNameInput" label="Team Name" value={team.name || ""} onChange={nameInputChanged} onFocus={handleFocus} sx={{width: "80%"}} />
-        {/* <PlayerList players={players} setPlayers={setPlayers} /> */}
         <Button type="submit" variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={saveTeam}>Save</Button>
       </form>
       </div>

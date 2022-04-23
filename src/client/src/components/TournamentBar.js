@@ -31,7 +31,7 @@ function ClipboardButton(props) {
 function ButtonLink(props) {
   return (
     <Link to={`/tournament/${props.tournamentId}` + props.targetPath} >
-        <Button variant="contained" color="primary" disabled={props.activeTitle === props.title} sx={{margin: "15px", fontSize: "1.2em"}} >{props.title}</Button>
+        <Button variant="contained" color="primary" disabled={props.activeTitle === props.title || props.viewTournament} sx={{margin: "15px", fontSize: "1.2em"}} >{props.title}</Button>
     </Link>
   );
 }
@@ -41,7 +41,7 @@ export default function TournamentBar(props) {
     return (
         <Paper sx={{width: "90vw", margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center"> 
           <Stack direction="row" paddingTop={'0.5%'}>
-            <ButtonLink targetPath="" tournamentId={tournamentId} activeTitle={props.pageTitle} title="View Tournament" />
+            <ButtonLink targetPath="" tournamentId={tournamentId} activeTitle={props.pageTitle} title="View Tournament" viewTournament={props.viewTournament} />
             <ButtonLink targetPath="/manage" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Edit Tournament" />
             <ButtonLink targetPath="/teams" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Manage Teams" />
           </Stack>

@@ -5,11 +5,6 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 
 import {Button, Textfield, Stack, InputLabel, Paper, Typography} from '@mui/material';
 
-
-function ProfileView() {
-    return "lol";
-}
-
 export default function LoginPage() {
     return (
         <>
@@ -17,9 +12,9 @@ export default function LoginPage() {
             <Paper x={{width: "70vw", margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center">
                 <Stack  direction="column" paddingTop={'0.5%'} alignItems={'center'}>
                     <Typography>Sign in with google</Typography>
-                    <Link to={process.env.REACT_APP_LOGIN_URL}>
+                    <a href={process.env.REACT_APP_LOGIN_URL}>
                         <img src="/btn_google_signing_dark.png" alt="Sign in with google" />
-                    </Link>
+                    </a>
                 </Stack>
             </Paper>            
         </>

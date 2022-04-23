@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+
 import TournamentCreator from "./TournamentCreator.js";
 import TournamentOverview from "./TournamentOverview.js";
 import TournamentManager from "./TournamentManager.js";
@@ -8,6 +9,10 @@ import TournamentTeams from "./TournamentTeams";
 import LoginPage from "./LoginPage";
 import ProfilePage from "./ProfilePage";
 import AppBar from './components/AsuraBar';
+import SuccessSnackbar from "./components/SuccessSnackbar";
+import ErrorSnackbar from "./components/ErrorSnackbar";
+import AdminsOverview from "./AdminsOverview";
+
 import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon, TextField } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
@@ -111,6 +116,8 @@ function TournamentListItem(props) {
               
               <Typography variant="h5" color="text.primary" gutterBottom> Players: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
               <Description />
+              <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trohpy" color="gold"/>  Prize: {props.tournament.prize} </Typography>
+              <Countdown />
               
               <Box sx={{flexGrow: 1, marginTop: "20px"}}>
                 <Grid container spacing={4} justifyContent="center" wrap="wrap">
@@ -131,8 +138,6 @@ function TournamentListItem(props) {
                 </Grid>
               </Box>
               
-              <Countdown />
-              <Typography variant="body" color="text.primary"> <EmojiEventsIcon alt="A trohpy" color="gold" /> Prize: {props.tournament.teamCount} </Typography>
             </CardContent>
           </Card>     
         </Paper>
@@ -157,7 +162,7 @@ function TournamentList() {
         for (let i = 0; i < tournaments.length; i++) {
           tournaments[i].startTime = new Date(tournaments[i].startTime);
           tournaments[i].endTime = new Date(tournaments[i].endTime);
-          if(today - tournaments[i].endTime <= 24*60*60*1000) {
+          if(today - tournaments[i].endTime <= 2*60*60*1000) {
             currenttournaments.push(tournaments[i])
           }
         }
@@ -209,7 +214,7 @@ class LoginManager {
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
-          console.error(data);
+          console.error(data.data);
           return;
         }
         console.log(data);
@@ -229,21 +234,45 @@ class LoginManager {
 let login = new LoginManager();
 login.checkLogin();
 
+
+let showSuccess = (message) => {};
+let showError = (message) => {};
+
 export default function App() {
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  showError = (message) => {
+    setOpenError(false);
+    setErrorMessage(message);
+    setOpenError(true);
+  }
+
+  const [openSuccess, setOpenSuccess] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState("");
+  showSuccess = (message) => {
+    setOpenSuccess(false);
+    setSuccessMessage(message);
+    setOpenSuccess(true);
+  }
+
   return (
     <React.StrictMode>
       <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/create" element={<TournamentCreator />} />
+        <Route path="/" element={<Home showError={showError} showSuccess={showSuccess} />} />
+        <Route path="/create" element={<TournamentCreator showError={showError} showSuccess={showSuccess} />} />
         <Route path="/tournament/:tournamentId" element={<TournamentOverview />} />
-        <Route path="/tournament/:tournamentId/manage" element={<TournamentManager />} />
-        <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />
-        <Route path="/history" element={<TournamentHistory />} />
+        <Route path="/tournament/:tournamentId/manage" element={<TournamentManager showError={showError} showSuccess={showSuccess} />} />
+        <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams showError={showError} showSuccess={showSuccess} />} />
+        <Route path="/history" element={<TournamentHistory showError={showError} showSuccess={showSuccess} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage login={login} />} />
+        <Route path="/admins" element={<AdminsOverview />} />
       </Routes>
     </Router>
+
+    <SuccessSnackbar message={successMessage} open={openSuccess} setOpen={setOpenSuccess} />
+    <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />
     </React.StrictMode>
   );
 }
