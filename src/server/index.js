@@ -21,7 +21,7 @@ app.use(session({
   secret: process.env.COOKIE_SECRET,
   rolling: true,
   cookie: { 
-    secure: (process.env.COOKIE_SECRET == "true"), // All env vars are strings, so cast bool manually
+    secure: (process.env.COOKIE_SECURE == "true"), // All env vars are strings, so cast bool manually
     sameSite: 'strict', // Browsers will reject a "secure" cookie without this
     maxAge: 60 * 60 * 1000 // 1 hour (in milliseconds)
   }
@@ -120,7 +120,6 @@ app.get('/auth/google/callback',
     })
     .catch(err => {
       // User is not in the database at all, do not give them a session.
-      res.session.user = null;
       res.json({"status": "error", message: "Email is not in administrator list."});
       return;
     });
