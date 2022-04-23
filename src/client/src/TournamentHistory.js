@@ -55,7 +55,8 @@ function shorten(description, maxLength) {
                 
                 <Typography variant="h5" color="text.primary" gutterBottom> Players: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
                 <Description />
-                
+                <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trohpy" color="gold" align="vertical-center"/>  Prize: {props.tournament.prize} </Typography>
+
                 <Box sx={{flexGrow: 1, marginTop: "20px"}}>
                   <Grid container spacing={4} justifyContent="center" wrap="wrap">
                       <Grid item >
@@ -67,7 +68,6 @@ function shorten(description, maxLength) {
                       </Grid>
                   </Grid>
                 </Box>
-                <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trohpy" color="gold" align="vertical-center"/>  Prize: {props.tournament.prize} </Typography>
               </CardContent>
             </Card>     
           </Paper>

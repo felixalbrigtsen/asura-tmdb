@@ -8,15 +8,25 @@ export default function ProfilePage(props) {
     if (!props.login) {
         return <h1>Something went very wrong</h1>
     }
-    console.log(props.login.user);
+
+    let user = props.login.user;
+    console.log(props.login);
     return (<>
         <AppBar pageTitle="Profile" />
         <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
-            {props.login.isLoggedIn ? <>
-                <Box sx={{ padding: "20px", width: "90vw", height: "30vh", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", alignContent: "center", flexGrow: 1}}>
-                  
-                </Box>
-            </>:<>
+            {props.login.isLoggedIn() ? <>
+                <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
+                    <div align="center">
+                    <h2><b>Your profile</b></h2>
+                    <Box>
+                        <h3><b>Name: </b> {user.name}</h3>
+                        <h3><b>Email: </b> {user.email}</h3>
+                        <h3><b>Role: </b> {user.isManager() ? "Manager" : "Administrator"}</h3>
+                        <h3><b>Picture: </b> <img src={user.imgURL} alt="Your profile"></img></h3>
+                    </Box>
+                    </div>
+                </Paper>
+            </> : <>
                 <Box sx={{ padding: "20px", width: "90vw", height: "30vh", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", alignContent: "center", flexGrow: 1}}>
                     You are not logged in.
                 </Box>

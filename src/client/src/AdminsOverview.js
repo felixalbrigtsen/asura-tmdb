@@ -26,7 +26,7 @@ function AdminCreator(props){
     formData.append("email", adminEmail)
     let body = new URLSearchParams(formData)
 
-    fetch(process.env.REACT_APP_API_URL + `/admins/create`, {
+    fetch(process.env.REACT_APP_API_URL + `/users/createBlank`, {
         method: "POST",
         body: body
         })
@@ -45,7 +45,7 @@ function AdminCreator(props){
     return (
         <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px"}} component={Stack} direction="column">
             <div align="center">
-                <TextField id="adminEmailInput" sx={{ width: "70%" }} label="Admin Email" variant="outlined" />
+                <TextField id="adminEmailInput" sx={{ width: "70%" }} label="Admin Email" variant="outlined" type="email" />
                 {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
                 <Button variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
                     <Box sx={{padding: "10px"}}>
@@ -58,16 +58,16 @@ function AdminCreator(props){
     )
 }
 
-function AdminList(props){
-    const deleteAdmin = adminId => {
-        fetch(process.env.REACT_APP_API_URL + `/users/${adminId}`, {method: "DELETE"})
+function UserList(props){
+    const deleteUsers = userId => {
+        fetch(process.env.REACT_APP_API_URL + `/users/${userId}`, {method: "DELETE"})
             .then(res => res.json())
             .then(data => {
                 if(data.status !== "OK"){
                     showError(data.data);
                     return;
                 }
-                props.setAdmins(props.admins.filter(admin => admin.id !== adminId));
+                props.setUsers(props.users.filter(user => user.id !== userId));
             })
             .catch(error => showError(error));
     }
@@ -79,20 +79,27 @@ function AdminList(props){
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Admin</TableCell>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell>Rank</TableCell>
                             <TableCell align="center">Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {props.admins.map((admin) => (
-                            <TableRow key={admin.id}>
-                            <TableCell component="th" scope="row"> <b>
-                              {admin.name}
-                            </b></TableCell>
+                        {props.users.map((user) => (
+                            <TableRow key={user.id}>
+                            <TableCell component="th" scope="row"> 
+                            <b>
+                              {user.name}
+                            </b>
+                            </TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            {/* TODO Drop down menu for selecting rank */}
+                            <TableCell>{'user.rank'}</TableCell>
                             {/* <TableCell align="right">{team.members}</TableCell> */}
                             <TableCell align="center">
                               {/* <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)} endIcon={<EditIcon />}>Edit</Button> */}
-                              <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteAdmin(admin.id)}} endIcon={<DeleteIcon />}>Delete</Button>
+                              <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteUsers(user.id)}} endIcon={<DeleteIcon />}>Delete</Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -103,23 +110,23 @@ function AdminList(props){
     )
 }
 
-export default function Admins(props) {
-    const [admins, setAdmins] = React.useState([]);
-    const { adminId } = useParams();
+export default function Users(props) {
+    const [users, setUsers] = React.useState([]);
+    const { userId } = useParams();
 
-    function getAdmins() {
+    function getUsers() {
         fetch(process.env.REACT_APP_API_URL + `/users/getUsers`)
             .then((res) => res.json())
             .then((data) =>{
                 if(data.status !== "OK") {
                     showError(data.data);
                 }
-                setAdmins(data.data);
+                setUsers(data.data);
             })
             .catch((err) => showError(err));
         } 
         React.useEffect(() => {
-            getAdmins()
+            getUsers()
         }, []);
 
         return (
@@ -127,7 +134,7 @@ export default function Admins(props) {
             <Appbar pageTitle="Admins" />
             <div className="admins">
                 <AdminCreator />
-                <AdminList />
+                <UserList users={users}/>
             </div>
             </>
         );

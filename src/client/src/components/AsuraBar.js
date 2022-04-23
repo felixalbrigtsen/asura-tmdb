@@ -4,6 +4,7 @@ import { AppBar, Typography, Toolbar, CssBaseline, Box, Button, IconButton, Grid
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HistoryIcon from '@mui/icons-material/History';
+import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import logo from "./../Asura2222.png";
@@ -35,6 +36,7 @@ function LoggedInMenu() {
           <Link to="/" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<AccountCircleIcon />}>Profile</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
           <Link to="/" style={{color:"black"}}><MenuItem onClick={logout}><Button endIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
+          <Link to="/admins" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<EditIcon />} >Admins</Button></MenuItem></Link>
       </Menu> 
     </> 
   );  
