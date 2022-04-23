@@ -200,48 +200,72 @@ function Home() {
   );
 }
 
-class LoginManager {
-  user = {
-    name: "",
-    email: "",
-    googleId: "",
-    asuraId: -1,
-    isManager: false
-  };
 
-  checkLogin() {
-    fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status !== "OK") {
-          console.error(data.data);
-          return;
-        }
-        console.log(data);
-        this.user = data.data;
-        return this.user;
-      })
-      .catch((err) => console.log(err.message));
-  }
+// class LoginManager {
+//   checkLogin() {
+//     fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
+//       .then(res => res.json())
+//       .then(data => {
+//         if (data.status !== "OK") {
+//           console.error(data.data);
+//           return;
+//         }
+//         console.log(data);
+//         setUser(data.data);
+//         return user;
+//       })
+//       .catch((err) => console.log(err.message));
+//   }
 
-  isLoggedIn() {
-    let loggedIn = this.user.googleId !== "" && this.user.asuraId !== -1; 
-    console.log(loggedIn);
-    return loggedIn;
-  }
-  isManager() {
-    return this.isLoggedIn() && this.user.isManager;
-  }
-}
+//   isLoggedIn() {
+//     let loggedIn = user.googleId !== "" && user.asuraId !== -1; 
+//     console.log(loggedIn);
+//     return loggedIn;
+//   }
+//   isManager() {
+//     return this.isLoggedIn() && user.isManager;
+//   }
+// }
 
-let login = new LoginManager();
-login.checkLogin();
+// let login = new LoginManager();
+// login.checkLogin();
 
 
 let showSuccess = (message) => {};
 let showError = (message) => {};
 
 export default function App() {
+  const [user, setUser] = React.useState({});
+  let checkLogin = () => {
+    fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status !== "OK") {
+          setUser({
+            isManager: false,
+            isLoggedIn: false
+          });
+          console.error(data.data);
+          return;
+        }
+        console.log(data);
+        let u  = data.data;
+        u.isLoggedIn = true;
+        setUser(u);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setUser({
+          isManager: false,
+          isLoggedIn: false
+        });
+      });
+  }
+
+  React.useEffect(() => {
+    checkLogin();
+  }, []);
+
   const [openError, setOpenError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
   showError = (message) => {
@@ -269,7 +293,7 @@ export default function App() {
         <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams showError={showError} showSuccess={showSuccess} />} />
         <Route path="/history" element={<TournamentHistory showError={showError} showSuccess={showSuccess} />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage login={login} />} />
+        <Route path="/profile" element={<ProfilePage user={user} checkLogin={checkLogin} />} />
         <Route path="/admins" element={<AdminsOverview />} />
       </Routes>
     </Router>
