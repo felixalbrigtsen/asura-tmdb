@@ -466,6 +466,8 @@ function getUsers () {
         userRows.forEach((userRow, index) => {
           let user = results=JSON.parse(JSON.stringify(userRow))
           user.isManager = user.isManager == 1;
+          user.asuraId = user.id;
+          user.id = undefined;
           users.push(user);
         });
         resolve(users);
@@ -485,6 +487,8 @@ function getUserByGoogleId(googleId) {
           reject("No such user exists");
         }
         users[0].isManager = users[0].isManager == 1;
+        users[0].asuraId = users[0].id;
+        users[0].id = undefined;
         resolve(users[0]);
       }
     });
@@ -503,6 +507,8 @@ function getUserByEmail(email) {
           return;
         }
         users[0].isManager = users[0].isManager == 1;
+        users[0].asuraId = users[0].id;
+        users[0].id = undefined;
         resolve(users[0]);
       }
     });
