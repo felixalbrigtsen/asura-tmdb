@@ -16,7 +16,7 @@ export default function ProfilePage(props) {
                     <Box>
                         <h3><b>Name: </b> {user.name}</h3>
                         <h3><b>Email: </b> {user.email}</h3>
-                        <h3><b>Role: </b> {props.login.isManager() ? "Manager" : "Administrator"}</h3>
+                        <h3><b>Role: </b> {user.isManager ? "Manager" : "Administrator"}</h3>
                         <h3><b>Picture: </b> <img src={user.imgURL} alt="Your profile"></img></h3>
                     </Box>
                     </div>
