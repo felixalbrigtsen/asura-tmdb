@@ -14,6 +14,8 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import EditIcon from '@mui/icons-material/Edit';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
+let isLoggedIn = true;
+
 function CreateButton(props) {
   return (
     <Link to="/create">
@@ -111,11 +113,13 @@ function TournamentListItem(props) {
               
               <Box sx={{flexGrow: 1, marginTop: "20px"}}>
                 <Grid container spacing={4} justifyContent="center" wrap="wrap">
-                    <Grid item>
+                    { isLoggedIn ?
+                      <Grid item>
                       <Link to={`/tournament/${props.tournament.id}/manage`}>
                         <Button className="ManageButton" variant="contained" color="primary" endIcon={<EditIcon />}>Edit Tournament</Button>
                       </Link>
-                    </Grid>
+                    </Grid> : null
+                    }
                     <Grid item >
                     <Link to={`/tournament/${props.tournament.id}`} >
                       <Button variant="contained" color="success">
@@ -177,7 +181,9 @@ function Home() {
           <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
             {/* <CreateButton /> */}
             <Typography variant="h3">Tournaments</Typography>
-            <CreateButton />
+            { isLoggedIn ?
+              <CreateButton /> : null
+            }
           </Box>
           <TournamentList />
           <Typography variant="h5" color="#555555">

@@ -10,6 +10,8 @@ import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
+let isLoggedIn = true;
+
 function showError(error) {
   alert("Something went wrong. \n" + error);
   console.error(error);
@@ -88,6 +90,8 @@ function Match(props){
       .catch(err => showError(err));
     })
 
+    console.log(props)
+
   let today = new Date()
   let yesterday = today.setDate(today.getDate() - 1)
   let isComplete = new Date(endTime) < yesterday
@@ -100,10 +104,10 @@ function Match(props){
               <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team1Name}
               </Typography>
-              { props.match.winnerId && (props.match.team1Id === props.match.winnerId) && !isComplete ?
+              { props.match.teamId !== null && !isComplete && props.match.tier !== Math.log2(4) - 1 && props.match.winnerId === null && team1Name !== "TBA" ?
               <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> : null
               }
-              { props.match.team1Id !== null && !isComplete ?
+              { props.match.team1Id !== null && props.match.winnerId === null && !isComplete && team1Name !== "TBA" ?
               <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
               }
               {/* { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
@@ -118,10 +122,10 @@ function Match(props){
               <Typography className={`teamName`} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team2Name}
               </Typography>
-              { props.match.winnerId && (props.match.team2Id === props.match.winnerId) && !isComplete ?
+              { props.match.teamId !== null && !isComplete && props.match.tier !== Math.log2(props.maxTeams) - 1 && props.match.winnerId === null && team2Name !== "TBA" ? 
               <IconButton color="error" aria-label="remmove winner" component="span"><BackspaceIcon /></IconButton> : null
               }
-              { props.match.team2Id !== null && !isComplete ?
+              { props.match.team1Id !== null && props.match.winnerId === null && !isComplete && team2Name !== "TBA" ?
               <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
               }
               {/* { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
@@ -238,7 +242,9 @@ export default function TournamentOverview(props) {
   return (
     <>
       <Appbar pageTitle="View Tournament" />
-      <RemovableBar tournamentId={tournamentId} />
+      { isLoggedIn ? 
+        <RemovableBar tournamentId={tournamentId} /> : null
+      }
       <BracketViewer tournamentId={tournamentId} className="bracketViewer" />
     </>
   );

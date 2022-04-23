@@ -5,7 +5,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HistoryIcon from '@mui/icons-material/History';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
 import logo from "./../Asura2222.png";
+
+var isLoggedIn = false; // props.isLoggedIn;
 
 function LoggedInMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -19,6 +22,7 @@ function LoggedInMenu() {
 
   const logout = () => {
     console.log("Logged out");
+    isLoggedIn = false;
     setAnchorEl(null);
   }
 
@@ -41,12 +45,13 @@ function NotLoggedInButton() {
 
   const login = () => {
     console.log("Logged in");
+    isLoggedIn = true;
   }
 
   return (
     <>
-    <Link to="/" style={{color:"white"}}>
-      <Button sx={{color:"white"}} onclick={login}>
+    <Link to="/login" style={{color:"white"}}>
+      <Button sx={{color:"white"}} onClick={login} endIcon={<LoginIcon />}>
         Login
         </Button>
       </Link>
@@ -55,8 +60,6 @@ function NotLoggedInButton() {
 }
 
 export default function Appbar(props) {
-    const isLoggedIn = true; // props.isLoggedIn;
-
     return (
     <>
     <CssBaseline />
@@ -81,9 +84,13 @@ export default function Appbar(props) {
               <Grid item xs={8}>
                 <Typography component="div"><h2>{props.pageTitle || ""}</h2></Typography>
               </Grid>
-              <Grid item xs={2}>
+              { props.pageTitle !== "Sign in" ?
+                <Grid item xs={2}>
                   { isLoggedIn ? <LoggedInMenu /> : <NotLoggedInButton /> } 
-              </Grid>
+                </Grid> : 
+                <Grid item xs={2}>
+                </Grid>
+              }
             </Grid>
           </Box>
         </Toolbar>

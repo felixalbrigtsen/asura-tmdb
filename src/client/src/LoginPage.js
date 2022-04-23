@@ -14,10 +14,14 @@ export default function LoginPage() {
     return (
         <>
             <AppBar pageTitle="Sign in" />
-            <h2>Sign in with google</h2>
-            <a href={process.env.REACT_APP_LOGIN_URL}>
-                <img src="/btn_google_signing_dark.png" alt="Sign in with google" />
-            </a>
+            <Paper x={{width: "70vw", margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center">
+                <Stack  direction="column" paddingTop={'0.5%'} alignItems={'center'}>
+                    <Typography>Sign in with google</Typography>
+                    <Link to={process.env.REACT_APP_LOGIN_URL}>
+                        <img src="/btn_google_signing_dark.png" alt="Sign in with google" />
+                    </Link>
+                </Stack>
+            </Paper>            
         </>
     );
 }
