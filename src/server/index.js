@@ -62,9 +62,6 @@ var userProfile;
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/success', (req, res) => res.send(userProfile));
-// app.get('/error', (req, res) => res.send("error logging in"));
-
 passport.serializeUser(function(user, cb) {
   cb(null, user);
 });
@@ -118,7 +115,7 @@ app.get('/auth/google/callback',
         req.session.user = user;
       }
 
-      res.json({"status": "OK", "data": user});
+      res.redirect('/');
       return;
     })
     .catch(err => {
@@ -449,6 +446,10 @@ function isManager(session) {
   });
 }
 
+api.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/");
+});
 
 api.get("/users/getSessionUser", (req, res) => {
   if (req.session.user) {
