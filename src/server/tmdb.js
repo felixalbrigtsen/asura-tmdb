@@ -420,14 +420,11 @@ async function assignFirstMatch(teamId, tournamentId) {
   let matches = await getMatchesByTournamentId(tournamentId);
   
   let highTier = Math.log2(tournament.teamLimit)-1;
-  console.log(highTier);
   let highTierMatches = matches.filter(match => match.tier == highTier);
-  console.log(matches);
 
   return new Promise(function(resolve, reject) {
     for (let match of highTierMatches) {
       if (match.team1Id == null) {
-        console.log("Assigning team " + teamId + " to match " + match.id + " as team 1");
         connection.query("UPDATE matches SET team1Id = ? WHERE id = ?", [escapeString(teamId), escapeString(match.id)], (err, sets) => {
           if (err) {
             console.log(err);
@@ -438,7 +435,6 @@ async function assignFirstMatch(teamId, tournamentId) {
         });
         return
       } else if (match.team2Id == null) {
-        console.log("Assigning team " + teamId + " to match " + match.id + " as team 2");
         connection.query("UPDATE matches SET team2Id = ? WHERE id = ?", [escapeString(teamId), escapeString(match.id)], (err, sets) => {
           if (err) {
             console.log(err);

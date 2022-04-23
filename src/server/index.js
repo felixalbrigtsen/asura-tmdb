@@ -356,10 +356,10 @@ api.post("/team/:teamId/edit", (req, res) => {
 
 //Takes JSON body
 api.post("/tournament/create", async (req, res) => {
-  if (!(await isManager(req.session))) {
-    res.json({"status": "error", "data": "Not authorized"});
-    return
-  }
+  // if (!(await isManager(req.session))) {
+  //   res.json({"status": "error", "data": "Not authorized"});
+  //   return
+  // }
   //Check that req body is valid
   if (req.body.name == undefined || req.body.name == "") {
     res.json({"status": "error", "data": "No data supplied"});
