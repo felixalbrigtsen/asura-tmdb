@@ -6,6 +6,7 @@ import TournamentManager from "./TournamentManager.js";
 import TournamentHistory from "./TournamentHistory";
 import TournamentTeams from "./TournamentTeams";
 import LoginPage from "./LoginPage";
+import ProfilePage from "./ProfilePage";
 import AppBar from './components/AsuraBar';
 import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon, TextField } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -194,6 +195,40 @@ function Home() {
   );
 }
 
+class LoginManager {
+  user = {
+    name: "",
+    email: "",
+    googleId: "",
+    asuraId: -1,
+    isManager: false
+  };
+
+  checkLogin() {
+    fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status !== "OK") {
+          console.error(data);
+          return;
+        }
+        console.log(data);
+        this.user = data.data;
+      })
+      .catch((err) => console.log(err.message));
+  }
+
+  isLoggedIn() {
+    return this.user.googleId !== undefined && this.user.googleId !== "" && this.user.asuraId !== undefined && this.user.asuraId !== -1;
+  }
+  isManager() {
+    return this.isLoggedIn() && this.user.isManager;
+  }
+}
+
+let login = new LoginManager();
+login.checkLogin();
+
 export default function App() {
   return (
     <React.StrictMode>
@@ -206,6 +241,7 @@ export default function App() {
         <Route path="/tournament/:tournamentId/teams" element={<TournamentTeams />} />
         <Route path="/history" element={<TournamentHistory />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile" element={<ProfilePage login={login} />} />
       </Routes>
     </Router>
     </React.StrictMode>
