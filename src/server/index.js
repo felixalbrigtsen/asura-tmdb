@@ -282,6 +282,25 @@ api.post("/match/:matchId/setWinner", (req, res) => {
   .then(match => res.send({"status": "OK", "data": match}))
   .catch(err => res.send({"status": "error", "data": err}));
 });
+
+api.post("/match/:matchId/unsetContestant", (req, res) => {
+  let matchId = req.params.matchId;
+  let contestantId = req.body.teamId;
+  if (isNaN(matchId)) {
+    res.json({"status": "error", "data": "matchId must be a number"});
+    return
+  }
+  if (contestantId == undefined || isNaN(contestantId)) {
+    res.json({"status": "error", "data": "contestantId must be a number"});
+    return
+  }
+  
+  matchId = parseInt(matchId);
+  contestantId = parseInt(contestantId);
+  tmdb.unsetContestantAndWinner(matchId, contestantId)
+    .then(match => res.send({"status": "OK", "data": match}))
+    .catch(err => res.send({"status": "error", "data": err}));
+});
 // #endregion
 
 // #region team/:teamId

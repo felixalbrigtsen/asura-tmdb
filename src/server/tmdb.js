@@ -11,6 +11,7 @@ module.exports = {
   deleteTeam: deleteTeam,
   getMatch: getMatch,
   setMatchWinner: setMatchWinner,
+  unsetContestantAndWinner: unsetContestantAndWinner,
   createTournament: createTournament,
   deleteTournament: deleteTournament,
   editTournament: editTournament,
@@ -158,6 +159,29 @@ async function setMatchWinner(matchId, winnerId) {
 
       resolve(getMatch(matchId));
     });
+  });
+}
+
+async function unsetContestantAndWinner(matchId, teamId) {
+  let match = await getMatch(matchId);
+  return new Promise(function(resolve, reject) {
+    unsetContestant(matchId, teamId)
+      .then(() => {
+        // Find what the child match that supplied the team
+        connection.query("SELECT * FROM matches WHERE parentMatchId = ? AND winnerId = ?", [matchId, teamId], (err, childMatches) => {
+          if (err) { console.log(err); reject(err); }
+          if (childMatches.length != 1) {
+            reject("Error: Could not find the correct child match");
+            return;
+          }
+          let childMatch = childMatches[0];
+          // Remove the winner from the child match
+          setMatchWinner(childMatch.id, null)
+            .then(() => { resolve(); })
+            .catch(err => { reject(err); });
+        });
+      })
+      .catch(err => { reject(err); });
   });
 }
 
