@@ -9,8 +9,8 @@ let tmdb = require("./tmdb.js");
 
 // #region Express setup
 const app = express();
-const port = 3001;
-app.listen(port, () => {
+const port = process.env.SERVER_PORT || 3000;
+app.listen(parseInt(port), () => {
   console.log(`Listening on port ${port}`)
 })
 app.use(express.json());
@@ -176,7 +176,7 @@ api.post("/tournament/:tournamentId/edit", async (req, res) => {
     res.json({"status": "error", "data": "User is not logged in"});
     return
   }
-  
+
   let tournamentId = req.params.tournamentId;
   if (isNaN(tournamentId)) {
     res.json({"status": "error", "data": "tournamentId must be a number"});
@@ -456,6 +456,8 @@ api.post("/tournament/create", async (req, res) => {
 
 function isSessionLoggedIn(session) {
   return new Promise((resolve, reject) => {
+    if (process.env.DEBUG_ALLOW_ALL === "true") { resolve(true); return; }
+
     if (session.user == undefined || session.user.googleId == undefined) {
       return resolve(false);
     }
@@ -470,6 +472,8 @@ function isSessionLoggedIn(session) {
 
 function isSessionManager(session) {
   return new Promise((resolve, reject) => {
+    if (process.env.DEBUG_ALLOW_ALL === "true") { resolve(true); return; }
+
     if (session.user == undefined || session.user.googleId == undefined) {
       return resolve(false);
     }
@@ -482,7 +486,7 @@ function isSessionManager(session) {
 
 api.get("/logout", (req, res) => {
   req.session.destroy();
-  res.redirect("/");
+  res.redirect(process.env.AUTH_SUCCESS_REDIRECT);
 });
 
 api.get("/users/getSavedUser", (req, res) => {
