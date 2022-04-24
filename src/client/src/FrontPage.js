@@ -223,7 +223,18 @@ export default function App() {
         setUser({ isManager: false, isLoggedIn: false });
       });
   }
-  
+  // Debug mode, allow all:
+  // let fetchUser = () => {
+  //   setUser({
+  //     name: "TEST USERTEST",
+  //     isManager: true,
+  //     isLoggedIn: true,
+  //     email: "testesen@gmail.com",
+  //     asuraId: "123456789",
+  //     googleId: "234"
+  //   });
+  // }
+
   React.useEffect(() => {
     fetchUser();
   }, []);
