@@ -56,7 +56,6 @@ app.use('/static/*', express.static(path.join(__dirname, 'clientbuild/static')))
 // #region PASSPORT / OAUTH
 
 const passport = require('passport');
-const { getUserByEmail } = require("./tmdb.js");
 var userProfile;
 
 app.use(passport.initialize());
@@ -503,44 +502,31 @@ api.post("/users/createBlank", async (req, res) => {
     });
 });
 
-api.post("/users/changeManagerStatus", async (req, res) => {
+api.post("/users/:asuraId/changeManagerStatus", async (req, res) => {
   if (!(await isManager(req.session))) {
     res.json({"status": "error", "data": "Not authorized"});
     return
   }
-  let emailAddress = req.body.emailAddress;
+  let asuraId = req.params.asuraId;
   let isManager = req.body.isManager;
+  console.log(asuraId, isManager);
 
+  tmdb.changeManagerStatus(asuraId, isManager)
+    .then(msg => res.json({"status": "OK", "data": msg}))
+    .catch(err => res.json({"status": "error", "data": err}));
 
-  tmdb.getUserByEmail(emailAddress)
-    .then(user => {
-      tmdb.changeManagerStatus(user.id, isManager)
-        .then(msg => res.json({"status": "OK", "data": msg}))
-        .catch(err => res.json({"status": "error", "data": err}));
-    })
-    .catch(err => {
-      console.log(err);
-      res.json({"status": "error", "data": "Could not update the specified user"});
-    });
 });
 
-api.post("/deleteUser", async (req, res) => {
+api.delete("/users/:asuraId", async (req, res) => {
   if (!(await isManager(req.session))) {
     res.json({"status": "error", "data": "Not authorized"});
     return
   }
-  let emailAddress = req.body.emailAddress;
+  let asuraId = req.params.asuraId;
 
-  tmdb.getUserByEmail(emailAddress)
-    .then(user => {
-      tmdb.deleteUser(user.id)
-        .then(msg => res.json({"status": "OK", "data": msg}))
-        .catch(err => res.json({"status": "error", "data": err}));
-    })
-    .catch(err => {
-      console.log(err);
-      res.json({"status": "error", "data": "Could not update the specified user"});
-    });
+  tmdb.deleteUser(asuraId)
+    .then(msg => res.json({"status": "OK", "data": msg}))
+    .catch(err => res.json({"status": "error", "data": err}));
 });
 
 
