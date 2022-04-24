@@ -29,7 +29,7 @@ function LoggedInMenu(props) {
         <MenuIcon />
         </IconButton>
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{'aria-labelledby': 'basic-button',}} sx={{position:"absolute"}}>
-          <Link to="/profile" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<AccountCircleIcon />}>Profile</Button></MenuItem></Link>
+          <Link to="/profile" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<AccountCircleIcon />}>{props.user.name}</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
           <Link to="/api/logout" style={{color:"black"}}><MenuItem onClick={logout}><Button endIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
           { props.user.isManager && 
