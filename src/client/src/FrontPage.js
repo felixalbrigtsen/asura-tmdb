@@ -190,9 +190,11 @@ function Home(props) {
             }
           </Box>
           <TournamentList user={props.user} />
-          <Typography variant="h5" color="#555555">
-            Finished tournaments are moved to the <Link to="/history">history-page</Link>
-          </Typography>
+          {props.user.isLoggedIn &&
+            <Typography variant="h5" color="#555555">
+              Finished tournaments are moved to the <Link to="/history">history-page</Link>
+            </Typography>
+          }
         </Container>
     </>
   );
@@ -223,7 +225,7 @@ export default function App() {
         setUser({ isManager: false, isLoggedIn: false });
       });
   }
-  // Debug mode, allow all:
+  // // Debug mode, allow all:
   // let fetchUser = () => {
   //   setUser({
   //     name: "TEST USERTEST",
