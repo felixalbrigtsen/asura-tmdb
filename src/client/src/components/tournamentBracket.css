@@ -10,10 +10,10 @@
 	display:flex;
 	flex-direction:column;
 	justify-content:center;
-	width:20vw;
+	/* width:20vw; */
 	list-style:none;
 	padding:0;
-	font-size: 1.5rem;
+	/* font-size: 1.5rem; */
   }
 	.round .spacer{ flex-grow:1;}
 	.round .spacer:first-child,
@@ -31,30 +31,18 @@
 	padding:10px;
 	line-height:1.4em;
   } */
-
-  .teamName{
-	  max-width: 5vw;
-	  overflow: hidden;
-	  word-wrap: none;
-  }
   
   li.game{
 	padding-left:20px;
   }
-  .winnerTrophy{
-	visibility: hidden;
-  }
 	
-	.teamName.winner{
-	  font-weight:bold;
+	.winner{
+		color:green;
+		font-weight: bold;
 	}
-	li.game.winner > div.winnerTrophy{
-		visibility: visible;
-	  }
-	/* li.game .winnerTrophy{
-	  float:right;
-	  margin-right:5px;
-	} */
+	.loser{
+		color:grey;
+	}
   
 	li.game-top{ border-bottom:1px solid #aaa; }
   

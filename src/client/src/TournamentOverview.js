@@ -10,20 +10,23 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { fontSize } from "@mui/system";
 
 function TournamentTier(props){
-  let roundTypes = ["winner","finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
+  let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
     let matches = [];
-    for (let i = 0; i < props.matches.length; i++) {
-      matches.push(<Match tournament={props.tournament} user={props.user} teams={props.teams} match={props.matches[i]} key={i} />);
+      for (let i = 0; i < props.matches.length; i++) {
+        matches.push(<Match tournament={props.tournament} user={props.user} tier={props.tier} roundTypes={roundTypes} teams={props.teams} match={props.matches[i]} key={i} />);
+      }
+      return(
+        <>
+        <Box className={`round ${roundTypes[props.tier]}`} sx={{width:['50px', '150px', '200px', '250px', '300px']}}>
+          <li className="spacer">&nbsp;</li>
+          {matches}
+        </Box>
+        </>
+      )
     }
-    return(
-      <ul className={`round ${roundTypes[props.tier]}`}>
-        <li className="spacer">&nbsp;</li>
-        {matches}
-      </ul>
-    )
-}
 
 function Match(props){
   let team1Name = "TBA";
@@ -62,11 +65,11 @@ function Match(props){
   };
 
   let curryUnsetContestant = teamId => (e) => {
-    console.log("wack")
+    // console.log("wack")
     let formData = new FormData();
     formData.append("teamId", teamId);
     let body = new URLSearchParams(formData);
-    console.log(props.match)
+    // console.log(props.match)
     fetch(process.env.REACT_APP_API_URL + `/match/${props.match.id}/unsetContestant`, {
       method: "POST", 
       body: body
@@ -74,7 +77,7 @@ function Match(props){
       .then(response => response.json())
       .then(data => {
         if (data.status === "OK") {
-          console.log("wacky smacky");
+          // console.log("wacky smacky");
           window.location.reload();
         }
       })
@@ -84,16 +87,16 @@ function Match(props){
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <li className={`game game-top ${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`}>
-          <Stack direction={"row"}>
-              <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
+        <li className={`game game-top`}>
+          <Stack direction={"row"} alignItems="center" spacing={1}>
+              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`} align={'center'} sx={{ maxWidth:'70%', overflow:'hidden', wordWrap:'none', fontSize:['2vh', '1vh', '1.5vh', '2vh', '2.5vh', '3vh']}}>
                 {team1Name}
               </Typography>
               { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" color="gold" />
+              <EmojiEventsIcon alt="A trohpy" />
               }
               { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
-              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton>
+              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton>
               }
               { props.match.team1Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
               <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
@@ -102,16 +105,16 @@ function Match(props){
         </li>
         <li className="game game-spacer">&nbsp;</li>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <li className={`game game-bottom ${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`}>
-        <Stack direction={"row"} sx={{alignItems:'center'}}>
-              <Typography className={`teamName`} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
+        <li className={`game game-bottom`}>
+        <Stack direction={"row"} alignItems="center">
+              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team2Id === props.match.winnerId) ? "winner" : "loser" : ""}`} sx={{maxWidth:'70%', overflow:'hidden', wordWrap:'none',fontSize:['2vh', '1vh', '1.5vh', '2vh', '2.5vh', '3vh']}}>
                 {team2Name}
               </Typography>
               { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
               <EmojiEventsIcon alt="A trohpy" color="gold" />
               }
               { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
-              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton>
+              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton>
               }
               { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
               <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
@@ -144,6 +147,7 @@ function BracketViewer(props){
             tiers[match.tier] = [];
           }
           tiers[match.tier].push(match);
+          console.log(tiers)
           return tiers;
         }, {});
 
@@ -167,14 +171,18 @@ function BracketViewer(props){
       .catch(err => showError(err));
   }, []);
   return (
+    
       (props.tournament && matches && teams) ?
         // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
+        <>
         <div className="bracket">
-          {matches.map(tier => {
+        {matches.map(tier => {
             let tierNum = tier[0].tier;
             return <TournamentTier user={props.user} tournament={props.tournament} key={tierNum} tier={tierNum} matches={tier} teams={teams} />
           })}
         </div>
+         
+       </>
       : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
   );
 }
