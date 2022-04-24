@@ -2,6 +2,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import Appbar from './components/AsuraBar';
 import TournamentBar from "./components/TournamentBar";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 import { useParams } from 'react-router-dom'
 import { Button, IconButton, Paper, Stack, CircularProgress, Box, Grid, Typography, Container } from "@mui/material";
 import "./components/tournamentBracket.css";
@@ -10,17 +11,11 @@ import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-
-function showError(error) {
-  alert("Something went wrong. \n" + error);
-  console.error(error);
-}
-
 function TournamentTier(props){
   let roundTypes = ["winner","finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
     let matches = [];
     for (let i = 0; i < props.matches.length; i++) {
-      matches.push(<Match tournament={props.tournament} teams={props.teams} match={props.matches[i]} key={i} />);
+      matches.push(<Match tournament={props.tournament} user={props.user} teams={props.teams} match={props.matches[i]} key={i} />);
     }
     return(
       <ul className={`round ${roundTypes[props.tier]}`}>
@@ -94,11 +89,11 @@ function Match(props){
               <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team1Name}
               </Typography>
-              { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null ?
-              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton> : null
+              { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
+              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton>
               }
-              { props.match.team1Id !== null && props.match.winnerId === null && !props.tournament.hasEnded ?
-              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
+              { props.match.team1Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
+              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
               }
               {/* { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
               <EmojiEventsIcon alt="A trohpy" color="gold" />
@@ -112,11 +107,11 @@ function Match(props){
               <Typography className={`teamName`} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team2Name}
               </Typography>
-              { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null ? 
-              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton> : null
+              { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
+              <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton>
               }
-              { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded ?
-              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton> : null
+              { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
+              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
               }
               {/* { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
               <EmojiEventsIcon alt="A trohpy" color="gold" />
@@ -177,16 +172,25 @@ function BracketViewer(props){
         <div className="bracket">
           {matches.map(tier => {
             let tierNum = tier[0].tier;
-            return <TournamentTier tournament={props.tournament} key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+            return <TournamentTier user={props.user} tournament={props.tournament} key={tierNum} tier={tierNum} matches={tier} teams={teams} />
           })}
         </div>
       : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
   );
 }
 
+let showError = (message) => {};
 export default function TournamentOverview(props) {
   const { tournamentId } = useParams();
   const [tournament, setTournament] = React.useState(false);
+
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  showError = (message) => {
+    setOpenError(false);
+    setErrorMessage(message);
+    setOpenError(true);
+  }
 
   React.useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}`)
@@ -208,10 +212,10 @@ export default function TournamentOverview(props) {
   return (
     <>
       <Appbar user={props.user} pageTitle={tournament.name} />
-      { props.user.isLoggedIn && !tournament.hasEnded ? 
-        <TournamentBar tournamentId={tournamentId} viewTournament={true} /> : null
+      { props.user.isLoggedIn && !tournament.hasEnded && 
+        <TournamentBar tournamentId={tournamentId} viewTournament={true} />
       }
-      <BracketViewer tournament={tournament} tournamentId={tournamentId} className="bracketViewer" />
+      <BracketViewer tournament={tournament} user={props.user} tournamentId={tournamentId} className="bracketViewer" />
     </>
   );
 }

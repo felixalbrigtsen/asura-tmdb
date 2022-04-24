@@ -5,6 +5,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import Appbar from './components/AsuraBar';
+import LoginPage from './LoginPage';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 
@@ -143,16 +144,17 @@ function shorten(description, maxLength) {
     </>;
   }
 
-export default function TournamentHistory() {
-    return (
-        <>
-          <Appbar pageTitle="Tournament History" />
-            <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
-              <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
-                <Typography variant="h3">Past Tournaments</Typography>
-              </Box>
-              <TournamentList />
-            </Container>
-        </>
-      );
+export default function TournamentHistory(props) {
+  if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
+  return (
+      <>
+        <Appbar user={props.user} pageTitle="Tournament History" />
+          <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
+            <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
+              <Typography variant="h3">Past Tournaments</Typography>
+            </Box>
+            <TournamentList />
+          </Container>
+      </>
+    );
 }

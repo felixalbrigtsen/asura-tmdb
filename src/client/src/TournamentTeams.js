@@ -2,6 +2,7 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-router-dom";
 import Appbar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
+import LoginPage from "./LoginPage";
 import { Button, TextField, Stack, MenuItem, Box, InputLabel, Select, Container, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Paper, Typography} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -203,6 +204,8 @@ export default function TournamentTeams(props) {
     getTeams()
   }, []);
   
+  if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
+
   return (
     <>
     <Appbar user={props.user} pageTitle="Edit teams" />

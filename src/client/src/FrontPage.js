@@ -199,48 +199,18 @@ function Home(props) {
 }
 
 
-// class LoginManager {
-//   checkLogin() {
-//     fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
-//       .then(res => res.json())
-//       .then(data => {
-//         if (data.status !== "OK") {
-//           console.error(data.data);
-//           return;
-//         }
-//         console.log(data);
-//         setUser(data.data);
-//         return user;
-//       })
-//       .catch((err) => console.log(err.message));
-//   }
-
-//   isLoggedIn() {
-//     let loggedIn = user.googleId !== "" && user.asuraId !== -1; 
-//     console.log(loggedIn);
-//     return loggedIn;
-//   }
-//   isManager() {
-//     return this.isLoggedIn() && user.isManager;
-//   }
-// }
-
-// let login = new LoginManager();
-// login.checkLogin();
-
-
 let showSuccess = (message) => {};
 let showError = (message) => {};
 
 export default function App() {
   const [user, setUser] = React.useState({});
-  let checkLogin = () => {
+  let fetchUser = () => {
     fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
           setUser({ isManager: false, isLoggedIn: false });
-          console.log(data.data);
+          console.log(data.data); // "No user logged in"
           return;
         }
         let u  = data.data;
@@ -255,7 +225,7 @@ export default function App() {
   }
 
   React.useEffect(() => {
-    checkLogin();
+    fetchUser();
   }, []);
 
   const [openError, setOpenError] = React.useState(false);

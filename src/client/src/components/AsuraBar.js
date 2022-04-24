@@ -55,7 +55,9 @@ function NotLoggedInButton() {
 }
 
 export default function Appbar(props) {
-    return (
+  console.log("Appbar-user:")
+  console.log(props.user);
+  return (
     <>
     <CssBaseline />
       <AppBar position="static" color="primary">
@@ -79,7 +81,7 @@ export default function Appbar(props) {
               <Grid item xs={8}>
                 <Typography component="div"><h2>{props.pageTitle || ""}</h2></Typography>
               </Grid>
-              { props.pageTitle !== "Sign in" ?
+              { props.pageTitle !== "Login" ?
                 <Grid item xs={2}>
                   { props.user.isLogggedIn ? <LoggedInMenu /> : <NotLoggedInButton /> } 
                 </Grid> : 
@@ -91,5 +93,5 @@ export default function Appbar(props) {
         </Toolbar>
       </AppBar>
     </>
-    );
+  );
 }

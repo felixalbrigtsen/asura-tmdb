@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 // import { AlertContainer, alert } from "react-custom-alert";
 import Appbar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
+import LoginPage from "./LoginPage";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
@@ -220,6 +221,11 @@ export default function TournamentManager(props) {
 
   showError = props.showError;
   showSuccess = props.showSuccess;
+
+  if (!props.user.isLoggedIn) {
+    return <LoginPage user={props.user} />;
+  }
+
   return (
     <>
     <Appbar user={props.user} pageTitle="Edit Tournament" />
