@@ -9,7 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import logo from "./../Asura2222.png";
 
-function LoggedInMenu() {
+function LoggedInMenu(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -32,7 +32,9 @@ function LoggedInMenu() {
           <Link to="/" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<AccountCircleIcon />}>Profile</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
           <Link to="/api/logout" style={{color:"black"}}><MenuItem onClick={logout}><Button endIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
+          { props.user.isManager && 
           <Link to="/admins" style={{color:"black"}}><MenuItem onClick={handleClose}><Button endIcon={<EditIcon />} >Admins</Button></MenuItem></Link>
+          }
       </Menu> 
     </> 
   );  
@@ -83,7 +85,7 @@ export default function Appbar(props) {
               </Grid>
               { props.pageTitle !== "Login" ?
                 <Grid item xs={2}>
-                  { props.user.isLogggedIn ? <LoggedInMenu /> : <NotLoggedInButton /> } 
+                  { props.user.isLoggedIn ? <LoggedInMenu user={props.user} /> : <NotLoggedInButton /> } 
                 </Grid> : 
                 <Grid item xs={2}>
                 </Grid>

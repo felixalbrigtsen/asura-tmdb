@@ -2,7 +2,7 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-router-dom";
 import Appbar from "./components/AsuraBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
-
+import LoginPage from "./LoginPage";
 import {Button, Box, TextField, Stack, InputLabel, Paper, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Typography} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -124,18 +124,29 @@ export default function Users(props) {
                 setUsers(data.data);
             })
             .catch((err) => showError(err));
-        } 
-        React.useEffect(() => {
-            getUsers()
-        }, []);
+    } 
+    React.useEffect(() => {
+        getUsers()
+    }, []);
 
-        return (
-            <>
+    if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
+    if (!props.user.isManager) {
+        return (<>
             <Appbar user={props.user} pageTitle="Admins" />
-            <div className="admins">
-                <AdminCreator />
-                <UserList users={users}/>
+            <Paper sx={{minHeight: "30vh", width:"90vw", margin:"10px auto", padding: "25px"}} component={Stack} direction="column" justifycontent="center">
+            <div align="center">
+                <Typography variant="h4">You do not have permission to view this page. If you believe this is incorrect, please contact a manager.</Typography>
             </div>
-            </>
-        );
+            </Paper>
+        </>);
+    }
+    return (
+        <>
+        <Appbar user={props.user} pageTitle="Admins" />
+        <div className="admins">
+            <AdminCreator />
+            <UserList users={users}/>
+        </div>
+        </>
+    );
 }

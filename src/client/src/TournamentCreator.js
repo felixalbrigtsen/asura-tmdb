@@ -2,7 +2,7 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import Appbar from "./components/AsuraBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
-
+import LoginPage from "./LoginPage";
 import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -167,6 +167,8 @@ export default function TournamentCreator(props) {
     setErrorMessage(message);
     setOpenError(true);
   }
+
+  if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
 
   return (
     <>

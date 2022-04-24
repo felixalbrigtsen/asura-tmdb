@@ -9,7 +9,7 @@ function MatchHistory() {
   );
 }
 
-export default function TournamentMatches() {
+export default function TournamentMatches(props) {
   return (
     <>
       <Appbar user={props.user} />
