@@ -31,7 +31,7 @@ function ClipboardButton(props) {
 function ButtonLink(props) {
   return (
     <Link to={`/tournament/${props.tournamentId}` + props.targetPath} >
-        <Button variant="contained" color="primary" disabled={props.activeTitle === props.title || props.viewTournament} sx={{margin: "15px", fontSize: "1.2em"}} >{props.title}</Button>
+        <Button variant="contained" color="primary" disabled={props.activeTitle === props.title || props.viewTournament} sx={{margin: "1.5vw", fontSize: "1.2em"}} >{props.title}</Button>
     </Link>
   );
 }
