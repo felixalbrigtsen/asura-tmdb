@@ -524,6 +524,25 @@ api.post("/users/changeManagerStatus", async (req, res) => {
     });
 });
 
+api.post("/deleteUser", async (req, res) => {
+  if (!(await isManager(req.session))) {
+    res.json({"status": "error", "data": "Not authorized"});
+    return
+  }
+  let emailAddress = req.body.emailAddress;
+
+  tmdb.getUserByEmail(emailAddress)
+    .then(user => {
+      tmdb.deleteUser(user.id)
+        .then(msg => res.json({"status": "OK", "data": msg}))
+        .catch(err => res.json({"status": "error", "data": err}));
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({"status": "error", "data": "Could not update the specified user"});
+    });
+});
+
 
 api.get("/dumpsession", async (req, res) => {
   let out = {};

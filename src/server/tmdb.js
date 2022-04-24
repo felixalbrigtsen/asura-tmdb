@@ -20,6 +20,8 @@ module.exports = {
   getUserByEmail: getUserByEmail,
   getUserByGoogleId: getUserByGoogleId,
   createUserBlank: createUserBlank,
+  changeManagerStatus: changeManagerStatus,
+  deleteUser, deleteUser,
   editUser: editUser,
 }
 
@@ -552,6 +554,40 @@ function editUser(email, user) {
         console.log(sets);
         resolve("User updated");
       }
+    });
+  });
+}
+
+function changeManagerStatus(userId, isManager) {
+  return new Promise(function(resolve, reject) {
+    connection.query("UPDATE users SET isManager = ? WHERE id = ?", [escapeString(isManager), escapeString(userId)], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+        return
+      } 
+      if (sets.affectedRows == 0) {
+        reject("No such user exists");
+        return
+      }
+      resolve("User updated");
+    });
+  });
+}
+
+function deleteUser(userId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("DELETE FROM users WHERE id = ?", [escapeString(userId)], (err, sets) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+        return;
+      }
+      if (sets.affectedRows == 0) {
+        reject("No such user exists");
+        return;
+      }
+      resolve("User deleted");
     });
   });
 }
