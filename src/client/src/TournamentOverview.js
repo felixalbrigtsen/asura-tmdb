@@ -89,15 +89,15 @@ function Match(props){
               <Typography className={`teamName`} align={'center'} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team1Name}
               </Typography>
+              { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
+              <EmojiEventsIcon alt="A trohpy" color="gold" />
+              }
               { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
               <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton>
               }
               { props.match.team1Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
               <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
               }
-              {/* { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" color="gold" />
-              } */}
           </Stack>
         </li>
         <li className="game game-spacer">&nbsp;</li>
@@ -107,15 +107,15 @@ function Match(props){
               <Typography className={`teamName`} sx={{fontSize:'1.5rem', maxWidth:'15vw', overflow:'hidden', wordWrap:'none'}}>
                 {team2Name}
               </Typography>
+              { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
+              <EmojiEventsIcon alt="A trohpy" color="gold" />
+              }
               { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
               <IconButton color="error" aria-label="remmove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton>
               }
               { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
               <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
               }
-              {/* { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" color="gold" />
-              } */}
             </Stack>
         </li>
         <li className="spacer">&nbsp;</li>

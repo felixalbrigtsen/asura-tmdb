@@ -61,7 +61,7 @@ function AdminCreator(props){
 }
 
 function UserList(props){
-    const deleteUsers = userId => {
+    const deleteUsers = (userId) => {
         fetch(process.env.REACT_APP_API_URL + `/users/${userId}`, {method: "DELETE"})
             .then(res => res.json())
             .then(data => {
@@ -74,13 +74,12 @@ function UserList(props){
             .catch(error => showError(error));
     }
 
-    let updateRank = (email) => event => {
+    let updateRank = (asuraId) => event => {
         let isManager = event.target.value == "manager";
         let formData = new FormData();
         formData.append("isManager", isManager);
-        formData.append("emailAddress", email);
         let body = new URLSearchParams(formData);
-        fetch(process.env.REACT_APP_API_URL + `/users/changeManagerStatus`, {
+        fetch(process.env.REACT_APP_API_URL + `/users/${asuraId}/changeManagerStatus`, {
             method: "POST",
             body: body
         })
@@ -119,7 +118,7 @@ function UserList(props){
                             <TableCell>{user.email}</TableCell>
                             {/* TODO Drop down menu for selecting rank */}
                             <TableCell>
-                                <select onChange={updateRank(user.email)} value={user.isManager ? "manager" : "admin"}>
+                                <select onChange={updateRank(user.asuraId)} value={user.isManager ? "manager" : "admin"}>
                                     <option value="manager">Manager</option>
                                     <option value="admin">Admin</option>
                                 </select>
@@ -127,7 +126,7 @@ function UserList(props){
                             {/* <TableCell align="right">{team.members}</TableCell> */}
                             <TableCell align="center">
                               {/* <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)} endIcon={<EditIcon />}>Edit</Button> */}
-                              <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteUsers(user.id)}} endIcon={<DeleteIcon />}>Delete</Button>
+                              <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteUsers(user.asuraId)}} endIcon={<DeleteIcon />}>Delete</Button>
                             </TableCell>
                           </TableRow>
                         ))}
