@@ -556,10 +556,4 @@ function editUser(email, user) {
   });
 }
 
-function userIsManager(userId) {
-  getUser(userId)
-    .then(user => { return user.isManager; })
-    .catch(err => { console.log(err); return false; });
-}
-
 // #endregion

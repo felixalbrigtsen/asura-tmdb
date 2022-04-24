@@ -504,7 +504,7 @@ api.post("/users/createBlank", async (req, res) => {
 });
 
 api.post("/users/changeManagerStatus", async (req, res) => {
-  if (!await isManager(req.session)) {
+  if (!(await isManager(req.session))) {
     res.json({"status": "error", "data": "Not authorized"});
     return
   }
