@@ -109,13 +109,12 @@ app.get('/auth/google/callback',
       } else {
         // User is "preregistered" with email only, so complete the registration
         // This step will register the name, img and googleId
-        user.isManager = false;
         tmdb.editUser(user.email, user).catch(err => console.log(err));
 
         req.session.user = user;
       }
 
-      res.redirect('/');
+      res.redirect(process.env.AUTH_SUCCESS_REDIRECT);
       return;
     })
     .catch(err => {
