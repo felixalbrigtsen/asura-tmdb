@@ -57,8 +57,6 @@ function NotLoggedInButton() {
 }
 
 export default function Appbar(props) {
-  console.log("Appbar-user:")
-  console.log(props.user);
   return (
     <>
     <CssBaseline />

@@ -45,14 +45,16 @@ function AdminCreator(props){
     return (
         <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px"}} component={Stack} direction="column">
             <div align="center">
-                <TextField id="adminEmailInput" sx={{ width: "70%" }} label="Admin Email" variant="outlined" type="email" />
-                {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
-                <Button variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
-                    <Box sx={{padding: "10px"}}>
-                        Create Admin
-                    </Box>
-                    <AddCircleIcon />
-                </Button>
+                <form>
+                    <TextField id="adminEmailInput" sx={{ width: "70%" }} label="Admin Email" variant="outlined" type="email" />
+                    {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
+                    <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
+                        <Box sx={{padding: "10px"}}>
+                            Create Admin
+                        </Box>
+                        <AddCircleIcon />
+                    </Button>
+                </form>
             </div>
         </Paper>
     )
@@ -68,6 +70,27 @@ function UserList(props){
                     return;
                 }
                 props.setUsers(props.users.filter(user => user.id !== userId));
+            })
+            .catch(error => showError(error));
+    }
+
+    let updateRank = (email) => event => {
+        let isManager = event.target.value == "manager";
+        let formData = new FormData();
+        formData.append("isManager", isManager);
+        formData.append("emailAddress", email);
+        let body = new URLSearchParams(formData);
+        fetch(process.env.REACT_APP_API_URL + `/users/changeManagerStatus`, {
+            method: "POST",
+            body: body
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status !== "OK"){
+                    showError(data.data);
+                    return;
+                }
+                props.onUserUpdated();
             })
             .catch(error => showError(error));
     }
@@ -95,7 +118,12 @@ function UserList(props){
                             </TableCell>
                             <TableCell>{user.email}</TableCell>
                             {/* TODO Drop down menu for selecting rank */}
-                            <TableCell>{'user.rank'}</TableCell>
+                            <TableCell>
+                                <select onChange={updateRank(user.email)} value={user.isManager ? "manager" : "admin"}>
+                                    <option value="manager">Manager</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </TableCell>
                             {/* <TableCell align="right">{team.members}</TableCell> */}
                             <TableCell align="center">
                               {/* <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)} endIcon={<EditIcon />}>Edit</Button> */}
@@ -112,7 +140,6 @@ function UserList(props){
 
 export default function Users(props) {
     const [users, setUsers] = React.useState([]);
-    const { userId } = useParams();
 
     function getUsers() {
         fetch(process.env.REACT_APP_API_URL + `/users/getUsers`)
@@ -144,7 +171,7 @@ export default function Users(props) {
         <>
         <Appbar user={props.user} pageTitle="Admins" />
         <div className="admins">
-            <AdminCreator />
+            <AdminCreator onAdminCreated={getUsers} onUserUpdated={getUsers} />
             <UserList users={users}/>
         </div>
         </>
