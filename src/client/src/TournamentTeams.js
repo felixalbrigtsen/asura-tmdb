@@ -2,16 +2,12 @@ import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-router-dom";
 import Appbar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 import LoginPage from "./LoginPage";
 import { Button, TextField, Stack, MenuItem, Box, InputLabel, Select, Container, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Paper, Typography} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
-function showError(error) {
-  alert("Something went wrong. \n" + error);
-  console.error(error);
-}
 
 function TeamCreator(props) {
   function postCreate() {
@@ -183,6 +179,8 @@ function TeamEditor(props) {
   )
 }
 
+let showError = (message) => {};
+
 export default function TournamentTeams(props) {
   const [teams, setTeams] = React.useState([]);
   const [selectedTeamId, setSelectedTeamId] = React.useState(-1);
@@ -203,6 +201,14 @@ export default function TournamentTeams(props) {
   React.useEffect(() => {
     getTeams()
   }, []);
+
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  showError = (message) => {
+    setOpenError(false);
+    setErrorMessage(message);
+    setOpenError(true);
+  }
   
   if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
 
@@ -215,6 +221,7 @@ export default function TournamentTeams(props) {
       <TeamList teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
       <TeamEditor teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
     </div>
+    <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />
     </>
   );
 }
