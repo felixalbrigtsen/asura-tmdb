@@ -165,17 +165,17 @@ export default function Users(props) {
         getUsers()
     }, []);
 
-    // if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
-    // if (!props.user.isManager) {
-    //     return (<>
-    //         <Appbar user={props.user} pageTitle="Admins" />
-    //         <Paper sx={{minHeight: "30vh", width:"90vw", margin:"10px auto", padding: "25px"}} component={Stack} direction="column" justifycontent="center">
-    //         <div align="center">
-    //             <Typography variant="h4">You do not have permission to view this page. If you believe this is incorrect, please contact a manager.</Typography>
-    //         </div>
-    //         </Paper>
-    //     </>);
-    // }
+    if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
+    if (!props.user.isManager) {
+        return (<>
+            <Appbar user={props.user} pageTitle="Admins" />
+            <Paper sx={{minHeight: "30vh", width:"90vw", margin:"10px auto", padding: "25px"}} component={Stack} direction="column" justifycontent="center">
+            <div align="center">
+                <Typography variant="h4">You do not have permission to view this page. If you believe this is incorrect, please contact a manager.</Typography>
+            </div>
+            </Paper>
+        </>);
+    }
 
     return (
         <>
