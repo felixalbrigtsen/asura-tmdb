@@ -171,7 +171,12 @@ api.get("/tournament/:tournamentId/getTeams", (req, res) => {
     .catch(err => res.send({"status": "error", "data": err}));
 });
 
-api.post("/tournament/:tournamentId/edit", (req, res) => {
+api.post("/tournament/:tournamentId/edit", async (req, res) => {
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+  
   let tournamentId = req.params.tournamentId;
   if (isNaN(tournamentId)) {
     res.json({"status": "error", "data": "tournamentId must be a number"});
@@ -215,7 +220,12 @@ api.post("/tournament/:tournamentId/edit", (req, res) => {
     
 });
 
-api.post("/tournament/:tournamentId/createTeam", (req, res) => {
+api.post("/tournament/:tournamentId/createTeam", async (req, res) => {
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+
   let tournamentId = req.params.tournamentId;
   if (isNaN(tournamentId)) {
     res.json({"status": "error", "data": "tournamentId must be a number"});
@@ -233,7 +243,12 @@ api.post("/tournament/:tournamentId/createTeam", (req, res) => {
     .catch(err => res.json({"status": "error", "data": err}));
 });
 
-api.delete("/tournament/:tournamentId", (req, res) => {
+api.delete("/tournament/:tournamentId", async (req, res) => {
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+
   let tournamentId = req.params.tournamentId;
   if (isNaN(tournamentId)) {
     res.json({"status": "error", "data": "tournamentId must be a number"});
@@ -262,7 +277,12 @@ api.get("/match/:matchId", (req, res) => {
   .catch(err => res.send({"status": "error", "data": err}));
 });
 
-api.post("/match/:matchId/setWinner", (req, res) => {
+api.post("/match/:matchId/setWinner", async (req, res) => {
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+
   let matchId = req.params.matchId;
   let winnerId = req.body.winnerId;
   if (isNaN(matchId)) {
@@ -281,7 +301,12 @@ api.post("/match/:matchId/setWinner", (req, res) => {
   .catch(err => res.send({"status": "error", "data": err}));
 });
 
-api.post("/match/:matchId/unsetContestant", (req, res) => {
+api.post("/match/:matchId/unsetContestant", async (req, res) => {
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+
   let matchId = req.params.matchId;
   let contestantId = req.body.teamId;
   if (isNaN(matchId)) {
@@ -314,7 +339,12 @@ api.get("/team/:teamId", (req, res) => {
   .catch(err => res.send({"status": "error", "data": err}));
 });
 
-api.delete("/team/:teamId", (req, res) => {
+api.delete("/team/:teamId", async (req, res) => {
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+  
   let teamId = req.params.teamId;
   if (isNaN(teamId)) {
     res.json({"status": "error", "data": "teamId must be a number"});
@@ -331,7 +361,12 @@ api.delete("/team/:teamId", (req, res) => {
     .catch(err => res.send({"status": "error", "data": err}));
 });
 
-api.post("/team/:teamId/edit", (req, res) => {
+api.post("/team/:teamId/edit", async (req, res) => {
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+  
   let teamId = req.params.teamId;
   let teamName = req.body.name;
   console.log(req.body);
@@ -354,10 +389,11 @@ api.post("/team/:teamId/edit", (req, res) => {
 
 //Takes JSON body
 api.post("/tournament/create", async (req, res) => {
-  // if (!(await isManager(req.session))) {
-  //   res.json({"status": "error", "data": "Not authorized"});
-  //   return
-  // }
+  if (!(await isSessionLoggedIn(req.session))) {
+    res.json({"status": "error", "data": "User is not logged in"});
+    return
+  }
+
   //Check that req body is valid
   if (req.body.name == undefined || req.body.name == "") {
     res.json({"status": "error", "data": "No data supplied"});
@@ -418,7 +454,7 @@ api.post("/tournament/create", async (req, res) => {
 
 // #region users
 
-function isLoggedIn(session) {
+function isSessionLoggedIn(session) {
   return new Promise((resolve, reject) => {
     if (session.user == undefined || session.user.googleId == undefined) {
       return resolve(false);
@@ -432,7 +468,7 @@ function isLoggedIn(session) {
 }
 
 
-function isManager(session) {
+function isSessionManager(session) {
   return new Promise((resolve, reject) => {
     if (session.user == undefined || session.user.googleId == undefined) {
       return resolve(false);
@@ -449,14 +485,6 @@ api.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-api.get("/users/getSessionUser", (req, res) => {
-  if (req.session.user) {
-    res.json({"status": "OK", "data": req.session.user});
-  } else {
-    res.json({"status": "error", "data": "No user logged in"});
-  }
-});
-
 api.get("/users/getSavedUser", (req, res) => {
   if (!req.session.user) {
     res.json({"status": "error", "data": "No user logged in"});
@@ -468,14 +496,19 @@ api.get("/users/getSavedUser", (req, res) => {
     .catch(err => res.json({"status": "error", "data": err}));
 });
 
-api.get("/users/getUsers", (req, res) => {
+api.get("/users/getUsers", async (req, res) => {
+  if (!(await isSessionManager(req.session))) {
+    res.json({"status": "error", "data": "Not authorized"});
+    return
+  }
+  
   tmdb.getUsers()
   .then(users => res.json({"status": "OK", "data": users}))
   .catch(err => res.json({"status": "error", "data": err}));
 });
 
 api.post("/users/createBlank", async (req, res) => {
-  if (!(await isManager(req.session))) {
+  if (!(await isSessionManager(req.session))) {
     res.json({"status": "error", "data": "Not authorized"});
     return
   }
@@ -503,14 +536,13 @@ api.post("/users/createBlank", async (req, res) => {
 });
 
 api.post("/users/:asuraId/changeManagerStatus", async (req, res) => {
-  if (!(await isManager(req.session))) {
+  if (!(await isSessionManager(req.session))) {
     res.json({"status": "error", "data": "Not authorized"});
     return
   }
+
   let asuraId = req.params.asuraId;
   let isManager = req.body.isManager;
-  console.log(asuraId, isManager);
-
   tmdb.changeManagerStatus(asuraId, isManager)
     .then(msg => res.json({"status": "OK", "data": msg}))
     .catch(err => res.json({"status": "error", "data": err}));
@@ -518,7 +550,7 @@ api.post("/users/:asuraId/changeManagerStatus", async (req, res) => {
 });
 
 api.delete("/users/:asuraId", async (req, res) => {
-  if (!(await isManager(req.session))) {
+  if (!(await isSessionManager(req.session))) {
     res.json({"status": "error", "data": "Not authorized"});
     return
   }
@@ -530,13 +562,22 @@ api.delete("/users/:asuraId", async (req, res) => {
 });
 
 
-api.get("/dumpsession", async (req, res) => {
-  let out = {};
-  out.session = req.session;
-  out.header = req.headers;
-  out.isLoggedIn = await isLoggedIn(req.session);
-  out.isManager = await isManager(req.session);
-  console.log(out);
-  res.json(out);
-});
+// Debugging functions, disabled on purpouse
+// api.get("/users/getSessionUser", (req, res) => {
+//   if (req.session.user) {
+//     res.json({"status": "OK", "data": req.session.user});
+//   } else {
+//     res.json({"status": "error", "data": "No user logged in"});
+//   }
+// });
+
+// api.get("/dumpsession", async (req, res) => {
+//   let out = {};
+//   out.session = req.session;
+//   out.header = req.headers;
+//   out.isLoggedIn = await isSessionLoggedIn(req.session);
+//   out.isManager = await isSessionManager(req.session);
+//   console.log(out);
+//   res.json(out);
+// });
 // #endregion

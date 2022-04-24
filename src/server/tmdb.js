@@ -560,7 +560,8 @@ function editUser(email, user) {
 
 function changeManagerStatus(userId, isManager) {
   return new Promise(function(resolve, reject) {
-    connection.query("UPDATE users SET isManager = ? WHERE id = ?", [escapeString(isManager), escapeString(userId)], (err, sets) => {
+    let isManagerInt = (isManager === true || isManager === "true") ? 1 : 0;
+    connection.query("UPDATE users SET isManager = ? WHERE id = ?", [isManagerInt, escapeString(userId)], (err, sets) => {
       if (err) {
         console.log(err);
         reject(err);
