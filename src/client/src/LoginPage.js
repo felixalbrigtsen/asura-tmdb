@@ -11,7 +11,7 @@ export default function LoginPage(props) {
         window.location.href = "/";
         return;
     }
-
+    
     return (
         <>
             <Appbar user={props.user} pageTitle="Login" /> 
