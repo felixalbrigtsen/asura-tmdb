@@ -222,9 +222,7 @@ export default function TournamentManager(props) {
   showError = props.showError;
   showSuccess = props.showSuccess;
 
-  if (!props.user.isLoggedIn) {
-    return <LoginPage user={props.user} />;
-  }
+  if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
 
   return (
     <>

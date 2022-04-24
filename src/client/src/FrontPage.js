@@ -223,7 +223,7 @@ export default function App() {
         setUser({ isManager: false, isLoggedIn: false });
       });
   }
-
+  
   React.useEffect(() => {
     fetchUser();
   }, []);
