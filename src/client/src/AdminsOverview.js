@@ -3,15 +3,10 @@ import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-r
 import Appbar from "./components/AsuraBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import LoginPage from "./LoginPage";
-import {Button, Box, TextField, Stack, InputLabel, Paper, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Typography} from '@mui/material';
+import {Button, Box, TextField, Stack, InputLabel, Paper, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Typography, Select, MenuItem, FormControl} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
-function showError(error) {
-    alert("Something went wrong. \n" + error);
-    console.error(error);
-}
 
 function AdminCreator(props){
     function postCreate(){
@@ -21,7 +16,6 @@ function AdminCreator(props){
             return;
         }
     
-
     let formData = new FormData();
     formData.append("email", adminEmail)
     let body = new URLSearchParams(formData)
@@ -75,7 +69,8 @@ function UserList(props){
     }
 
     let updateRank = (asuraId) => event => {
-        let isManager = event.target.value == "manager";
+        event.preventDefault();
+        let isManager = event.target.value === "manager";
         let formData = new FormData();
         formData.append("isManager", isManager);
         let body = new URLSearchParams(formData);
@@ -109,7 +104,7 @@ function UserList(props){
                     </TableHead>
                     <TableBody>
                         {props.users.map((user) => (
-                            <TableRow key={user.id}>
+                            <TableRow key={user.asuraId}>
                             <TableCell component="th" scope="row"> 
                             <b>
                               {user.name}
@@ -118,10 +113,12 @@ function UserList(props){
                             <TableCell>{user.email}</TableCell>
                             {/* TODO Drop down menu for selecting rank */}
                             <TableCell>
-                                <select onChange={updateRank(user.asuraId)} value={user.isManager ? "manager" : "admin"}>
-                                    <option value="manager">Manager</option>
-                                    <option value="admin">Admin</option>
-                                </select>
+                                <FormControl variant="standard">
+                                    <Select onChange={updateRank(user.asuraId)} value={user.isManager ? "manager" : "admin"} label="rank" labelId="rankSelect" id="rankSelect">
+                                        <MenuItem value={"manager"}>Manager</MenuItem>
+                                        <MenuItem value={"admin"}>Admin</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </TableCell>
                             {/* <TableCell align="right">{team.members}</TableCell> */}
                             <TableCell align="center">
@@ -137,7 +134,19 @@ function UserList(props){
     )
 }
 
+let showError = (message) => {};
+
+
+
 export default function Users(props) {
+
+    const [openError, setOpenError] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
+    showError = (message) => {
+        setOpenError(false);
+        setErrorMessage(message);
+        setOpenError(true);
+    }
     const [users, setUsers] = React.useState([]);
 
     function getUsers() {
@@ -146,6 +155,7 @@ export default function Users(props) {
             .then((data) =>{
                 if(data.status !== "OK") {
                     showError(data.data);
+                    return;
                 }
                 setUsers(data.data);
             })
@@ -155,24 +165,27 @@ export default function Users(props) {
         getUsers()
     }, []);
 
-    if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
-    if (!props.user.isManager) {
-        return (<>
-            <Appbar user={props.user} pageTitle="Admins" />
-            <Paper sx={{minHeight: "30vh", width:"90vw", margin:"10px auto", padding: "25px"}} component={Stack} direction="column" justifycontent="center">
-            <div align="center">
-                <Typography variant="h4">You do not have permission to view this page. If you believe this is incorrect, please contact a manager.</Typography>
-            </div>
-            </Paper>
-        </>);
-    }
+    // if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
+    // if (!props.user.isManager) {
+    //     return (<>
+    //         <Appbar user={props.user} pageTitle="Admins" />
+    //         <Paper sx={{minHeight: "30vh", width:"90vw", margin:"10px auto", padding: "25px"}} component={Stack} direction="column" justifycontent="center">
+    //         <div align="center">
+    //             <Typography variant="h4">You do not have permission to view this page. If you believe this is incorrect, please contact a manager.</Typography>
+    //         </div>
+    //         </Paper>
+    //     </>);
+    // }
+
     return (
         <>
         <Appbar user={props.user} pageTitle="Admins" />
         <div className="admins">
             <AdminCreator onAdminCreated={getUsers} onUserUpdated={getUsers} />
-            <UserList users={users}/>
+            <UserList users={users} setUsers={setUsers} onUserUpdated={getUsers} />
         </div>
+
+        <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />
         </>
     );
 }
