@@ -16,7 +16,9 @@ export default function showError(props) {
 
     props.setOpen(false);
   };
-  console.log(props.message);
+  if (props.message && props.message.length > 0) {
+    console.log(props.message);
+  }
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
