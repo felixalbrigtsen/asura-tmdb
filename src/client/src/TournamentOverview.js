@@ -155,7 +155,7 @@ function WinnerDisplay(props) {
   return (
     <div className="winnerDisplay winner">
       <Typography variant="h4" component="h2" align="center">
-        {props.user.isLoggedIn && <IconButton color="error" aria-label="remove winner" component="span" onClick={unsetWinner}><BackspaceIcon /></IconButton>}
+        {props.user.isLoggedIn && !props.tournament.hasEnded && <IconButton color="error" aria-label="remove winner" component="span" onClick={unsetWinner}><BackspaceIcon /></IconButton>}
         Winner:
       </Typography>
       <Typography variant="h4" component="h2">
@@ -233,7 +233,7 @@ function BracketViewer(props){
             return <TournamentTier user={props.user} tournament={props.tournament} key={tierNum} tier={tierNum} matches={tierMatches} teams={teams} onwinnerchange={getMatches} />
           })}
         
-        <WinnerDisplay team={getWinnerTeam(matches)} user={props.user} finalMatch={getFinalMatch(matches)} onwinnerchange={getMatches} />
+        <WinnerDisplay team={getWinnerTeam(matches)} user={props.user} finalMatch={getFinalMatch(matches)} onwinnerchange={getMatches} tournament={props.tournament} />
         </div>
        </>
       : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
