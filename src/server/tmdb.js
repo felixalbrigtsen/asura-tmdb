@@ -543,7 +543,7 @@ function createUserBlank(email) {
 
 function editUser(email, user) {
   return new Promise(function(resolve, reject) {
-    if (!user.isManager) { // If isManager is not defined (or false)
+    if (user.isManager == undefined) {
       user.isManager = false;
     }
     connection.query("UPDATE users SET googleId = ?, name = ?, isManager = ? WHERE email = ?", [escapeString(user.googleId), escapeString(user.name), escapeString(user.isManager), escapeString(email)], (err, sets) => {

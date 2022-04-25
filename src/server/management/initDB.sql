@@ -48,8 +48,8 @@ CREATE TABLE users (
 );
 
 -- Example data (Two tournaments, 4 teams, single elimination)
-INSERT INTO tournaments (name, description, startTime, endTime, teamLimit) VALUES ('Tournament 1', 'First tournament, single elimination', '2022-06-01 16:00:00', '2022-06-01 20:00:00', 4);
-INSERT INTO tournaments (name, description, startTime, endTime, teamLimit) VALUES ('Tournament 2', 'Second tournament, four teams', '2022-03-03 17:30:00', '2022-03-04 21:30:00', 8);
+INSERT INTO tournaments (name, description, prize, startTime, endTime, teamLimit) VALUES ('Tournament 1', 'First tournament, single elimination', '300 000 points', '2022-04-29 16:00:00', '2022-04-29 20:00:00', 4);
+INSERT INTO tournaments (name, description, prize, startTime, endTime, teamLimit) VALUES ('Tournament 2', 'Second tournament, four teams', '450 000 points', '2022-04-29 09:00:00', '2022-04-29 10:30:00', 8);
 
 INSERT INTO teams (tournamentId, name) VALUES (1, 'Fnatic');        -- 1
 INSERT INTO teams (tournamentId, name) VALUES (1, 'Cloud 9');       -- 2
@@ -83,3 +83,8 @@ INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 5, 7, 8, 2);           -- 8
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 6, 9, 10, 2);            -- 9
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 6, 11, 12, 2);           -- 10
+
+INSERT INTO users (email, isManager) VALUES ('felixalbrigtsen@gmail.com', 1);
+INSERT INTO users (email, isManager) VALUES ('kriloneri@gmail.com', 1);
+INSERT INTO users (email, isManager) VALUES ('limboblivion@gmail.com', 1);
+INSERT INTO users (email, isManager) VALUES ('jonas.haugland98@gmail.com', 1);
