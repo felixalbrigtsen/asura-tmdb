@@ -485,13 +485,17 @@ function getUserByGoogleId(googleId) {
         console.log(err);
         reject(err);
       } else {
-        if (users.length == 0) {
+        if (!users || users.length == 0) {
           reject("No such user exists");
         }
-        users[0].isManager = users[0].isManager == 1;
-        users[0].asuraId = users[0].id;
-        users[0].id = undefined;
-        resolve(users[0]);
+        try {
+          users[0].isManager = users[0].isManager == 1;
+          users[0].asuraId = users[0].id;
+          users[0].id = undefined;
+          resolve(users[0]);
+        } catch (e) {
+          reject("No such user exists");
+        }
       }
     });
   });
