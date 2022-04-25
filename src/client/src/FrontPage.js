@@ -183,8 +183,7 @@ function Home(props) {
       <Appbar user={props.user} pageTitle="Asura Tournaments" />
         <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
           <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
-            {/* <CreateButton /> */}
-            <Typography variant="h3">Tournaments</Typography>
+            <Typography sx={{fontSize:['1.5rem','2rem','2rem']}}>Tournaments</Typography>
             { props.user.isLoggedIn ?
               <CreateButton /> : null
             }
@@ -206,36 +205,36 @@ let showError = (message) => {};
 
 export default function App() {
   const [user, setUser] = React.useState({});
-  let fetchUser = () => {
-    fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status !== "OK") {
-          setUser({ isManager: false, isLoggedIn: false });
-          console.log(data.data); // "No user logged in"
-          return;
-        }
-        let u  = data.data;
-        u.isLoggedIn = true;
-        console.log("User is logged in")
-        setUser(u);
-      })
-      .catch((err) => {
-        showError(err.message);
-        setUser({ isManager: false, isLoggedIn: false });
-      });
-  }
-  // // Debug mode, allow all:
   // let fetchUser = () => {
-  //   setUser({
-  //     name: "TEST USERTEST",
-  //     isManager: true,
-  //     isLoggedIn: true,
-  //     email: "testesen@gmail.com",
-  //     asuraId: "123456789",
-  //     googleId: "234"
-  //   });
+  //   fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (data.status !== "OK") {
+  //         setUser({ isManager: false, isLoggedIn: false });
+  //         console.log(data.data); // "No user logged in"
+  //         return;
+  //       }
+  //       let u  = data.data;
+  //       u.isLoggedIn = true;
+  //       console.log("User is logged in")
+  //       setUser(u);
+  //     })
+  //     .catch((err) => {
+  //       showError(err.message);
+  //       setUser({ isManager: false, isLoggedIn: false });
+  //     });
   // }
+  // // Debug mode, allow all:
+  let fetchUser = () => {
+    setUser({
+      name: "TEST USERTEST",
+      isManager: true,
+      isLoggedIn: true,
+      email: "testesen@gmail.com",
+      asuraId: "123456789",
+      googleId: "234"
+    });
+  }
 
   React.useEffect(() => {
     fetchUser();

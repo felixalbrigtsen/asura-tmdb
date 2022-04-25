@@ -39,9 +39,9 @@ function ButtonLink(props) {
 export default function TournamentBar(props) {
     const { tournamentId } = useParams();
     return (
-        <Paper sx={{width: "90vw", margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center"> 
+        <Paper sx={{width: ["90vw",], margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center"> 
           <Stack direction="row" paddingTop={'0.5%'}>
-            <ButtonLink targetPath="" tournamentId={tournamentId} activeTitle={props.pageTitle} title="View Tournament" viewTournament={props.viewTournament} />
+            <ButtonLink targetPath="" tournamentId={tournamentId} activeTitle={props.pageTitle} title="View Tournament" viewTournament={props.viewTournament} sx={{}}/>
             <ButtonLink targetPath="/manage" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Edit Tournament" />
             <ButtonLink targetPath="/teams" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Manage Teams" />
           </Stack>
@@ -50,6 +50,5 @@ export default function TournamentBar(props) {
             <ClipboardButton clipboardContent={"https://asura.feal.no/tournament/" + tournamentId} name="Tournament Link" />
           </Stack>
         </Paper>
-
     )
 }

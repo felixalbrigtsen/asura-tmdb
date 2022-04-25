@@ -78,8 +78,8 @@ export default function Appbar(props) {
                   }
               </Box>
               </Grid>    
-              <Grid item xs={8}>
-                <Typography component="div"><h2>{props.pageTitle || ""}</h2></Typography>
+              <Grid item xs={2} sm={3} md={4} lg={6} xl={8}>
+                <Typography component="div" sx={{fontSize:['0.5rem','1rem','1.5rem','2rem']}}>{props.pageTitle || ""}</Typography>
               </Grid>
               { props.pageTitle !== "Login" ?
                 <Grid item xs={2}>
