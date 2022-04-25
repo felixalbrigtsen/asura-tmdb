@@ -50,6 +50,7 @@ CREATE TABLE users (
 -- Example data (Two tournaments, 4 teams, single elimination)
 INSERT INTO tournaments (name, description, prize, startTime, endTime, teamLimit) VALUES ('Tournament 1', 'First tournament, single elimination', '300 000 points', '2022-04-29 16:00:00', '2022-04-29 20:00:00', 4);
 INSERT INTO tournaments (name, description, prize, startTime, endTime, teamLimit) VALUES ('Tournament 2', 'Second tournament, four teams', '450 000 points', '2022-04-29 09:00:00', '2022-04-29 10:30:00', 8);
+INSERT INTO tournaments (name, description, prize, startTime, endTime, teamLimit) VALUES ('Tournament 3', 'Previous tournament, it is done', '200 000 points', '2022-04-24 12:00:00', '2022-04-25 12:00:00', 4);
 
 INSERT INTO teams (tournamentId, name) VALUES (1, 'Fnatic');        -- 1
 INSERT INTO teams (tournamentId, name) VALUES (1, 'Cloud 9');       -- 2
@@ -64,6 +65,12 @@ INSERT INTO teams (tournamentId, name) VALUES (2, 'Team Secret');   -- 9
 INSERT INTO teams (tournamentId, name) VALUES (2, 'Virtus.pro');    -- 10
 INSERT INTO teams (tournamentId, name) VALUES (2, 'Natus Vincere'); -- 11
 INSERT INTO teams (tournamentId, name) VALUES (2, 'FaZe');          -- 12
+
+INSERT INTO teams(tournamentId, name) VALUES (3, 'Fnatic');         -- 13
+INSERT INTO teams(tournamentId, name) VALUES (3, 'Cloud 9');        -- 14
+INSERT INTO teams(tournamentId, name) VALUES (3, 'Team Liquid');    -- 15
+INSERT INTO teams(tournamentId, name) VALUES (3, 'LDLC');           -- 16
+
 
 -- tournament 1 --
 -- Final match
@@ -84,6 +91,14 @@ INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 6, 9, 10, 2);            -- 9
 INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier) VALUES (2, 6, 11, 12, 2);           -- 10
 
+-- tournament 3 --
+-- Final match
+INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier, winnerId) VALUES (3, NULL, 14, 15, 0, 14);   -- 11
+-- Semi-finals
+INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier, winnerId) VALUES (3, 11, 13, 14, 1, 14);            -- 12
+INSERT INTO matches (tournamentId, parentMatchId, team1Id, team2Id, tier, winnerId) VALUES (3, 11, 15, 16, 1, 15);            -- 13
+
+-- Users
 INSERT INTO users (email, isManager) VALUES ('felixalbrigtsen@gmail.com', 1);
 INSERT INTO users (email, isManager) VALUES ('kriloneri@gmail.com', 1);
 INSERT INTO users (email, isManager) VALUES ('limboblivion@gmail.com', 1);
