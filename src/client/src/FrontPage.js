@@ -85,7 +85,7 @@ function TournamentListItem(props) {
         </Box>)
     } else {
       return(<Box>
-        <Typography variant="body"> Starts in: </Typography>
+        <Typography variant="body"> Starts in: </Typography> <br />
         { remainingDays > 0 ? <Typography variant="body"> {remainingDays} days</Typography> : null }
         { remainingHours > 0 ? <Typography variant="body"> {remainingHours} hours</Typography> : null }
         { remainingMins > 0 ? <Typography variant="body"> {remainingMins} mins</Typography> : null }
@@ -105,26 +105,26 @@ function TournamentListItem(props) {
               image="banner2.png"
             />
             <CardContent align="left">
-              <Typography variant="h3" component="div" align="center">{props.tournament.name} </Typography>
+              <Typography sx={{fontSize:['2rem','2.5rem','3rem']}} component="div" align="center">{props.tournament.name} </Typography>
               
               <Box component={Stack} direction="column">
                 <Typography variant="body"> Start: {props.tournament.startTime.toLocaleString()} </Typography>
                 <Typography variant="body"> End: {props.tournament.endTime.toLocaleString()} </Typography>
               </Box>
               
-              <Typography variant="h5" color="text.primary" gutterBottom> Players: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
+              <Typography variant="h5" color="text.primary" gutterBottom> Particpants: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
               <Description />
               <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trohpy" color="gold"/>  Prize: {props.tournament.prize} </Typography>
               <Countdown />
               
               <Box sx={{flexGrow: 1, marginTop: "20px"}}>
-                <Grid container spacing={4} justifyContent="center" wrap="wrap">
-                    { props.user.isLoggedIn ?
+                <Grid container spacing={2} justifyContent="center" wrap="wrap">
+                    { props.user.isLoggedIn &&
                       <Grid item>
                       <Link to={`/tournament/${props.tournament.id}/manage`}>
                         <Button className="ManageButton" variant="contained" color="primary" endIcon={<EditIcon />}>Edit Tournament</Button>
                       </Link>
-                    </Grid> : null
+                    </Grid>
                     }
                     <Grid item >
                     <Link to={`/tournament/${props.tournament.id}`} >
@@ -182,7 +182,7 @@ function Home(props) {
     <>
       <Appbar user={props.user} pageTitle="Asura Tournaments" />
         <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
-        <Box component={Stack} direction={['column','row']}sx={{align:'center', justifyContent:'space-between', flexGrow:1}}>
+        <Box component={Stack} direction={['column','row']} sx={{align:'center', justifyContent:'space-between', flexGrow:1}}>
             <Typography sx={{fontSize:['1.5rem','2rem','2rem']}}>Tournaments</Typography>
             { props.user.isLoggedIn ?
               <CreateButton /> : null
@@ -205,36 +205,36 @@ let showError = (message) => {};
 
 export default function App() {
   const [user, setUser] = React.useState({});
-  let fetchUser = () => {
-    fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status !== "OK") {
-          setUser({ isManager: false, isLoggedIn: false });
-          console.log(data.data); // "No user logged in"
-          return;
-        }
-        let u  = data.data;
-        u.isLoggedIn = true;
-        console.log("User is logged in")
-        setUser(u);
-      })
-      .catch((err) => {
-        showError(err.message);
-        setUser({ isManager: false, isLoggedIn: false });
-      });
-  }
-  // // Debug mode, allow all:
   // let fetchUser = () => {
-  //   setUser({
-  //     name: "TEST USERTEST",
-  //     isManager: true,
-  //     isLoggedIn: true,
-  //     email: "testesen@gmail.com",
-  //     asuraId: "123456789",
-  //     googleId: "234"
-  //   });
+  //   fetch(process.env.REACT_APP_API_URL + `/users/getSavedUser`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (data.status !== "OK") {
+  //         setUser({ isManager: false, isLoggedIn: false });
+  //         console.log(data.data); // "No user logged in"
+  //         return;
+  //       }
+  //       let u  = data.data;
+  //       u.isLoggedIn = true;
+  //       console.log("User is logged in")
+  //       setUser(u);
+  //     })
+  //     .catch((err) => {
+  //       showError(err.message);
+  //       setUser({ isManager: false, isLoggedIn: false });
+  //     });
   // }
+  // Debug mode, allow all:
+  let fetchUser = () => {
+    setUser({
+      name: "TEST USERTEST",
+      isManager: true,
+      isLoggedIn: true,
+      email: "testesen@gmail.com",
+      asuraId: "123456789",
+      googleId: "234"
+    });
+  }
 
   React.useEffect(() => {
     fetchUser();

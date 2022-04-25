@@ -67,9 +67,9 @@ li.game-bottom{
 	margin: auto 5px;
 	padding: 10px;
 }
-.winnerDisplay.winner {
-	border: 2px solid green;
+.winnerDisplay > p.winner {
+	color:green;
 }
-.winnerDisplay > h2 {
+.winnerDisplay > div.winner {
 	margin-right: 10px;
 }

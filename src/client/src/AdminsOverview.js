@@ -39,17 +39,17 @@ function AdminCreator(props){
     }
 
     return (
-        <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px"}} component={Stack} direction="column">
+        <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px", align:'center', justifyContent:'center', flexGrow:1}} component={Stack} direction={['column']} spacing={2}>
             <div align="center">
                 <form>
-                    <TextField id="adminEmailInput" sx={{ width: "70%" }} label="Admin Email" variant="outlined" type="email" />
-                    {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
-                    <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
-                        <Box sx={{padding: "10px"}}>
-                            Create Admin
-                        </Box>
-                        <AddCircleIcon />
-                    </Button>
+                    <TextField id="adminEmailInput" label="Admin Email" variant="outlined" type="email" sx={{width:['auto','50%','60%','70%']}} />
+                        {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
+                        <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{marginLeft:['5px'],width:['fit-content','40%','30%','20%']}}>
+                            <Box sx={{padding: "10px"}}>
+                                Create Admin
+                            </Box>
+                            <AddCircleIcon />
+                        </Button>
                 </form>
             </div>
         </Paper>
@@ -118,7 +118,7 @@ function UserList(props){
                           {/* TODO Drop down menu for selecting rank */}
                           <TableCell>
                               <FormControl variant="standard">
-                                  <Select onChange={updateRank(user.asuraId)} value={user.isManager ? "manager" : "admin"} label="rank" labelId="rankSelect" id="rankSelect">
+                                  <Select onChange={updateRank(user.asuraId)} value={user.isManager ? "manager" : "admin"} aria-label="rank" id="rankSelect">
                                       <MenuItem value={"manager"}>Manager</MenuItem>
                                       <MenuItem value={"admin"}>Admin</MenuItem>
                                   </Select>

@@ -20,8 +20,8 @@ function TournamentTier(props){
       }
       return(
         <>
-        <Box className={`round ${roundTypes[props.tier]}`} sx={{width:['100px', '150px', '200px', '250px', '400px']}}>
-          <li className="spacer">&nbsp;</li>
+        <Box component='ul' className={`round ${roundTypes[props.tier]}`} sx={{width:['125px','200px','250px','300px','350px']}}>
+          <Box component='li' className="spacer">&nbsp;</Box>
           {matches}
         </Box>
         </>
@@ -85,41 +85,43 @@ function Match(props){
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <li className={`game game-top`}>
-          <Stack direction={"row"} alignItems="center" spacing={1}>
-              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`} align={'center'} sx={{ maxWidth:'70%', overflow:'hidden', wordWrap:'none', fontSize:['2vh', '1.5vh', '2vh', '3vh', '3.5vh', '4vh']}}>
+        <Box component='li' className={`game game-top`}>
+          <Stack direction={"row"} alignItems="center" spacing={1} sx={{justifyContent:['start','space-between']}}>
+              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`} align={'center'} sx={{ maxWidth:'70%', overflow:'hidden', wordWrap:'none', fontSize:['1em','1em','1.5em','1.75em']}}>
                 {team1Name}
               </Typography>
               { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" />
+              <EmojiEventsIcon alt="A trohpy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
               }
+              <Box component={Stack} direction={'row'} spacing={-1.25}>
               { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
-              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton>
+                <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
               { props.match.team1Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
-              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
+              </Box>
           </Stack>
-        </li>
-        <li className="game game-spacer">&nbsp;</li>
+        </Box>
+        <Box component='li' className="game game-spacer">&nbsp;</Box>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <li className={`game game-bottom`}>
-        <Stack direction={"row"} alignItems="center">
-              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team2Id === props.match.winnerId) ? "winner" : "loser" : ""}`} sx={{maxWidth:'70%', overflow:'hidden', wordWrap:'none',fontSize:['2vh', '1.5vh', '2vh', '3vh', '3.5vh', '4vh']}}>
+        <Box component='li' className={`game game-bottom`}>
+        <Stack direction={"row"} alignItems="center" sx={{justifyContent:['start','space-between']}}>
+              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team2Id === props.match.winnerId) ? "winner" : "loser" : ""}`} sx={{maxWidth:'70%', overflow:'hidden', wordWrap:'none',fontSize:['1em','1em','1.5em','1.75em']}}>
                 {team2Name}
               </Typography>
               { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" />
+              <EmojiEventsIcon alt="A trohpy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
               }
               { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
-              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton>
+              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
               { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
-              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span" ><AddCircleIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
             </Stack>
-        </li>
-        <li className="spacer">&nbsp;</li>
+        </Box>
+        <Box component='li' className="spacer">&nbsp;</Box>
     </>
   );
 }
@@ -146,21 +148,21 @@ function WinnerDisplay(props) {
   if (!props.team) {
     // Winner is not yet chosen
     return <div className="winnerDisplay">
-      <Typography variant="h5" component="h2">
+      <Typography sx={{fontSize:['1em','1em','1.5em','2em']}}>
         Winner is not chosen.<br /> Will it be you?
       </Typography>
     </div>;
   }
 
   return (
-    <div className="winnerDisplay winner">
-      <Typography variant="h4" component="h2" align="center">
+    <div className="winnerDisplay">
+      <Typography align="center">
         {props.user.isLoggedIn && !props.tournament.hasEnded && <IconButton color="error" aria-label="remove winner" component="span" onClick={unsetWinner}><BackspaceIcon /></IconButton>}
-        Winner:
       </Typography>
-      <Typography variant="h4" component="h2">
-        {props.team.name}<EmojiEventsIcon alt="A trohpy" />
+      <Typography sx={{fontSize:['1em','1em','1.5em','2em']}} className="winner">
+        {props.team.name}
       </Typography>
+      <EmojiEventsIcon alt="A trohpy" />
     </div>
   )
 }

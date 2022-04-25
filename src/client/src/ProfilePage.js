@@ -12,7 +12,6 @@ export default function ProfilePage(props) {
 
     return (<>
         <Appbar user={props.user} pageTitle="Profile" />
-        <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
             <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
                 <div align="center">
                 <h2><b>Your profile</b></h2>
@@ -23,6 +22,5 @@ export default function ProfilePage(props) {
                 </Box>
                 </div>
             </Paper>
-        </Container>
     </>)
 }

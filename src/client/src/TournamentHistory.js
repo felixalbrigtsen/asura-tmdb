@@ -54,7 +54,7 @@ function shorten(description, maxLength) {
                   <Typography variant="body"> End: {props.tournament.endTime.toLocaleString()} </Typography>
                 </Box>
                 
-                <Typography variant="h5" color="text.primary" gutterBottom> Players: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
+                <Typography variant="h5" color="text.primary" gutterBottom> Participants: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
                 <Description />
                 <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trohpy" color="gold" align="vertical-center"/>  Prize: {props.tournament.prize} </Typography>
 
@@ -150,8 +150,8 @@ export default function TournamentHistory(props) {
       <>
         <Appbar user={props.user} pageTitle="Tournament History" />
           <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
-            <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
-              <Typography variant="h3">Past Tournaments</Typography>
+            <Box component={Stack} direction="row" align="center" justifyContent="center" alignItems="center" sx={{flexGrow: 1, margin:'2.5% 0'}}>
+              <Typography sx={{fontSize:['1.5rem','2rem','2rem']}}>Past Tournaments</Typography>
             </Box>
             <TournamentList />
           </Container>
