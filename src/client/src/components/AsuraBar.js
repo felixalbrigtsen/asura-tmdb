@@ -31,10 +31,10 @@ function LoggedInMenu(props) {
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{'aria-labelledby': 'basic-button',}} sx={{position:"absolute"}}>
           <Link to="/profile" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<AccountCircleIcon />}>{props.user.name}</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
-          <Link to="/api/logout" style={{color:"black"}}><MenuItem onClick={logout}><Button startIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
           { props.user.isManager && 
           <Link to="/admins" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<EditIcon />} >Admins</Button></MenuItem></Link>
           }
+           <a href={`${process.env.REACT_APP_API_URL}/users/logout`} style={{color:"black"}}><MenuItem onClick={logout}><Button startIcon={<LogoutIcon />} >Logout</Button></MenuItem></a>
       </Menu> 
     </> 
   );  

@@ -3,6 +3,11 @@ import { useParams } from "react-router-dom";
 import { BrowserRouter as Router, Link, Route, Routes, History } from "react-router-dom";
 import { Stack, Paper, Typography, Box, Button, Grid, Snackbar, IconButton } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function ClipboardButton(props) {
   const [open, setOpen] = React.useState(false);
@@ -23,7 +28,11 @@ function ClipboardButton(props) {
   return (
     <>
       <Button onClick={copyString} variant="outlined" color="primary" sx={{margin: "auto 5px"}} >Copy {props.name}</Button>
-      <Snackbar open={open} autoHideDuration={1500} onClose={handleClose} message={props.name + " copied to clipboard"} action={closeAction} />
+      <Snackbar open={open} autoHideDuration={1500} onClose={handleClose} action={closeAction}>
+        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+          {props.name + " copied to clipboard"}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

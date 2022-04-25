@@ -16,7 +16,7 @@ function TournamentTier(props){
   let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
     let matches = [];
       for (let i = 0; i < props.matches.length; i++) {
-        matches.push(<Match tournament={props.tournament} user={props.user} tier={props.tier} roundTypes={roundTypes} teams={props.teams} match={props.matches[i]} key={i} />);
+        matches.push(<Match tournament={props.tournament} user={props.user} tier={props.tier} roundTypes={roundTypes} teams={props.teams} match={props.matches[i]} key={i} onwinnerchange={props.onwinnerchange} />);
       }
       return(
         <>
@@ -40,7 +40,6 @@ function Match(props){
 
   let setWinner = curryTeamId => event => {
     let teamId = curryTeamId;
-    // console.log(teamId)
     if (!teamId || teamId == null) {
       showError("No team selected");
       return;
@@ -56,7 +55,7 @@ function Match(props){
       .then(data => {
         if (data.status === "OK") {
           //Refresh when winner is set successfully
-          window.location.reload();
+          props.onwinnerchange();
         } else {
           showError(data.data)
         }
@@ -65,11 +64,9 @@ function Match(props){
   };
 
   let curryUnsetContestant = teamId => (e) => {
-    // console.log("wack")
     let formData = new FormData();
     formData.append("teamId", teamId);
     let body = new URLSearchParams(formData);
-    // console.log(props.match)
     fetch(process.env.REACT_APP_API_URL + `/match/${props.match.id}/unsetContestant`, {
       method: "POST", 
       body: body
@@ -77,8 +74,9 @@ function Match(props){
       .then(response => response.json())
       .then(data => {
         if (data.status === "OK") {
-          // console.log("wacky smacky");
-          window.location.reload();
+          props.onwinnerchange()
+        } else {
+          showError(data.data);
         }
       })
       .catch(error => showError(error));
@@ -126,12 +124,53 @@ function Match(props){
   );
 }
 
+function WinnerDisplay(props) {
+  let unsetWinner = event => {
+    let formData = new FormData();
+    formData.append("winnerId","null");
+    let body = new URLSearchParams(formData);
+    fetch(process.env.REACT_APP_API_URL + `/match/${props.finalMatch.id}/setWinner`, {
+      method: "POST",
+      body: body
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status !== "OK") { showError(data.data); return;}
+        props.onwinnerchange();
+      })
+      .catch(error => showError(error));
+  };
+          
+
+
+  if (!props.team) {
+    // Winner is not yet chosen
+    return <div className="winnerDisplay">
+      <Typography variant="h5" component="h2">
+        Winner is not chosen.<br /> Will it be you?
+      </Typography>
+    </div>;
+  }
+
+  return (
+    <div className="winnerDisplay winner">
+      <Typography variant="h4" component="h2" align="center">
+        {props.user.isLoggedIn && <IconButton color="error" aria-label="remove winner" component="span" onClick={unsetWinner}><BackspaceIcon /></IconButton>}
+        Winner:
+      </Typography>
+      <Typography variant="h4" component="h2">
+        {props.team.name}<EmojiEventsIcon alt="A trohpy" />
+      </Typography>
+    </div>
+  )
+}
+
 function BracketViewer(props){
   
   const [matches, setMatches] = React.useState(null);
   const [teams, setTeams] = React.useState(null);
 
-  React.useEffect(() => {
+  let getMatches = () => {
     fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}/getMatches`)
       .then(res => res.json())
       .then(data => {
@@ -140,20 +179,18 @@ function BracketViewer(props){
           console.error(data);
           return;
         }
-        let matches = data.data;
+        let allMatches = data.data;
         // Group all matches by their round/tier
-        let tiers = matches.reduce((tiers, match) => {
+        let tiers = allMatches.reduce((tiers, match) => {
           if (!tiers[match.tier]) {
             tiers[match.tier] = [];
           }
           tiers[match.tier].push(match);
-          console.log(tiers)
           return tiers;
         }, {});
 
         tiers = Object.values(tiers);
         tiers = tiers.reverse();
-        
         setMatches(tiers);
       })
       .catch(err => showError(err));
@@ -169,19 +206,35 @@ function BracketViewer(props){
         setTeams(teams);
       })
       .catch(err => showError(err));
+  }
+  React.useEffect(() => {
+    getMatches();
   }, []);
+
+  let getFinalMatch = (tierMatches) => {
+    let finalMatch = tierMatches[tierMatches.length - 1][0];
+    return finalMatch;
+  };
+  let getWinnerTeam = (tierMatches) => {
+    let finalMatch = getFinalMatch(tierMatches);
+    if (finalMatch.winnerId === null) { return null;}
+    let winnerTeam = teams.find(team => team.id === finalMatch.winnerId);
+    return winnerTeam;
+  };
+  
   return (
     
       (props.tournament && matches && teams) ?
         // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
         <>
         <div className="bracket">
-        {matches.map(tier => {
-            let tierNum = tier[0].tier;
-            return <TournamentTier user={props.user} tournament={props.tournament} key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+        {matches.map(tierMatches => {
+            let tierNum = tierMatches[0].tier;
+            return <TournamentTier user={props.user} tournament={props.tournament} key={tierNum} tier={tierNum} matches={tierMatches} teams={teams} onwinnerchange={getMatches} />
           })}
+        
+        <WinnerDisplay team={getWinnerTeam(matches)} user={props.user} finalMatch={getFinalMatch(matches)} onwinnerchange={getMatches} />
         </div>
-         
        </>
       : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
   );

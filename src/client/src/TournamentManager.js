@@ -219,8 +219,13 @@ export default function TournamentManager(props) {
   const handleDialogClickListItem = () => { setDialogOpen(true); };
   const handleDialogClose = () => { setDialogOpen(false); };
 
-  showError = props.showError;
-  showSuccess = props.showSuccess;
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  showError = (message) => {
+    setOpenError(false);
+    setErrorMessage(message);
+    setOpenError(true);
+  }
 
   if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
 
@@ -229,7 +234,7 @@ export default function TournamentManager(props) {
     <Appbar user={props.user} pageTitle="Edit Tournament" />
     <TournamentBar pageTitle="Edit Tournament"/>
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
-      <ManageTournament tournamentId={tournamentId} showError={showError} />
+      <ManageTournament tournamentId={tournamentId} />
       {/* <AnnounceButton /> */}
       <Box sx={{width: "100%"}}>
         <Button variant="contained" color="error" onClick={handleDialogClickListItem} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>

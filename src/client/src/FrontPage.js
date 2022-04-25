@@ -182,7 +182,7 @@ function Home(props) {
     <>
       <Appbar user={props.user} pageTitle="Asura Tournaments" />
         <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
-          <Box component={Stack} direction="row" align="center" justifyContent="space-between" alignItems="center" sx={{flexGrow: 1}}>
+        <Box component={Stack} direction={['column','row']}sx={{align:'center', justifyContent:'space-between', flexGrow:1}}>
             <Typography sx={{fontSize:['1.5rem','2rem','2rem']}}>Tournaments</Typography>
             { props.user.isLoggedIn ?
               <CreateButton /> : null
