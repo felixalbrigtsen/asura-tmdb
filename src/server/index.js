@@ -289,13 +289,18 @@ api.post("/match/:matchId/setWinner", async (req, res) => {
     res.json({"status": "error", "data": "matchId must be a number"});
     return
   }
-  if (winnerId == undefined || isNaN(winnerId)) {
+  if (winnerId == undefined || (isNaN(winnerId) && winnerId != "null")) {
     res.json({"status": "error", "data": "winnerId must be a number"});
     return
   }
+
   
   matchId = parseInt(matchId);
-  winnerId = parseInt(winnerId);
+  if (winnerId == "null") {
+    winnerId = null;
+  } else {
+    winnerId = parseInt(winnerId);
+  }
   tmdb.setMatchWinner(matchId, winnerId)
   .then(match => res.send({"status": "OK", "data": match}))
   .catch(err => res.send({"status": "error", "data": err}));
@@ -484,11 +489,6 @@ function isSessionManager(session) {
   });
 }
 
-api.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.redirect(process.env.AUTH_SUCCESS_REDIRECT);
-});
-
 api.get("/users/getSavedUser", (req, res) => {
   if (!req.session.user) {
     res.json({"status": "error", "data": "No user logged in"});
@@ -563,6 +563,11 @@ api.delete("/users/:asuraId", async (req, res) => {
   tmdb.deleteUser(asuraId)
     .then(msg => res.json({"status": "OK", "data": msg}))
     .catch(err => res.json({"status": "error", "data": err}));
+});
+
+api.get("/users/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect(process.env.AUTH_SUCCESS_REDIRECT);
 });
 
 
