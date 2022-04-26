@@ -24,8 +24,6 @@ code {
 }
 
 .mainIcon{
-  height: 65px;
-  width: 65px;
   border-radius: 50%;
   /* border: 5px dotted salmon; */
   border: 3px solid #1ab35a;

@@ -39,12 +39,12 @@ function TeamCreator(props) {
   }
 
   return (
-    <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px"}} component={Stack} direction="column">
+    <Paper sx={{width: "90vw", margin: "10px auto", padding: "15px", align:'center', justifyContent:'center', flexGrow:1}} component={Stack} direction={['column']} spacing={2}>
       <div align="center">
         <form>
-        <TextField id="teamNameInput" sx={{ width: "70%" }} label="Team Name" variant="outlined" />
+        <TextField id="teamNameInput" sx={{width:['auto','50%','60%','70%'], margin:'1% 0'}} label="Team Name" variant="outlined" />
         {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
-        <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{width: "20%", marginLeft: "5px"}}>
+        <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{ margin:'1% 1%',width:['fit-content','40%','30%','20%']}}>
           <Box sx={{padding: "10px"}}>
             Create Team
           </Box>

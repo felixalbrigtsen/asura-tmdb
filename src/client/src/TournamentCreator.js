@@ -113,7 +113,7 @@ function TournamentForm(props) {
         <TextField type="text" id="prizeInput" label="Prize" placeholder="Prize" InputLabelProps={{shrink: true}}/>     
         <Box flexGrow={1}>
         <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={4}>
+          <Grid item xs={6}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
               onChange={setStartTime}
@@ -121,8 +121,7 @@ function TournamentForm(props) {
             />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={4}>
-          
+          <Grid item xs={6}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={endTime}
               onChange={setEndTime}

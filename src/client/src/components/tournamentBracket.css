@@ -6,7 +6,7 @@
 	flex-direction:row;
 	justify-content: center;
   }
-  .round{
+.round{
 	display:flex;
 	flex-direction:column;
 	justify-content:center;
@@ -14,13 +14,13 @@
 	list-style:none;
 	padding:0;
 	/* font-size: 1.5rem; */
-  }
-	.round .spacer{ flex-grow:1;}
-	.round .spacer:first-child,
-	.round .spacer:last-child{ flex-grow:.5; }
-	.round .game-spacer{
-	  flex-grow:1;
-	}
+}
+.round .spacer{ flex-grow:1;}
+.round .spacer:first-child,
+.round .spacer:last-child{ flex-grow:.5; }
+.round .game-spacer{
+	flex-grow:1;
+}
   
   /*
    *  General Styles
@@ -32,26 +32,44 @@
 	line-height:1.4em;
   } */
   
-  li.game{
+li.game{
 	padding-left:20px;
-  }
+}
 	
-	.winner{
-		color:green;
-		font-weight: bold;
-	}
-	.loser{
-		color:grey;
-	}
+.winner{
+	color:green;
+	font-weight: bold;
+}
+.loser{
+	color:grey;
+}
   
-	li.game-top{ border-bottom:1px solid #aaa; }
+li.game-top{ border-bottom:1px solid #aaa; }
   
-	li.game-spacer{ 
-	  border-right:1px solid #aaa;
-	  min-height:10vh;
-	}
+li.game-spacer{ 
+	border-right:1px solid #aaa;
+	min-height:10vh;
+}
   
-	li.game-bottom{ 
-	  border-top:1px solid #aaa;
-	}
+li.game-bottom{ 
+	border-top:1px solid #aaa;
+}
   
+
+.winnerDisplay {
+	display:flex;
+	flex-direction:row;
+	align-items: center;
+	border: 2px solid gray;
+	border-radius: 15px;
+	min-height: 10vh;
+	max-height: 40vh;
+	margin: auto 5px;
+	padding: 10px;
+}
+.winnerDisplay > p.winner {
+	color:green;
+}
+.winnerDisplay > div.winner {
+	margin-right: 10px;
+}

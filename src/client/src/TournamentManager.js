@@ -134,13 +134,13 @@ function ManageTournament(props) {
   return (
     <>
     <form>
-    <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={2} align="center">
+    <Stack sx={{minHeight: "30vh", margin: "1.5%"}} direction="column" justifyContent="center" spacing={2} align="center">
           <TextField type="text" id="editName" label="Edit Name:" placeholder="Edit Name" InputLabelProps={{shrink: true}}/>
           <TextField type="text" multiline={true} id="editDesc" label="Edit Description:" placeholder="Edit Description" InputLabelProps={{shrink: true}} />
           <TextField type="text" id="editPrize" label="Edit Prize:" placeholder="Edit Prize" InputLabelProps={{shrink: true}}/>
           <Box sx={{flexGrow: 1}}>
           <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker label={"Start Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm" inputFormat="yyyy-MM-dd HH:mm" value={startTime}
                   onChange={setStartTime}
@@ -148,7 +148,7 @@ function ManageTournament(props) {
                 />
               </LocalizationProvider>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker label={"End Time"} inputVariant="outlined" ampm={false} mask="____-__-__ __:__" format="yyyy-MM-dd HH:mm:" inputFormat="yyyy-MM-dd HH:mm" value={endTime}             
                   onChange={setEndTime}
@@ -219,8 +219,13 @@ export default function TournamentManager(props) {
   const handleDialogClickListItem = () => { setDialogOpen(true); };
   const handleDialogClose = () => { setDialogOpen(false); };
 
-  showError = props.showError;
-  showSuccess = props.showSuccess;
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  showError = (message) => {
+    setOpenError(false);
+    setErrorMessage(message);
+    setOpenError(true);
+  }
 
   if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
 
@@ -229,7 +234,7 @@ export default function TournamentManager(props) {
     <Appbar user={props.user} pageTitle="Edit Tournament" />
     <TournamentBar pageTitle="Edit Tournament"/>
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
-      <ManageTournament tournamentId={tournamentId} showError={showError} />
+      <ManageTournament tournamentId={tournamentId} />
       {/* <AnnounceButton /> */}
       <Box sx={{width: "100%"}}>
         <Button variant="contained" color="error" onClick={handleDialogClickListItem} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>

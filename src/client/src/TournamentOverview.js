@@ -16,12 +16,12 @@ function TournamentTier(props){
   let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
     let matches = [];
       for (let i = 0; i < props.matches.length; i++) {
-        matches.push(<Match tournament={props.tournament} user={props.user} tier={props.tier} roundTypes={roundTypes} teams={props.teams} match={props.matches[i]} key={i} />);
+        matches.push(<Match tournament={props.tournament} user={props.user} tier={props.tier} roundTypes={roundTypes} teams={props.teams} match={props.matches[i]} key={i} onwinnerchange={props.onwinnerchange} />);
       }
       return(
         <>
-        <Box className={`round ${roundTypes[props.tier]}`} sx={{width:['100px', '150px', '200px', '250px', '400px']}}>
-          <li className="spacer">&nbsp;</li>
+        <Box component='ul' className={`round ${roundTypes[props.tier]}`} sx={{width:['125px','200px','250px','300px','350px']}}>
+          <Box component='li' className="spacer">&nbsp;</Box>
           {matches}
         </Box>
         </>
@@ -40,7 +40,6 @@ function Match(props){
 
   let setWinner = curryTeamId => event => {
     let teamId = curryTeamId;
-    // console.log(teamId)
     if (!teamId || teamId == null) {
       showError("No team selected");
       return;
@@ -56,7 +55,7 @@ function Match(props){
       .then(data => {
         if (data.status === "OK") {
           //Refresh when winner is set successfully
-          window.location.reload();
+          props.onwinnerchange();
         } else {
           showError(data.data)
         }
@@ -65,11 +64,9 @@ function Match(props){
   };
 
   let curryUnsetContestant = teamId => (e) => {
-    // console.log("wack")
     let formData = new FormData();
     formData.append("teamId", teamId);
     let body = new URLSearchParams(formData);
-    // console.log(props.match)
     fetch(process.env.REACT_APP_API_URL + `/match/${props.match.id}/unsetContestant`, {
       method: "POST", 
       body: body
@@ -77,8 +74,9 @@ function Match(props){
       .then(response => response.json())
       .then(data => {
         if (data.status === "OK") {
-          // console.log("wacky smacky");
-          window.location.reload();
+          props.onwinnerchange()
+        } else {
+          showError(data.data);
         }
       })
       .catch(error => showError(error));
@@ -87,43 +85,86 @@ function Match(props){
   return (
     <>
         {/* Team 1 (Winner-status?) (Team name) */}
-        <li className={`game game-top`}>
-          <Stack direction={"row"} alignItems="center" spacing={1}>
-              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`} align={'center'} sx={{ maxWidth:'70%', overflow:'hidden', wordWrap:'none', fontSize:['2vh', '1.5vh', '2vh', '3vh', '3.5vh', '4vh']}}>
+        <Box component='li' className={`game game-top`}>
+          <Stack direction={"row"} alignItems="center" spacing={1} sx={{justifyContent:['start','space-between']}}>
+              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`} align={'center'} sx={{ maxWidth:'70%', overflow:'hidden', wordWrap:'none', fontSize:['1em','1em','1.5em','1.75em']}}>
                 {team1Name}
               </Typography>
               { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" />
+              <EmojiEventsIcon alt="A trohpy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
               }
+              <Box component={Stack} direction={'row'} spacing={-1.25}>
               { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
-              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon /></IconButton>
+                <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team1Id)}><BackspaceIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
               { props.match.team1Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
-              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              <IconButton onClick={setWinner(props.match.team1Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
+              </Box>
           </Stack>
-        </li>
-        <li className="game game-spacer">&nbsp;</li>
+        </Box>
+        <Box component='li' className="game game-spacer">&nbsp;</Box>
         {/* Team 2 (Winner-status?) (Team name) */}
-        <li className={`game game-bottom`}>
-        <Stack direction={"row"} alignItems="center">
-              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team2Id === props.match.winnerId) ? "winner" : "loser" : ""}`} sx={{maxWidth:'70%', overflow:'hidden', wordWrap:'none',fontSize:['2vh', '1.5vh', '2vh', '3vh', '3.5vh', '4vh']}}>
+        <Box component='li' className={`game game-bottom`}>
+        <Stack direction={"row"} alignItems="center" sx={{justifyContent:['start','space-between']}}>
+              <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team2Id === props.match.winnerId) ? "winner" : "loser" : ""}`} sx={{maxWidth:'70%', overflow:'hidden', wordWrap:'none',fontSize:['1em','1em','1.5em','1.75em']}}>
                 {team2Name}
               </Typography>
               { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" />
+              <EmojiEventsIcon alt="A trohpy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
               }
               { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
-              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon /></IconButton>
+              <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
               { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
-              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span"><AddCircleIcon /></IconButton>
+              <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span" ><AddCircleIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
             </Stack>
-        </li>
-        <li className="spacer">&nbsp;</li>
+        </Box>
+        <Box component='li' className="spacer">&nbsp;</Box>
     </>
   );
+}
+
+function WinnerDisplay(props) {
+  let unsetWinner = event => {
+    let formData = new FormData();
+    formData.append("winnerId","null");
+    let body = new URLSearchParams(formData);
+    fetch(process.env.REACT_APP_API_URL + `/match/${props.finalMatch.id}/setWinner`, {
+      method: "POST",
+      body: body
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status !== "OK") { showError(data.data); return;}
+        props.onwinnerchange();
+      })
+      .catch(error => showError(error));
+  };
+          
+
+
+  if (!props.team) {
+    // Winner is not yet chosen
+    return <div className="winnerDisplay">
+      <Typography sx={{fontSize:['1em','1em','1.5em','2em']}}>
+        Winner is not chosen.<br /> Will it be you?
+      </Typography>
+    </div>;
+  }
+
+  return (
+    <div className="winnerDisplay">
+      <Typography align="center">
+        {props.user.isLoggedIn && !props.tournament.hasEnded && <IconButton color="error" aria-label="remove winner" component="span" onClick={unsetWinner}><BackspaceIcon /></IconButton>}
+      </Typography>
+      <Typography sx={{fontSize:['1em','1em','1.5em','2em']}} className="winner">
+        {props.team.name}
+      </Typography>
+      <EmojiEventsIcon alt="A trohpy" />
+    </div>
+  )
 }
 
 function BracketViewer(props){
@@ -131,7 +172,7 @@ function BracketViewer(props){
   const [matches, setMatches] = React.useState(null);
   const [teams, setTeams] = React.useState(null);
 
-  React.useEffect(() => {
+  let getMatches = () => {
     fetch(process.env.REACT_APP_API_URL + `/tournament/${props.tournamentId}/getMatches`)
       .then(res => res.json())
       .then(data => {
@@ -140,20 +181,18 @@ function BracketViewer(props){
           console.error(data);
           return;
         }
-        let matches = data.data;
+        let allMatches = data.data;
         // Group all matches by their round/tier
-        let tiers = matches.reduce((tiers, match) => {
+        let tiers = allMatches.reduce((tiers, match) => {
           if (!tiers[match.tier]) {
             tiers[match.tier] = [];
           }
           tiers[match.tier].push(match);
-          console.log(tiers)
           return tiers;
         }, {});
 
         tiers = Object.values(tiers);
         tiers = tiers.reverse();
-        
         setMatches(tiers);
       })
       .catch(err => showError(err));
@@ -169,19 +208,35 @@ function BracketViewer(props){
         setTeams(teams);
       })
       .catch(err => showError(err));
+  }
+  React.useEffect(() => {
+    getMatches();
   }, []);
+
+  let getFinalMatch = (tierMatches) => {
+    let finalMatch = tierMatches[tierMatches.length - 1][0];
+    return finalMatch;
+  };
+  let getWinnerTeam = (tierMatches) => {
+    let finalMatch = getFinalMatch(tierMatches);
+    if (finalMatch.winnerId === null) { return null;}
+    let winnerTeam = teams.find(team => team.id === finalMatch.winnerId);
+    return winnerTeam;
+  };
+  
   return (
     
       (props.tournament && matches && teams) ?
         // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
         <>
         <div className="bracket">
-        {matches.map(tier => {
-            let tierNum = tier[0].tier;
-            return <TournamentTier user={props.user} tournament={props.tournament} key={tierNum} tier={tierNum} matches={tier} teams={teams} />
+        {matches.map(tierMatches => {
+            let tierNum = tierMatches[0].tier;
+            return <TournamentTier user={props.user} tournament={props.tournament} key={tierNum} tier={tierNum} matches={tierMatches} teams={teams} onwinnerchange={getMatches} />
           })}
+        
+        <WinnerDisplay team={getWinnerTeam(matches)} user={props.user} finalMatch={getFinalMatch(matches)} onwinnerchange={getMatches} tournament={props.tournament} />
         </div>
-         
        </>
       : <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', position:'relative', marginTop:'5%'}}><CircularProgress size={"20vw"}/></Box>   
   );

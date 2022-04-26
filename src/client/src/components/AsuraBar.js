@@ -31,10 +31,10 @@ function LoggedInMenu(props) {
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{'aria-labelledby': 'basic-button',}} sx={{position:"absolute"}}>
           <Link to="/profile" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<AccountCircleIcon />}>{props.user.name}</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
-          <Link to="/api/logout" style={{color:"black"}}><MenuItem onClick={logout}><Button startIcon={<LogoutIcon />} >Logout</Button></MenuItem></Link>
           { props.user.isManager && 
           <Link to="/admins" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<EditIcon />} >Admins</Button></MenuItem></Link>
           }
+           <a href={`${process.env.REACT_APP_API_URL}/users/logout`} style={{color:"black"}}><MenuItem onClick={logout}><Button startIcon={<LogoutIcon />} >Logout</Button></MenuItem></a>
       </Menu> 
     </> 
   );  
@@ -67,19 +67,19 @@ export default function Appbar(props) {
               <Grid item xs={2}>
               <Box sx={{ width:"100%", height: "100%", justifyContent:"left", align: "center", alignItems:"center", margin: "none", padding: "none", color: "white" ,display: "flex", flexFlow: "row"}}>
                 <Link to="/">
-                  <img sx={{width: "10%"}} src={logo} alt="Tournament logo" className="mainIcon"></img>
+                  <Box component="img" src={logo} alt="Tournament logo" className="mainIcon" sx={{height:['55px','65px'], width:['55px','65px']}}></Box>
                 </Link>
                   { props.pageTitle !== "Asura Tournaments" &&
                   <Link to="/" style={{color:"white"}}>
-                    <Typography component="div" align="center">
+                    <Typography component="div" align="center" sx={{fontSize:['1em','1em','1.5em','2em']}}>
                           Home
                     </Typography>
                   </Link>
                   }
               </Box>
               </Grid>    
-              <Grid item xs={2} sm={3} md={4} lg={6} xl={8}>
-                <Typography component="div" sx={{fontSize:['0.5rem','1rem','1.5rem','2rem']}}>{props.pageTitle || ""}</Typography>
+              <Grid item xs={4} md={6} lg={8}>
+                <Typography component="div" sx={{fontSize:['1em','1em','1.5em','2em']}}>{props.pageTitle || ""}</Typography>
               </Grid>
               { props.pageTitle !== "Login" ?
                 <Grid item xs={2}>
