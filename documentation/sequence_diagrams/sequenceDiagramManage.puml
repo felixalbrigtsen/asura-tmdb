@@ -1,0 +1,101 @@
+@startuml Manage Tournament
+title Manage Tournament
+Actor Admin #palegreen
+participant Website
+database Server #brown
+hide footbox
+
+alt Manage Teams
+    Admin->Website: manageTeamsButton()
+    activate Admin
+    activate Website
+    Website-->Admin: redirect(/tournament/id/teams)
+        opt Add 
+            Admin->Website: addTeam(name,members)
+                opt Error
+                    Website-->Admin: displayError(error)
+                end
+            Website->Server: addTeam(id,name,members)
+            activate Server
+            Server-->Website: postTeam(team)
+            deactivate Server
+            Website-->Admin: updateTeamList(team)
+            deactivate Admin
+            deactivate Website
+        end
+    opt Edit
+        Admin->Website: selectTeam(team)
+        activate Admin
+        activate Website
+        Website->Server: getTeam(team)
+        activate Server
+        Server-->Website: postTeam(team)
+        deactivate Server
+        Website-->Admin: showTeam(team,members)
+            opt Add Member 
+                Admin->Website: addMember(name)
+                activate Server
+                Website->Server: updateTeam(team,member:name) 
+                Website-->Admin: showTeam(team,member)
+                deactivate Server
+            end
+            opt Remove Member
+                Admin->Website: removeMember(id)
+                activate Server
+                Website->Server: updateTeam(team,member:id)
+                Website-->Admin: showTeam(team,member)
+                deactivate Server
+                deactivate Admin
+                deactivate Website
+            end
+        
+    end
+
+    opt Delete
+    activate Admin
+    activate Website
+        Admin->Website: deleteTeam(team)
+        Website-->Admin: confirm ? Yes : No;
+                opt Error
+                    Website-->Admin: displayError(error)
+                end
+            opt Yes
+                Website->Server: removeTeam(team:id)
+                activate Server
+                Server-->Website: postTeam(team)
+                deactivate Server
+                Website-->Admin: updateTeamList(team)
+            end
+            opt No
+                Website-->Admin: redirect(/tournament/tournament/id/teams)
+            end
+        deactivate Admin
+        deactivate Website
+    end
+end
+
+alt Select Match Winner
+    Admin->Website: chooseWinner(match,team)
+    Website->Server: updateMatch(id:matchID,winner:teamID)
+activate Server
+    Server-->Website: updateParentOf(child:matchID)
+deactivate Server
+    Website-->Admin: displayTournament(Tournament)
+end
+
+alt Delete Tournament
+    Admin->Website: removeTournament(tournament)
+    Website-->Admin: confirm ? Yes : No; 
+    opt Yes 
+        activate Server
+        Website->Server: removeTournament(tournament:id)
+        Website-->Admin: redirect(/homePage)
+        deactivate Server
+    end
+    opt No
+        Website-->Admin: redirect(/tournaments/id/)
+    end
+    deactivate Admin
+    deactivate Website
+end
+@enduml

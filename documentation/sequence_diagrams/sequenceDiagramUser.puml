@@ -1,7 +1,9 @@
 @startuml User View
+title User View
 actor User #LightBlue
 participant Website
 database Server #Brown
+hide footbox
 
 User->Website: viewTournament(Tournament)
 activate User

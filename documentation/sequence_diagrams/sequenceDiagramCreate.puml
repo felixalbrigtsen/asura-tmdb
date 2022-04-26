@@ -1,0 +1,27 @@
+@startuml Create Tournament
+title Create Tournament
+Actor Admin #palegreen
+participant Website
+database Server #brown
+hide footbox
+
+Admin->Website: createTournament(Tournament)
+activate Admin
+activate Website
+Website->Server: sendInfo(Tournament)
+activate Server
+Server-->Website: {status: success | failure}
+deactivate Server
+alt status = success
+Website->Server: fetchInfo(Tournament)
+activate Server
+Server-->Website: sendInfo(Tournament)
+deactivate Server
+Website-->Admin: displayTournament(Tournament)
+end
+alt status = failure
+Website-->Admin: displayError(error)
+end
+deactivate Admin
+deactivate Website
+@enduml

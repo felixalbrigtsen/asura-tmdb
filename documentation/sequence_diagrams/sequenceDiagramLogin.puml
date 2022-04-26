@@ -1,0 +1,26 @@
+@startuml Asura Tournament System
+title Login
+Actor Admin #palegreen
+participant Website
+database Server #brown
+hide footbox
+
+    Admin->Website: login(username, passwd)
+activate Admin
+activate Website
+    Website->Server: Login Request
+activate Server
+    Server-->Website: {status: success | failure}
+deactivate Server
+alt status = success
+    Website-->Admin: "Login Successful"
+opt if (isManager(user))
+    Website->Admin: redirect(managerPage)
+    else 
+        Website->Admin: redirect(adminPage)
+end
+
+end
+deactivate Website
+deactivate Admin
+@enduml

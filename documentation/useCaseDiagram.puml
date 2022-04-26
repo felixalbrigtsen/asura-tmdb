@@ -1,0 +1,81 @@
+@startuml Tournament System
+title Tournament System - Group 1 
+
+skinparam actorStyle awesome
+skinparam linetype ortho
+
+package Administrators {
+    actor Manager as mgr
+    actor Admin as adm
+
+    note "Manager extends admin" as MgrNote
+    mgr .l. MgrNote
+    MgrNote .l.|> adm
+}
+
+actor User as u1
+
+left to right direction
+rectangle System {
+    usecase "Login" as SysLogin
+    usecase "Manage admins" as SysMngAdm
+    
+        usecase "Create admin" as SysCrtAdm
+        usecase "Delete admin" as SysDelAdm
+    
+    usecase "View home page" as HomeView
+    
+    package Tournament {
+        usecase "Manage tournament" as MngTou
+        usecase "Create tournament" as TouCreateT
+        together {
+            usecase "Edit tournament" as TouEdit
+            usecase "Delete tournament" as TouDelete
+            usecase "View teams" as TeamView
+        }
+        together {
+            usecase "Add team" as TeamAdd
+            usecase "Delete team" as TeamDel
+            usecase "Manage team" as TeamMng
+            usecase "Add members" as MembAdd
+            usecase "Remove members" as MembDel
+        }
+        together {
+            usecase "View tournaments" as TouVtou
+            usecase "View matches" as TouVmatch
+        }
+    }
+
+    note "If logged in as manager" as SysCrtAdmNote
+    SysLogin .r. SysCrtAdmNote
+    SysCrtAdmNote ..> SysMngAdm
+}
+
+mgr --> SysLogin
+
+adm --> SysLogin
+adm --> HomeView
+
+u1 --> HomeView
+
+SysLogin --> MngTou
+SysLogin --> TouCreateT
+
+SysMngAdm -l--> SysCrtAdm
+SysMngAdm -l--> SysDelAdm
+
+MngTou --> TouEdit
+MngTou --> TouDelete
+MngTou --> TeamView
+
+TeamView --> TeamAdd
+TeamView --> TeamDel
+TeamView --> TeamMng
+
+TeamMng --> MembAdd
+TeamMng --> MembDel
+
+
+HomeView --> TouVtou
+HomeView --> TouVmatch
+@enduml

@@ -5,9 +5,9 @@ class Match {
     *match_id: Integer
     Tournament
     Teams
-    Scores
     Winner
 }
+
 class Team {
     *team_id
     Name
@@ -15,6 +15,7 @@ class Team {
     Players
     Matches
 }
+
 class Player {
     *player_id
     Name
@@ -37,10 +38,16 @@ class Administrator {
     Manager-status
 }
 
-Team "2..*" -> "1..*" Tournament : "Plays in"
-Tournament "1" --> "1..*" Match : contains
-Player "1..*" --> "1..1" Team : "Belongs to"
-Team "2..2" --> "1..*" Match : "Competes in"
+class User {
+    
+}
 
+Team "2..*" - "1..*" Tournament : "Plays in"
+Tournament "1" -- "1..*" Match : contains
+Player "1..*" -- "1..1" Team : "Belongs to"
+Team "2..2" -- "1..*" Match : "Competes in"
 
+Administrator "1..*" -- "0..*" Tournament : "Manages"
+Administrator "1..*" -- "0..*" Team : "Manages"
+User "0..*" --> "0..*" Tournament : "View overview"
 @enduml
