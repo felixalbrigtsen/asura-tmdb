@@ -1,13 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import ListElement from "./list_component";
+import App from "./FrontPage.js";
+import theme from './components/theme';
+import { ThemeProvider } from "@emotion/react";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ListElement />
-    <ListElement />
-    <ListElement />
-  </React.StrictMode>,
+  <>
+  <ThemeProvider theme={theme}>
+    <App />
+  </ThemeProvider>
+  </>,
   document.getElementById("root")
 );
