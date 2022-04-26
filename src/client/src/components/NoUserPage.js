@@ -9,11 +9,10 @@ export default function NoSuchPage() {
             You are not logged in
         </Typography>
         <Typography type="h4">
-            You dont have access to this page, you can log in here: <Link to="/login">Login</Link>
+        Your account is not in the administrators list. Try again with another account here: <Link to="/login">Login</Link>
+        or 
+        <Link to="/"> Return to the home page</Link>
         </Typography>
-        <Link to="/">
-            Return to the home page
-        </Link>
     </>
     )
 }
