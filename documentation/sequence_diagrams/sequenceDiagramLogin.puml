@@ -21,8 +21,8 @@ opt if (userIsAdmin)
     else 
         Website->Admin: redirect(noSuchUserPage)
     end
+deactivate Website
+deactivate Admin    
 end
 
-deactivate Website
-deactivate Admin
 @enduml

@@ -71,7 +71,4 @@ deactivate Manager
 deactivate Website
 end
 
-
-
-
 @enduml

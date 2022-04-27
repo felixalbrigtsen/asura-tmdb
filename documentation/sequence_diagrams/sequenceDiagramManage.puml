@@ -33,18 +33,20 @@ alt Manage Teams
         activate Server
         Server-->Website: postTeam(team)
         deactivate Server
-        Website-->Admin: showTeam(team)      
+        Website-->Admin: showTeam(team)
+        deactivate Admin
+        deactivate Website     
     end
 
     opt Delete
+    Admin->Website: deleteTeam(team)
     activate Admin
     activate Website
-        Admin->Website: deleteTeam(team)
         Website->Server: removeTeam(team:id)
             activate Server
             Server-->Website: postTeam(team)
             deactivate Server
-            Website-->Admin: updateTeamList(team)
+        Website-->Admin: updateTeamList(team)
         opt Error
             Website-->Admin: displayError(error)
         end
