@@ -3,7 +3,6 @@
 ' Describes database fields and object methods required
 
 title Tournament System - Group 1 
-skinparam Linetype ortho
 
 class User {
     *user_id: Integer
@@ -39,9 +38,10 @@ class Tournament {
 }
 
 
-Team "2..*" --- "1..1" Tournament : "Plays in"
-Team "2..2" --- "1..*" Match : "Competes in"
+User "1..*" -- "0..*" Tournament : "Manages"
+User "1..*" -- "0..*" Team : "Manages"
+Team "2..*" -- "1..1" Tournament : "Plays in"
+Team "2..2" -- "1..*" Match : "Competes in"
+Tournament "1" -- "3..*" Match : "Contains"
 
-left to right direction
-Tournament "1" --- "3..*" Match : contains
 @enduml
