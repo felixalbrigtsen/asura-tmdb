@@ -54,7 +54,7 @@ export default function TournamentBar(props) {
             <ButtonLink targetPath="/manage" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Edit Tournament" />
             <ButtonLink targetPath="/teams" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Manage Teams" />
           </Stack>
-          <Stack direction="row" paddingBottom={'0.5%'} component={Stack}>
+          <Stack direction="row" sx={{paddingBottom:'0.5%', width: '80%', margin: '0 auto'}} component={Stack} justifyContent="center">
             <ClipboardButton clipboardContent={"https://discord.gg/asura"} name="Discord Invite Link" />
             <ClipboardButton clipboardContent={"https://asura.feal.no/tournament/" + tournamentId} name="Tournament Link" />
           </Stack>
