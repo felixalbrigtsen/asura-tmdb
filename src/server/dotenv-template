@@ -1,0 +1,13 @@
+DB_HOST=url to mysql server
+DB_USER=
+DB_PASSWORD=
+DB_DATABASE=
+SERVER_PORT=3000
+GOOGLE_CLIENT_ID=xxxxxxxxxxxxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxx
+GOOGLE_CALLBACK_URL=https://asura.feal.no/auth/google/callback
+AUTH_SUCCESS_REDIRECT=https://asura.feal.no/
+DEBUG_ALLOW_ALL=false
+COOKIE_SECURE=false
+COOKIE_SECRET=any random string
+CLIENT_BUILD_DIR=../client/build
