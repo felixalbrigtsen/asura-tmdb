@@ -48,13 +48,13 @@ function ButtonLink(props) {
 export default function TournamentBar(props) {
     const { tournamentId } = useParams();
     return (
-        <Paper sx={{width: ["90vw",], fontSize:['1rem','1rem','1.5rem','2rem'], margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center"> 
+        <Paper sx={{width: ["90vw",], fontSize:['1rem','1rem','1.5rem'], margin: "1.5% auto"}} component={Stack} direction="column" justifyContent="center" alignItems="center"> 
           <Stack direction="row" paddingTop={'0.5%'} sx={{fontSize:['1rem','1rem','1.5rem','2rem'], margin:'1.5%'}} spacing={2}>
             <ButtonLink targetPath="" tournamentId={tournamentId} activeTitle={props.pageTitle} title="View Tournament" viewTournament={props.viewTournament}/>
             <ButtonLink targetPath="/manage" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Edit Tournament" />
             <ButtonLink targetPath="/teams" tournamentId={tournamentId} activeTitle={props.pageTitle} title="Manage Teams" />
           </Stack>
-          <Stack direction="row" paddingBottom={'0.5%'}>
+          <Stack direction="row" paddingBottom={'0.5%'} component={Stack}>
             <ClipboardButton clipboardContent={"https://discord.gg/asura"} name="Discord Invite Link" />
             <ClipboardButton clipboardContent={"https://asura.feal.no/tournament/" + tournamentId} name="Tournament Link" />
           </Stack>

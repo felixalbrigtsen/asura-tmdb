@@ -56,7 +56,7 @@ function shorten(description, maxLength) {
                 
                 <Typography variant="h5" color="text.primary" gutterBottom> Participants: {props.tournament.teamCount} / {props.tournament.teamLimit} </Typography>
                 <Description />
-                <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trohpy" color="gold" align="vertical-center"/>  Prize: {props.tournament.prize} </Typography>
+                <Typography variant="body" color="text.primary"><EmojiEventsIcon alt="A trophy" color="gold" align="vertical-center"/>  Prize: {props.tournament.prize} </Typography>
 
                 <Box sx={{flexGrow: 1, marginTop: "20px"}}>
                   <Grid container spacing={4} justifyContent="center" wrap="wrap">
@@ -135,13 +135,13 @@ function shorten(description, maxLength) {
     }
   }
   
-    return <>
-    <TextField type="text" id="searchInput" label="Search" placeholder="Tournament Name" InputLabelProps={{shrink: true}} onChange={search}/>
+    return <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px", alignContent:'center'}}>
+    <TextField sx={{width: '50%', marginLeft: '25%', color: 'black', fontSize: '1.5em'}} size="large" type="text" id="searchInput" label="Search finished tournaments" placeholder="Tournament Name" InputLabelProps={{shrink: true}} onChange={search}/>
     <Stack spacing={3} sx={{margin: "10px auto"}}>
       {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
     </Stack>
       
-    </>;
+    </Container>;
   }
 
 export default function TournamentHistory(props) {
@@ -149,12 +149,7 @@ export default function TournamentHistory(props) {
   return (
       <>
         <Appbar user={props.user} pageTitle="Tournament History" />
-          <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px"}} component={Container} direction="column" align="center">
-            <Box component={Stack} direction="row" align="center" justifyContent="center" alignItems="center" sx={{flexGrow: 1, margin:'2.5% 0'}}>
-              <Typography sx={{fontSize:['1.5rem','2rem','2rem']}}>Past Tournaments</Typography>
-            </Box>
-            <TournamentList />
-          </Container>
+        <TournamentList />
       </>
     );
 }

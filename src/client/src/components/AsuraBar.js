@@ -25,11 +25,11 @@ function LoggedInMenu(props) {
 
   return (
     <>
+      <Link to="/profile"><Button sx={{color:'white', marginTop:'5px'}} startIcon={<AccountCircleIcon />}>{props.user.name}</Button></Link>
       <IconButton size="large" edge="start" color="inherit" aria-label="menu"  onClick={handleClick}>
         <MenuIcon />
         </IconButton>
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{'aria-labelledby': 'basic-button',}} sx={{position:"absolute"}}>
-          <Link to="/profile" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<AccountCircleIcon />}>{props.user.name}</Button></MenuItem></Link>
           <Link to="/history" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<HistoryIcon />}>History</Button></MenuItem></Link>
           { props.user.isManager && 
           <Link to="/admins" style={{color:"black"}}><MenuItem onClick={handleClose}><Button startIcon={<EditIcon />} >Admins</Button></MenuItem></Link>
@@ -71,7 +71,7 @@ export default function Appbar(props) {
                 </Link>
                   { props.pageTitle !== "Asura Tournaments" &&
                   <Link to="/" style={{color:"white"}}>
-                    <Typography component="div" align="center" sx={{fontSize:['1em','1em','1.5em','2em']}}>
+                    <Typography component="div" align="center" sx={{fontSize:['1em','1em','1.5em']}}>
                           Home
                     </Typography>
                   </Link>

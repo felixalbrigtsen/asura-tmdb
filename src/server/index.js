@@ -43,14 +43,16 @@ app.use(require('express-log-url'));
 // #region frontend
 
 // Serve static files from the React app
-app.use('/', express.static(path.join(__dirname, 'clientbuild')));
-app.use('/login', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
-app.use('/history', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
-app.use('/admins', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
-app.use('/profile', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
-app.use('/tournament/*', express.static(path.join(__dirname, 'clientbuild', 'index.html')));
-app.use('/static', express.static(path.join(__dirname, 'clientbuild/static')));
-app.use('/static/*', express.static(path.join(__dirname, 'clientbuild/static')));
+const indexhtmlPath = path.join(process.env.CLIENT_BUILD_DIR, "index.html");
+const staticPath = path.join(process.env.CLIENT_BUILD_DIR, "static");
+app.use('/', express.static(process.env.CLIENT_BUILD_DIR));
+app.use('/login', express.static(indexhtmlPath));
+app.use('/history', express.static(indexhtmlPath));
+app.use('/admins', express.static(indexhtmlPath));
+app.use('/profile', express.static(indexhtmlPath));
+app.use('/tournament/*', express.static(indexhtmlPath));
+app.use('/static', express.static(staticPath));
+app.use('/static/*', express.static(staticPath));
 // #endregion
 
 // #region PASSPORT / OAUTH

@@ -71,17 +71,49 @@ function TeamList(props) {
       .catch(error => showError(error));
   }
 
+  function search() {
+    let searchBase = []
+    let searchResult = []
+    let originalList = props.originalList
+    originalList.map((tournament) => searchBase.push(tournament.name))
+    let input = document.getElementById("searchInput")
+    let inputUpperCase = input.value.toUpperCase()
+    for (let i = 0; i < searchBase.length; i++) {
+      let tournamentName = searchBase[i].toUpperCase()
+      if(tournamentName.indexOf(inputUpperCase) >= 0) {
+        searchResult.push(tournamentName)
+      }
+    }
+
+    let searchedList = []
+    for (let i = 0; i < originalList.length; i++) {
+      let name = originalList[i].name
+      for (let j = 0; j < searchResult.length; j++) {
+        if (name.toUpperCase() == searchResult[j]) {
+          searchedList.push(originalList[i])
+        }
+      }
+    }
+
+    if (input.value == "") {
+      props.setTeams(originalList)
+    } else {
+      props.setTeams(searchedList)
+    }
+  }
+
   return (
   <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
   <div align="center" >
-  <h2><b>Teams:</b></h2>
-  {/* TODO: scroll denne menyen, eventuelt søkefelt */}
+  {/* Make a horizontal stack */}
+    <TextField sx={{margin:'2.5% 0 0 0', width: '50%'}} type="text" id="searchInput" label="Search" placeholder="Team Name" InputLabelProps={{shrink: true}} onChange={search}/>   
+ 
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Team Name</TableCell>
+            <TableCell><h2>Team Name</h2></TableCell>
             {/* <TableCell align="right">Team Members</TableCell> */}
-            <TableCell align="center">Actions</TableCell>
+            <TableCell align="center"><h2>Actions</h2></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -91,7 +123,6 @@ function TeamList(props) {
               <TableCell component="th" scope="row"> <b>
                 {team.name}
               </b></TableCell>
-              {/* <TableCell align="right">{team.members}</TableCell> */}
               <TableCell align="center">
                 <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => {props.setSelectedTeamId(team.id); window.scrollTo(0, document.body.scrollHeight)}} endIcon={<EditIcon />}>Edit</Button>
                 <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteTeam(team.id)}} endIcon={<DeleteIcon />}>Delete</Button>
@@ -184,6 +215,7 @@ let showError = (message) => {};
 export default function TournamentTeams(props) {
   const [teams, setTeams] = React.useState([]);
   const [selectedTeamId, setSelectedTeamId] = React.useState(-1);
+  const [originalList, setOriginalList] = React.useState([])
   const { tournamentId } = useParams();
 
   function getTeams() {
@@ -194,6 +226,7 @@ export default function TournamentTeams(props) {
           showError(data.data);
         }
         setTeams(data.data);
+        setOriginalList(data.data)
         //setselectedTeamId(teams[0].id);
       })
       .catch((err) => showError(err));
@@ -218,7 +251,7 @@ export default function TournamentTeams(props) {
     <TournamentBar pageTitle="Manage Teams" />
     <div className="tournamentTeams">
       <TeamCreator tournamentId={tournamentId} teams={teams} onTeamCreated={getTeams} />
-      <TeamList teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
+      <TeamList teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} originalList={originalList} setOriginalList={setOriginalList} />
       <TeamEditor teams={teams} setTeams={setTeams} selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
     </div>
     <ErrorSnackbar message={errorMessage} open={openError} setOpen={setOpenError} />

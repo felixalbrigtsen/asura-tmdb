@@ -91,7 +91,7 @@ function Match(props){
                 {team1Name}
               </Typography>
               { props.match.winnerId && (props.match.team1Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
+              <EmojiEventsIcon alt="A trophy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
               }
               <Box component={Stack} direction={'row'} spacing={-1.25}>
               { props.match.team1Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
@@ -111,7 +111,7 @@ function Match(props){
                 {team2Name}
               </Typography>
               { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
-              <EmojiEventsIcon alt="A trohpy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
+              <EmojiEventsIcon alt="A trophy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
               }
               { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
               <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
@@ -162,7 +162,7 @@ function WinnerDisplay(props) {
       <Typography sx={{fontSize:['1em','1em','1.5em','2em']}} className="winner">
         {props.team.name}
       </Typography>
-      <EmojiEventsIcon alt="A trohpy" />
+      <EmojiEventsIcon alt="A trophy" />
     </div>
   )
 }
