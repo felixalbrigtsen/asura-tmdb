@@ -1,5 +1,7 @@
 @startuml Asura Tournament System
 title Login
+skinparam actorStyle awesome
+
 Actor Admin #palegreen
 participant Website
 database Server #brown
@@ -14,13 +16,13 @@ activate Server
 deactivate Server
 alt status = success
     Website-->Admin: "Login Successful"
-opt if (isManager(user))
-    Website->Admin: redirect(managerPage)
+opt if (userIsAdmin)
+    Website->Admin: redirect(frontPage)
     else 
-        Website->Admin: redirect(adminPage)
+        Website->Admin: redirect(noSuchUserPage)
+    end
 end
 
-end
 deactivate Website
 deactivate Admin
 @enduml

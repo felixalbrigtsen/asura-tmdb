@@ -13,7 +13,7 @@ package Administrators {
     MgrNote .l.|> adm
 }
 
-actor User as u1
+actor Guest
 
 left to right direction
 rectangle System {
@@ -36,9 +36,6 @@ rectangle System {
         together {
             usecase "Add team" as TeamAdd
             usecase "Delete team" as TeamDel
-            usecase "Manage team" as TeamMng
-            usecase "Add members" as MembAdd
-            usecase "Remove members" as MembDel
         }
         together {
             usecase "View tournaments" as TouVtou
@@ -56,7 +53,7 @@ mgr --> SysLogin
 adm --> SysLogin
 adm --> HomeView
 
-u1 --> HomeView
+Guest --> HomeView
 
 SysLogin --> MngTou
 SysLogin --> TouCreateT
@@ -70,12 +67,8 @@ MngTou --> TeamView
 
 TeamView --> TeamAdd
 TeamView --> TeamDel
-TeamView --> TeamMng
-
-TeamMng --> MembAdd
-TeamMng --> MembDel
-
 
 HomeView --> TouVtou
 HomeView --> TouVmatch
+
 @enduml

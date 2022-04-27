@@ -25,14 +25,15 @@ class Tournament {
     Teams
 }
 
-class Administrator {
+class Admin {
     *admin_id
     Name
     Email
+    google_id
     Manager-status
 }
 
-class User {
+class Guest {
     
 }
 
@@ -40,8 +41,8 @@ Team "2..*" -- "1..*" Tournament : "Plays in"
 Tournament "1" -- "1..*" Match : "Contains"
 Team "2..2" -- "1..*" Match : "Competes in"
 
-Administrator "1..*" -- "0..*" Tournament : "Manages"
-Administrator "1..*" -- "0..*" Team : "Manages"
-User "0..*" --> "0..*" Tournament : "View overview"
+Admin "1..*" -- "0..*" Tournament : "Manages"
+Admin "1..*" -- "0..*" Team : "Manages"
+Guest "0..*" --> "0..*" Tournament : "View overview"
 
 @enduml

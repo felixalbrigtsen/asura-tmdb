@@ -1,5 +1,7 @@
 @startuml Manger View
 title Manager View
+skinparam actorStyle awesome
+
 Actor Manager #lime
 participant Website
 database Server #brown
@@ -11,20 +13,24 @@ note left of Manager #white
 end note
 
 alt View Admins
+Manager->Website: viewAdmins()
 activate Manager
 activate Website
-    Manager->Website: viewAdmins()
 activate Server
     Website->Server: requestList(Admins)
     Website<--Server: sendList(Admins)
 deactivate Server
     Manager<--Website: displayAdmins()
+deactivate Manager
+deactivate Website
 end
 
 alt Add Admins
-    Manager->Website: addAdmin(name,passwd)
+    Manager->Website: createAdmin(email)
+    activate Manager
+    activate Website
 activate Server
-    Website->Server: addUser(id,name,passwd)
+    Website->Server: createAdmin(email)
     Website<--Server: {status: success | failure}
 deactivate Server
     opt status = success
@@ -38,12 +44,16 @@ deactivate Server
     else status = failure
         Manager<--Website: displayError(error)  
     end
+deactivate Manager
+deactivate Website
 end
 
 alt Remove Admins
     Manager->Website: removeAdmin(name)
+    activate Manager
+    activate Website
 activate Server
-    Website->Server: removeUser(id)
+    Website->Server: removeAdmin(id)
     Website<--Server: {status: success | failure}
 deactivate Server
     opt status = success

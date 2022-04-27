@@ -1,24 +1,24 @@
-@startuml User View
-title User View
-actor User #LightBlue
+@startuml Guest View
+title Guest View
+skinparam actorStyle awesome
+actor Guest #LightBlue
 participant Website
 database Server #Brown
 hide footbox
 
-User->Website: viewTournament(Tournament)
-activate User
+Guest->Website: viewTournament(Tournament)
+activate Guest
 activate Website
 Website->Server: fetchTournament(Tournament)
 activate Server
 Server-->Website: {status: success | failure}
 deactivate Server
 alt status = success
-Website-->User: displayTournament(Tournament)
+Website-->Guest: displayTournament(Tournament)
 else status = failure 
-Website-->User: displayError(error)
-deactivate User
+Website-->Guest: displayError(error)
+deactivate Guest
 deactivate Website
 end
 
 @enduml
-
