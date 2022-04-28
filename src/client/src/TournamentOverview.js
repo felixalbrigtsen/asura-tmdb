@@ -113,12 +113,14 @@ function Match(props){
               { props.match.winnerId && (props.match.team2Id === props.match.winnerId) &&
               <EmojiEventsIcon alt="A trophy" sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} />
               }
+              <Box component={Stack} direction={'row'} spacing={-1.25}>
               { props.match.team2Id !== null && !props.tournament.hasEnded && props.match.tier !== Math.log2(props.tournament.teamLimit) - 1 && props.match.winnerId === null && props.user.isLoggedIn &&
               <IconButton color="error" aria-label="remove winner" component="span" onClick={curryUnsetContestant(props.match.team2Id)}><BackspaceIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
               { props.match.team2Id !== null && props.match.winnerId === null && !props.tournament.hasEnded && props.user.isLoggedIn &&
               <IconButton onClick={setWinner(props.match.team2Id)} color="success" aria-label="select winner" component="span" ><AddCircleIcon sx={{width:['0.75em','1em','1.25em'], height:['0.75em','1em','1.25em']}} /></IconButton>
               }
+              </Box>
             </Stack>
         </Box>
         <Box component='li' className="spacer">&nbsp;</Box>
