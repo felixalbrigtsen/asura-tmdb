@@ -1,7 +1,7 @@
-# Installing Asura Tournament Manager
-This is guide describes the process of installing Asura Tournament Manager on your own server. At the time of writing, you can reach our production server at [https://asura.feal.no/](https://asura.feal.no/).
+# Installation manual
+This guide describes the process of installing Asura Tournament Manager on your own server. At the time of writing, you can reach our production server at [https://asura.feal.no/](https://asura.feal.no/).
 
-- [Installing Asura Tournament Manager](#installing-asura-tournament-manager)
+- [Installation manual](#installation-manual)
   - [Before installing](#before-installing)
   - [Download the source](#download-the-source)
   - [Configure the client](#configure-the-client)
