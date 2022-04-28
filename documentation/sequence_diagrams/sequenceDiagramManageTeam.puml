@@ -1,0 +1,62 @@
+@startuml Manage Team
+title Manage Team
+skinparam actorStyle awesome
+
+Actor Admin #palegreen
+participant Website
+database Server #brown
+hide footbox
+
+Admin->Website: manageTeams()
+activate Admin
+activate Website
+Website-->Admin: redirect(/tournament/{id}/teams)
+
+alt Add 
+    Admin->Website: addTeam(name)
+        opt Error
+            Website-->Admin: displayError(error)
+        end
+    Website->Server: addTeam(id,name)
+    activate Server
+    Server-->Website: postTeam(team)
+    deactivate Server
+    Website-->Admin: updateTeamList(team)
+    deactivate Admin
+    deactivate Website
+end
+
+alt Edit
+    Admin->Website: selectTeam(team)
+    activate Admin
+    activate Website
+    opt Error
+        Website-->Admin: displayError(error)
+    end
+        Website->Server: getTeam(team)
+        activate Server
+        Server-->Website: postTeam(team)
+        deactivate Server
+    Website-->Admin: showTeam(team)
+    deactivate Admin
+    deactivate Website     
+end
+
+alt Delete
+Admin->Website: deleteTeam(team)
+activate Admin
+activate Website
+    opt Error
+        Website-->Admin: displayError(error)
+    end
+    Website->Server: removeTeam(team:id)
+        activate Server
+        Server-->Website: postTeam(team)
+        deactivate Server
+    Website-->Admin: updateTeamList(team)
+    
+deactivate Admin
+deactivate Website
+end
+
+@enduml
