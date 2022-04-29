@@ -13,9 +13,8 @@ export default function NoUserPage(props) {
             You are not logged in
         </Typography>
         <Typography type="h3">
-        Your account is not in the administrators list. Try again with another account here: <Link to="/login">Login</Link>
-        or 
-        <Link to="/"> Return to the home page</Link>
+        Your account is not in the administrators list. Try again with another account here: <Link to="/login">Login </Link>
+        or<Link to="/"> Return to the home page</Link>
         </Typography>
         </div>
     </Paper>
