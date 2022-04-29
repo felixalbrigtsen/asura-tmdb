@@ -58,7 +58,7 @@ const indexhtmlPath = path.join(process.env.CLIENT_BUILD_DIR, "index.html");
 const staticPath = path.join(process.env.CLIENT_BUILD_DIR, "static");
 app.use('/', express.static(process.env.CLIENT_BUILD_DIR));
 app.use('/login', express.static(indexhtmlPath));
-app.use('/nous', express.static(indexhtmlPath));
+app.use('/nouser', express.static(indexhtmlPath));
 app.use('/history', express.static(indexhtmlPath));
 app.use('/admins', express.static(indexhtmlPath));
 app.use('/profile', express.static(indexhtmlPath));

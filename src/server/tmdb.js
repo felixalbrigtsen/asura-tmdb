@@ -555,7 +555,6 @@ function editUser(email, user) {
         console.log(err);
         reject(err);
       } else {
-        console.log(sets);
         resolve("User updated");
       }
     });
