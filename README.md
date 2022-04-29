@@ -7,9 +7,11 @@ To make use of the Asura Tournament Manager, you need to have a running instance
 The recommended way to access the application is to use our instance on <https://asura.feal.no>.
 If you want run a separate instance of the server, the [installation process is described below](#installation).
 
+A complete user manual describing the application features and how to use them can be found in the [User Manual](https://gitlab.stud.idi.ntnu.no/felixalb/dcst1008-2022-group1/-/wikis/user-manual).
+
 ### Users and Managers
 Any visitor of the website is able to view current and future tournaments, but only administrators can create and edit tournaments.
-Managers can access the menu labeled "Admins" can invite new administrators.
+Managers can access the menu labeled "Admins" and invite new administrators. Once you are registered, the login process is as simple as pressing "Log in" and clicking your google account.
 
 ## Inner workings and explanatory diagrams
 The entire product and development process is described in our [wiki in the sidebar](https://gitlab.stud.idi.ntnu.no/felixalb/dcst1008-2022-group1/-/wikis).
@@ -26,7 +28,7 @@ In short, you will need
 - Basic knowledge of the command line
 
 This is not an in-depth guide, but rather a quick start reference to be used alongside the installation guide.
-- Establish a server with a nginx
+- Establish a server with [NGINX](https://www.nginx.com/)
   - Configure domains / subdomains as needed
   - Enable SSL
   - Use a local proxy to allow https to an internal port of your choice (default is 3000)
