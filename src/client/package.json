@@ -1,6 +1,6 @@
 {
   "name": "tournament-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "DCST1008 Project - Server - Asura Tournament Management System",
   "author": "felixalb, kristoju, jonajha, krisleri",
   "private": true,

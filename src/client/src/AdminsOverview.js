@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Link, Route, Routes, useParams } from "react-r
 import Appbar from "./components/AsuraBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import LoginPage from "./LoginPage";
-import { Button, Box, TextField, Stack, InputLabel, Paper, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Typography, Select, MenuItem, FormControl } from '@mui/material';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Box, TextField, Stack, Paper, Table, TableBody, TableHead, TableCell, TableRow, Typography, Select, MenuItem, FormControl } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import PropTypes from 'prop-types'
 
 function AdminCreator(props){
@@ -43,7 +42,6 @@ function AdminCreator(props){
             <div align="center">
                 <form>
                     <TextField id="adminEmailInput" label="Admin Email" variant="outlined" type="email" sx={{width:['auto','50%','60%','70%']}} />
-                        {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
                         <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{marginLeft:['5px'],width:['fit-content','40%','30%','20%']}}>
                             <Box sx={{padding: "10px"}}>
                                 Create Admin
@@ -64,7 +62,6 @@ function UserList(props){
             .then(data => {
                 if(data.status !== "OK"){
                     showError(data.data);
-                    console.log("UWU")
                     return;
                 }
                 props.onUserUpdated();
@@ -115,7 +112,6 @@ function UserList(props){
                           </b>
                           </TableCell>
                           <TableCell>{user.email}</TableCell>
-                          {/* TODO Drop down menu for selecting rank */}
                           <TableCell>
                               <FormControl variant="standard">
                                   <Select onChange={updateRank(user.asuraId)} value={user.isManager ? "manager" : "admin"} aria-label="rank" id="rankSelect">
@@ -124,9 +120,7 @@ function UserList(props){
                                   </Select>
                               </FormControl>
                           </TableCell>
-                          {/* <TableCell align="right">{team.members}</TableCell> */}
                           <TableCell align="center">
-                            {/* <Button variant="contained" sx={{margin: "auto 5px"}} color="primary" onClick={() => props.setSelectedTeamId(team.id)} endIcon={<EditIcon />}>Edit</Button> */}
                             <Button variant="contained" sx={{margin: "auto 5px"}} color="error" onClick={() => {deleteUser(user.asuraId)}} endIcon={<DeleteIcon />}>Delete</Button>
                           </TableCell>
                         </TableRow>
@@ -139,7 +133,6 @@ function UserList(props){
 }
 
 function ConfirmationDialogRaw(props) {
-  const { userId } = useParams();
   const { onClose, value: valueProp, open, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
 

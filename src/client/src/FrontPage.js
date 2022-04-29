@@ -12,8 +12,10 @@ import Appbar from './components/AsuraBar';
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import AdminsOverview from "./AdminsOverview";
+import NoSuchPage from "./components/NoSuchPage.js";
+import NoUserPage from "./components/NoUserPage.js";
 
-import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon, TextField } from "@mui/material";
+import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
@@ -164,7 +166,6 @@ function TournamentList(props) {
             currenttournaments.push(tournaments[i])
           }
         }
-        // tournaments.filter((tournament) => today - tournament.endTime < 24*60*60*1000)
         setTournamentList(currenttournaments);
       })
       .catch((err) => console.log(err.message));
@@ -224,17 +225,6 @@ export default function App() {
         setUser({ isManager: false, isLoggedIn: false });
       });
   }
-  // Debug mode, allow all:
-  // let fetchUser = () => {
-    // setUser({
-      // name: "TEST USERTEST",
-      // isManager: true,
-      // isLoggedIn: true,
-      // email: "testesen@gmail.com",
-      // asuraId: "123456789",
-      // googleId: "234"
-    // });
-  // }
 
   React.useEffect(() => {
     fetchUser();
@@ -269,6 +259,8 @@ export default function App() {
         <Route path="/login" element={<LoginPage user={user} />} />
         <Route path="/profile" element={<ProfilePage user={user} />} />
         <Route path="/admins" element={<AdminsOverview user={user} />} />
+        <Route path="/nouser" element={<NoUserPage user={user} />} />
+        <Route path="*"element={<NoSuchPage user={user} />} />
       </Routes>
     </Router>
 

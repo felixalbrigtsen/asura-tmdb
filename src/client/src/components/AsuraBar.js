@@ -1,13 +1,13 @@
 import * as React from "react";
-import { BrowserRouter as Router, Link, Route, Routes, History } from "react-router-dom";
-import { AppBar, Typography, Toolbar, CssBaseline, Box, Button, IconButton, Grid, Menu, MenuItem, Container } from "@mui/material"
+import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { AppBar, Typography, Toolbar, CssBaseline, Box, Button, IconButton, Grid, Menu, MenuItem } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HistoryIcon from '@mui/icons-material/History';
 import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
-import logo from "./../Asura2222.png";
+import logo from "./AsuraLogo.png";
 
 function LoggedInMenu(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -42,13 +42,10 @@ function LoggedInMenu(props) {
 
 
 function NotLoggedInButton() {
-  const login = () => {
-  }
-
   return (
     <>
     <Link to="/login" style={{color:"white"}}>
-      <Button sx={{color:"white"}} onClick={login} endIcon={<LoginIcon />}>
+      <Button sx={{color:"white"}} endIcon={<LoginIcon />}>
         Login
         </Button>
       </Link>

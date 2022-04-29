@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import Appbar from "./components/AsuraBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import LoginPage from "./LoginPage";
-import { Button, TextField, Stack, InputLabel, Select, Container, Slider, Paper, Box, Grid, Typography } from '@mui/material';
+import { Button, TextField, Stack, InputLabel, Container, Slider, Paper, Box, Grid } from '@mui/material';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -57,7 +57,7 @@ function postTournament(tournamentName, tournamentDescription, tournamentStartDa
     .then(response => response.json())
     .then(data => {
       if (data.status === "OK") {
-        alert("Tournament created successfully");
+        console.log("Tournament created successfully");
         let tournamentId = data.data.tournamentId;
         if (tournamentId) {
           window.location.href = "/tournament/" + tournamentId;
@@ -106,9 +106,7 @@ function TournamentForm(props) {
     <>
     <form>
     <Stack sx={{minHeight: "30vh", margin: "10px auto"}} direction="column" justifyContent="center" spacing={3} align="center">
-        {/* <InputLabel htmlFor="nameInput">Tournament Name: </InputLabel> */}
         <TextField type="text" id="nameInput" label="Tournament Name" placeholder="Tournament Name" InputLabelProps={{shrink: true}}/>
-        {/* <InputLabel htmlFor="descriptionInput">Description: </InputLabel */}
         <TextField type="text" multiline={true} id="descriptionInput" label="Description" placeholder="Description" InputLabelProps={{shrink: true}}/>        
         <TextField type="text" id="prizeInput" label="Prize" placeholder="Prize" InputLabelProps={{shrink: true}}/>     
         <Box flexGrow={1}>
@@ -129,8 +127,6 @@ function TournamentForm(props) {
             />
           </LocalizationProvider>
           </Grid>
-          {/* <TextField type="datetime-local" id="startDatePicker" label="Start Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginRight: "2%"}} />
-          <TextField type="datetime-local" id="endDatePicker" label="End Time" InputLabelProps={{shrink: true}} sx={{width: "48%", marginLeft: "2%"}} /> */}
         </Grid>
         </Box>
         <InputLabel id="max-teams-label">Maximum number of teams</InputLabel>
@@ -146,7 +142,6 @@ function TournamentForm(props) {
           </Grid>
         </Box>
 
-        {/* go brrrr */}
         <br /><br />
         
         <Button type="submit" variant="contained" onClick={submitTournament} color="primary">Create Tournament!</Button>

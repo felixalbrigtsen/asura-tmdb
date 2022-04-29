@@ -1,15 +1,13 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, Icon, TextField } from "@mui/material";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { Button, Container, Typography, Box, Stack, Card, CardContent, CardMedia, Paper, Grid, TextField } from "@mui/material";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import Appbar from './components/AsuraBar';
 import LoginPage from './LoginPage';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
-
-function shorten(description, maxLength) {
+function shorten(description, maxLength) { 
     if (description.length > maxLength) {
       return description.substring(0, maxLength) + "...";
     }
@@ -22,7 +20,7 @@ function shorten(description, maxLength) {
     function toggleDescription() {
       setLongDescription(!longDescription);
     }
-    function Description() {
+    function Description() { // Allows for shortening description if needed
       if (longDescription) {
         return( <Box component={Stack} direction="row">
           <Typography variant="body1" onClick={toggleDescription}>{props.tournament.description}</Typography>
@@ -77,7 +75,7 @@ function shorten(description, maxLength) {
   
   function TournamentList() {
     let [tournamentList, setTournamentList] = React.useState([]);
-    let [originalList, setOriginalList] = React.useState([])
+    let [originalList, setOriginalList] = React.useState([]);
   
     React.useEffect(() => {
       fetch(process.env.REACT_APP_API_URL + `/tournament/getTournaments`)
@@ -88,60 +86,61 @@ function shorten(description, maxLength) {
             return;
           }
 
-          let tournamenthistory = []
-          let today = new Date()
+          let tournamenthistory = [];
+          let today = new Date();
           let tournaments = Object.values(data.data);
           for (let i = 0; i < tournaments.length; i++) {
             tournaments[i].startTime = new Date(tournaments[i].startTime);
             tournaments[i].endTime = new Date(tournaments[i].endTime);
             if(today - tournaments[i].endTime >= 2*60*60*1000) {
-                tournamenthistory.push(tournaments[i])
+              tournamenthistory.push(tournaments[i]);
             }
           }
 
           setTournamentList(tournamenthistory);
-          setOriginalList(tournamenthistory)
+          setOriginalList(tournamenthistory) // Stores the original tournament list in case its searched
         })
         .catch((err) => console.log(err.message));
     }, []);
 
   function search() {
-    let searchBase = []
-    let searchResult = []
-    originalList.map((tournament) => searchBase.push(tournament.name))
-    let input = document.getElementById("searchInput")
-    let inputUpperCase = input.value.toUpperCase()
-    for (let i = 0; i < searchBase.length; i++) {
-      let tournamentName = searchBase[i].toUpperCase()
+    let searchBase = [];
+    let searchResult = [];
+    originalList.map((tournament) => searchBase.push(tournament.name));
+    let input = document.getElementById("searchInput");
+    let inputUpperCase = input.value.toUpperCase();
+    for (let i = 0; i < searchBase.length; i++) { // Matches search input with any part of the team names
+      let tournamentName = searchBase[i].toUpperCase();
       if(tournamentName.indexOf(inputUpperCase) >= 0) {
-        searchResult.push(tournamentName)
+        searchResult.push(tournamentName);
       }
     }
 
-    let searchedList = []
+    let searchedList = [];
     for (let i = 0; i < originalList.length; i++) {
-      let name = originalList[i].name
+      let name = originalList[i].name;
       for (let j = 0; j < searchResult.length; j++) {
-        if (name.toUpperCase() == searchResult[j]) {
-          searchedList.push(originalList[i])
+        if (name.toUpperCase() === searchResult[j]) {
+          searchedList.push(originalList[i]);
         }
       }
     }
 
-    if (input.value == "") {
-      setTournamentList(originalList)
+    if (input.value === "") {
+      setTournamentList(originalList);
     } else {
-      setTournamentList(searchedList)
+      setTournamentList(searchedList); 
     }
   }
   
-    return <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px", alignContent:'center'}}>
-    <TextField sx={{width: '50%', marginLeft: '25%', color: 'black', fontSize: '1.5em'}} size="large" type="text" id="searchInput" label="Search finished tournaments" placeholder="Tournament Name" InputLabelProps={{shrink: true}} onChange={search}/>
-    <Stack spacing={3} sx={{margin: "10px auto"}}>
-      {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
-    </Stack>
-      
-    </Container>;
+    return (
+      <Container sx={{minHeight: "30vh", width: "90vw", padding: "20px 20px", alignContent:'center'}}>
+        <TextField sx={{width: '50%', marginLeft: '25%', color: 'black', fontSize: '1.5em'}} size="large" type="text" id="searchInput" label="Search finished tournaments" placeholder="Tournament Name" InputLabelProps={{shrink: true}} onChange={search}/>
+        <Stack spacing={3} sx={{margin: "10px auto"}}>
+          {tournamentList && tournamentList.map((tournamentObject) => <TournamentListItem key={tournamentObject.id.toString()} tournament={tournamentObject} />)}
+        </Stack>
+      </Container>
+    );
   }
 
 export default function TournamentHistory(props) {

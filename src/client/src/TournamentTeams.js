@@ -4,13 +4,13 @@ import Appbar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import LoginPage from "./LoginPage";
-import { Button, TextField, Stack, MenuItem, Box, InputLabel, Select, Container, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Paper, Typography} from "@mui/material";
+import { Button, TextField, Stack, Box, Table, TableBody, TableHead, TableCell, TableRow, Paper} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 function TeamCreator(props) {
-  function postCreate() {
+  function postCreate() { // Posts new team to api when the form is submitted
     let teamName = document.getElementById("teamNameInput").value;
     if (!teamName) {
       showError("Team name is required");
@@ -43,7 +43,6 @@ function TeamCreator(props) {
       <div align="center">
         <form>
         <TextField id="teamNameInput" sx={{width:['auto','50%','60%','70%'], margin:'1% 0'}} label="Team Name" variant="outlined" />
-        {/* <Button variant="contained" color="primary" onClick={postCreate}>Create Team</Button> */}
         <Button type="submit" variant="contained" color="success" onClick={postCreate} sx={{ margin:'1% 1%',width:['fit-content','40%','30%','20%']}}>
           <Box sx={{padding: "10px"}}>
             Create Team
@@ -71,48 +70,47 @@ function TeamList(props) {
       .catch(error => showError(error));
   }
 
-  function search() {
-    let searchBase = []
-    let searchResult = []
-    let originalList = props.originalList
-    originalList.map((tournament) => searchBase.push(tournament.name))
-    let input = document.getElementById("searchInput")
-    let inputUpperCase = input.value.toUpperCase()
-    for (let i = 0; i < searchBase.length; i++) {
-      let tournamentName = searchBase[i].toUpperCase()
+  function search() { 
+    // Update search criteria and re-render the list
+    let searchBase = [];
+    let searchResult = [];
+    let originalList = props.originalList; // Stores the original list of teams before searching
+    originalList.map((tournament) => searchBase.push(tournament.name));
+    let input = document.getElementById("searchInput");
+    let inputUpperCase = input.value.toUpperCase();
+    for (let i = 0; i < searchBase.length; i++) { // Matches search input with any part of the team names
+      let tournamentName = searchBase[i].toUpperCase();
       if(tournamentName.indexOf(inputUpperCase) >= 0) {
-        searchResult.push(tournamentName)
+        searchResult.push(tournamentName);
       }
     }
 
-    let searchedList = []
+    let searchedList = [];
     for (let i = 0; i < originalList.length; i++) {
-      let name = originalList[i].name
+      let name = originalList[i].name;
       for (let j = 0; j < searchResult.length; j++) {
-        if (name.toUpperCase() == searchResult[j]) {
-          searchedList.push(originalList[i])
+        if (name.toUpperCase() === searchResult[j]) {
+          searchedList.push(originalList[i]);
         }
       }
     }
 
-    if (input.value == "") {
-      props.setTeams(originalList)
+    if (input.value === "") {
+      props.setTeams(originalList);
     } else {
-      props.setTeams(searchedList)
+      props.setTeams(searchedList);
     }
   }
 
   return (
   <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
   <div align="center" >
-  {/* Make a horizontal stack */}
     <TextField sx={{margin:'2.5% 0 0 0', width: '50%'}} type="text" id="searchInput" label="Search" placeholder="Team Name" InputLabelProps={{shrink: true}} onChange={search}/>   
  
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell><h2>Team Name</h2></TableCell>
-            {/* <TableCell align="right">Team Members</TableCell> */}
             <TableCell align="center"><h2>Actions</h2></TableCell>
           </TableRow>
         </TableHead>
@@ -138,6 +136,7 @@ function TeamList(props) {
 }
 
 function TeamEditor(props) {
+  // Component that returns a team name editor if a team is selected in the list.
   const [team, setTeam] = React.useState({});
   React.useEffect(() => {
     if (props.selectedTeamId === -1) {
@@ -156,7 +155,7 @@ function TeamEditor(props) {
       .catch(error => showError(error));
   }, [props.selectedTeamId]);
 
-  if (props.selectedTeamId === -1 || !team) {
+  if (props.selectedTeamId === -1 || !team) { //returns if no team is selected for editing
     return (
       <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
         <div align="center" >
@@ -176,7 +175,7 @@ function TeamEditor(props) {
     event.currentTarget.select()
   }
 
-  function saveTeam() {
+  function saveTeam() { //pushes new team name to api
     let formData = new FormData();
     formData.append("name", team.name);
     let body = new URLSearchParams(formData)
@@ -197,7 +196,7 @@ function TeamEditor(props) {
     );
   }
 
-  return (
+  return ( 
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "10px auto"}} component={Stack} direction="column" justifyContent="center">
     <div align="center">
       <h2><b>Edit Team:</b></h2>
@@ -227,7 +226,6 @@ export default function TournamentTeams(props) {
         }
         setTeams(data.data);
         setOriginalList(data.data)
-        //setselectedTeamId(teams[0].id);
       })
       .catch((err) => showError(err));
   }
@@ -243,7 +241,7 @@ export default function TournamentTeams(props) {
     setOpenError(true);
   }
   
-  if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; }
+  if (!props.user.isLoggedIn) { return <LoginPage user={props.user} />; } 
 
   return (
     <>

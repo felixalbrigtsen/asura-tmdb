@@ -1,13 +1,12 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import Appbar from "./components/AsuraBar";
-import ErrorSnackbar from "./components/ErrorSnackbar";
 
-import {Button, Textfield, Stack, InputLabel, Paper, Typography} from '@mui/material';
+import { Stack, Paper, Typography} from '@mui/material';
 
 export default function LoginPage(props) {
     if (props.user.isLoggedIn) {
-        //Redirect to the front page if the user is logged in
+        // Redirect to the front page if the user is logged in
         window.location.href = "/";
         return;
     }

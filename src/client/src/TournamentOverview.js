@@ -2,15 +2,12 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import Appbar from './components/AsuraBar';
 import TournamentBar from "./components/TournamentBar";
-import ErrorSnackbar from "./components/ErrorSnackbar";
 import { useParams } from 'react-router-dom'
-import { Button, IconButton, Paper, Stack, CircularProgress, Box, Grid, Typography, Container } from "@mui/material";
+import {  IconButton, Stack, CircularProgress, Box, Typography } from "@mui/material";
 import "./components/tournamentBracket.css";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { fontSize } from "@mui/system";
 
 function TournamentTier(props){
   let roundTypes = ["finals", "semifinals", "quarterfinals", "eighthfinals", "sixteenthfinals", "thirtysecondfinals"];
@@ -54,7 +51,7 @@ function Match(props){
       .then(response => response.json())
       .then(data => {
         if (data.status === "OK") {
-          //Refresh when winner is set successfully
+          // Refresh when winner is set successfully
           props.onwinnerchange();
         } else {
           showError(data.data)
@@ -84,7 +81,7 @@ function Match(props){
 
   return (
     <>
-        {/* Team 1 (Winner-status?) (Team name) */}
+        {/* First team of a match, renders team name and checks if its the winner, includes conditional rendering of buttons to promote and demote */}
         <Box component='li' className={`game game-top`}>
           <Stack direction={"row"} alignItems="center" spacing={1} sx={{justifyContent:['start','space-between']}}>
               <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team1Id === props.match.winnerId) ? "winner"  : "loser" : ""}`} align={'center'} sx={{ maxWidth:'70%', overflow:'hidden', wordWrap:'none', fontSize:['1em','1em','1.5em','1.75em']}}>
@@ -104,7 +101,7 @@ function Match(props){
           </Stack>
         </Box>
         <Box component='li' className="game game-spacer">&nbsp;</Box>
-        {/* Team 2 (Winner-status?) (Team name) */}
+        {/* Second team of a match, renders team name and checks if its the winner, includes conditional rendering of buttons to promote and demote */}
         <Box component='li' className={`game game-bottom`}>
         <Stack direction={"row"} alignItems="center" sx={{justifyContent:['start','space-between']}}>
               <Typography noWrap className={`${props.match.winnerId !== null ? (props.match.team2Id === props.match.winnerId) ? "winner" : "loser" : ""}`} sx={{maxWidth:'70%', overflow:'hidden', wordWrap:'none',fontSize:['1em','1em','1.5em','1.75em']}}>
@@ -144,8 +141,6 @@ function WinnerDisplay(props) {
       })
       .catch(error => showError(error));
   };
-          
-
 
   if (!props.team) {
     // Winner is not yet chosen
@@ -179,8 +174,7 @@ function BracketViewer(props){
       .then(res => res.json())
       .then(data => {
         if (data.status !== "OK") {
-          // Do your error thing
-          console.error(data);
+          showError(data);
           return;
         }
         let allMatches = data.data;
@@ -203,7 +197,7 @@ function BracketViewer(props){
       .then(res => res.json())
       .then(data=>{
         if(data.status !== "OK"){
-          console.error(data)
+          showError(data)
           return;
         }
         let teams = data.data;
@@ -229,7 +223,6 @@ function BracketViewer(props){
   return (
     
       (props.tournament && matches && teams) ?
-        // <div sx={{width: "100vw", height: "80vh", overflow: "scroll"}} className="bracket">
         <>
         <div className="bracket">
         {matches.map(tierMatches => {
@@ -244,18 +237,13 @@ function BracketViewer(props){
   );
 }
 
-let showError = (message) => {};
+function showError(error) {
+  console.error(error);
+}
+
 export default function TournamentOverview(props) {
   const { tournamentId } = useParams();
   const [tournament, setTournament] = React.useState(false);
-
-  const [openError, setOpenError] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState("");
-  showError = (message) => {
-    setOpenError(false);
-    setErrorMessage(message);
-    setOpenError(true);
-  }
 
   React.useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}`)

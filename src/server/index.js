@@ -4,11 +4,18 @@ const session = require('express-session');
 const https = require("https");
 require("dotenv").config();
 
+/* Asura Tournament Server Index
+  This node applications functions as a web server to serve the client application, as well as serving the API.
+  The program is divided into sections or "regions". Each region lies between two comments "// #region <title>" and "// #endregion".
+*/
+
+
 // Our self-written module for handling database operations
 let tmdb = require("./tmdb.js");
 
 // #region Express setup
 const app = express();
+// Default to 3000 if no port is specified. This port is fine, as the server should be behind a reverse proxy
 const port = process.env.SERVER_PORT || 3000;
 app.listen(parseInt(port), () => {
   console.log(`Listening on port ${port}`)
@@ -32,9 +39,13 @@ app.use("/api", api);
 api.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, DELETE");
+  // If your API is CORS-enabled, you can use the following line instead of the above line
   // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+// Log both the client requests and API requests to terminal.
+// This allows for easier debugging and overview. The output includes the response status code and requested URL.
 api.use(require('express-log-url'));
 app.use(require('express-log-url'));
 
@@ -42,11 +53,12 @@ app.use(require('express-log-url'));
 
 // #region frontend
 
-// Serve static files from the React app
+// Serve static files from the React app.
 const indexhtmlPath = path.join(process.env.CLIENT_BUILD_DIR, "index.html");
 const staticPath = path.join(process.env.CLIENT_BUILD_DIR, "static");
 app.use('/', express.static(process.env.CLIENT_BUILD_DIR));
 app.use('/login', express.static(indexhtmlPath));
+app.use('/nous', express.static(indexhtmlPath));
 app.use('/history', express.static(indexhtmlPath));
 app.use('/admins', express.static(indexhtmlPath));
 app.use('/profile', express.static(indexhtmlPath));
@@ -56,6 +68,9 @@ app.use('/static/*', express.static(staticPath));
 // #endregion
 
 // #region PASSPORT / OAUTH
+// This process of signing in with google oauth and storing the session cookie with passport and express 
+// is loosely based on the google documentation: https://developers.google.com/identity/sign-in/web/sign-in
+// as well as this tutorial: https://www.loginradius.com/blog/engineering/google-authentication-with-nodejs-and-passportjs/
 
 const passport = require('passport');
 var userProfile;
@@ -109,7 +124,7 @@ app.get('/auth/google/callback',
         req.session.user = dbUser;
       } else {
         // User is "preregistered" with email only, so complete the registration
-        // This step will register the name, img and googleId
+        // This step will register the name and googleId
         tmdb.editUser(user.email, user).catch(err => console.log(err));
 
         req.session.user = user;
@@ -120,7 +135,8 @@ app.get('/auth/google/callback',
     })
     .catch(err => {
       // User is not in the database at all, do not give them a session.
-      res.json({"status": "error", message: "Email is not in administrator list."});
+      // JSON alternative: res.json({"status": "error", message: "Email is not in administrator list."});
+      res.redirect(process.env.AUTH_ERROR_REDIRECT);
       return;
     });
   }
@@ -128,7 +144,14 @@ app.get('/auth/google/callback',
 
 // #endregion
 
+/* 
+  API *endpoints* are given in api.get, api.post, api.delete, etc.
+  These are the endpoints that the client will use to interact with the server.
+  Functions that are not defined in this way will not be accessible to the client, but internally in the server.
 
+  Most of these endpoints do some simple validations, make an asynchrnous call to the tmdb-module, and returns the result in JSON.
+
+*/
 // #region API
 api.get("/tournament/getTournaments", (req, res) => {
   tmdb.getTournaments()
@@ -190,7 +213,6 @@ api.post("/tournament/:tournamentId/edit", async (req, res) => {
   let prize = req.body.prize;
   let startDate = req.body.startDate;
   let endDate = req.body.endDate;
-  console.log(startDate);
   if (name == undefined || name == "" || description == undefined || description == "") {
     res.json({"status": "error", "data": "name and description must be provided"});
     return
@@ -206,11 +228,7 @@ api.post("/tournament/:tournamentId/edit", async (req, res) => {
     res.json({"status": "error", "data": "startDate and endDate must be valid dates"});
     return
   }
-  // let today = new Date();
-  // if (startDate < today) {
-  //   res.json({"status": "error", "data": "startDate cannot be in the past"});
-  //   return
-  // }
+
   if (startDate > endDate) {
     res.json({"status": "error", "data": "startDate cannot be after endDate"});
     return
@@ -376,7 +394,6 @@ api.post("/team/:teamId/edit", async (req, res) => {
   
   let teamId = req.params.teamId;
   let teamName = req.body.name;
-  console.log(req.body);
   if (isNaN(teamId)) {
     res.json({"status": "error", "data": "teamId must be a number"});
     return
@@ -406,16 +423,13 @@ api.post("/tournament/create", async (req, res) => {
     res.json({"status": "error", "data": "No data supplied"});
     return
   }
-  //Check that req is json  
-  // if (req.get("Content-Type") != "application/json") {
-  console.log(req.get("Content-Type"));
+
   let name = req.body.name;
   let description = req.body.description;
   let prize = req.body.prize;
   let teamLimit = req.body.teamLimit;
-  let startDate = req.body.startDate; //TODO: timezones, 2 hr skips
+  let startDate = req.body.startDate;
   let endDate = req.body.endDate;
-  console.log(startDate, endDate);
   if (name == undefined || name == "" || description == undefined || description == "") {
     res.json({"status": "error", "data": "name and description must be provided"});
     return
@@ -450,7 +464,6 @@ api.post("/tournament/create", async (req, res) => {
     res.json({"status": "error", "data": "endDate must be later than startDate"});
     return
   }
-  console.log(startDate);
 
   tmdb.createTournament(name, description, prize, startDate, endDate, teamLimit)
     .then(msg => res.json({"status": "OK", "data": msg}))
@@ -573,7 +586,7 @@ api.get("/users/logout", (req, res) => {
 });
 
 
-// Debugging functions, disabled on purpouse
+// Debugging functions, disabled in production environment
 // api.get("/users/getSessionUser", (req, res) => {
 //   if (req.session.user) {
 //     res.json({"status": "OK", "data": req.session.user});

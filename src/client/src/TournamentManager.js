@@ -1,13 +1,11 @@
 import * as React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-// import { AlertContainer, alert } from "react-custom-alert";
 import Appbar from "./components/AsuraBar";
 import TournamentBar from "./components/TournamentBar";
 import LoginPage from "./LoginPage";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Grid, Box, Container, Paper, Stack } from "@mui/material";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -17,10 +15,8 @@ import PropTypes from 'prop-types'
 let submitChanges = curryTournamentId => event => {
   event.preventDefault();
   let tournamentId = curryTournamentId;
-  //TODO: use refs to get values
   let tournamentName = document.getElementById("editName").value;
   let tournamentDescription = document.getElementById("editDesc").value;
-  // let tournamentImageFile = document.getElementById("editImage").files[0];
   let tournamentStartDate = document.getElementById("editStartDate").value;
   let tournamentEndDate = document.getElementById("editEndDate").value;
   let tournamentPrize = document.getElementById("editPrize").value
@@ -61,11 +57,10 @@ let submitChanges = curryTournamentId => event => {
   formData.append("description", tournamentDescription);
   formData.append("startDate", tournamentStartDate);
   formData.append("endDate", tournamentEndDate);
-  // formData.append("teamLimit", tournamentMaxTeams);
   formData.append("prize", tournamentPrize)
   let body = new URLSearchParams(formData);
 
-  fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}/edit`, {
+  fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}/edit`, { // Sends edited data to api
     method: "POST",
     body: body,
   })
@@ -82,7 +77,6 @@ let submitChanges = curryTournamentId => event => {
 }
 
 let deleteTournament = tournamentId => event => {
-  console.log(tournamentId);
   event.preventDefault();
 
   fetch(process.env.REACT_APP_API_URL + `/tournament/${tournamentId}`, {
@@ -168,7 +162,7 @@ function ManageTournament(props) {
   );
 }
 
-function ConfirmationDialogRaw(props) {
+function ConfirmationDialogRaw(props) { // Creates required confirmation before tournament deletion
   const { tournamentId } = useParams();
   const { onClose, value: valueProp, open, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
@@ -235,7 +229,6 @@ export default function TournamentManager(props) {
     <TournamentBar pageTitle="Edit Tournament"/>
     <Paper sx={{minHeight: "30vh", width: "90vw", margin: "20px auto", padding: "20px 0"}} component={Container} direction="column" align="center">
       <ManageTournament tournamentId={tournamentId} />
-      {/* <AnnounceButton /> */}
       <Box sx={{width: "100%"}}>
         <Button variant="contained" color="error" onClick={handleDialogClickListItem} sx={{margin: "auto 5px"}} endIcon={<DeleteIcon />}>
           Delete Tournament

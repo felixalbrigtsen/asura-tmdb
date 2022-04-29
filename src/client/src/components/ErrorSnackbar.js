@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
@@ -17,7 +16,7 @@ export default function showError(props) {
     props.setOpen(false);
   };
   if (props.message && props.message.length > 0) {
-    console.log(props.message);
+    console.log(props.message); // Lets the user check the console if they want to see the error
   }
 
   return (
