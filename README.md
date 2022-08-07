@@ -7,18 +7,18 @@ To make use of the Asura Tournament Manager, you need to have a running instance
 The recommended way to access the application is to use our instance on <https://asura.feal.no>.
 If you want run a separate instance of the server, the [installation process is described below](#installation).
 
-A complete user manual describing the application features and how to use them can be found in the [User Manual](https://gitlab.stud.idi.ntnu.no/felixalb/dcst1008-2022-group1/-/wikis/user-manual).
+A complete user manual describing the application features and how to use them can be found in the [User Manual](https://github.com/felixalbrigtsen/asura-tmdb/wiki/user-manual).
 
 ### Users and Managers
 Any visitor of the website is able to view current and future tournaments, but only administrators can create and edit tournaments.
 Managers can access the menu labeled "Admins" and invite new administrators. Once you are registered, the login process is as simple as pressing "Log in" and clicking your google account.
 
 ## Inner workings and explanatory diagrams
-The entire product and development process is described in our [wiki in the sidebar](https://gitlab.stud.idi.ntnu.no/felixalb/dcst1008-2022-group1/-/wikis).
+The entire product and development process is described in our [wiki page](https://github.com/felixalbrigtsen/asura-tmdb/wiki).
 You will find diagrams documents describing the inner workings of the application.
 
 ## Installation
-The installation process is described in detail on our wiki page: [Full installation guide](https://gitlab.stud.idi.ntnu.no/felixalb/dcst1008-2022-group1/-/wikis/installation-manual)
+The installation process is described in detail on our wiki page: [Full installation guide](https://github.com/felixalbrigtsen/asura-tmdb/wiki/installation-manual)
 
 
 In short, you will need
